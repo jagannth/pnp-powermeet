@@ -31,7 +31,7 @@ export default class PowermeetWebPart extends BaseClientSideWebPart<IPowermeetWe
   }
 
   public render(): void {
-    this.domElement.innerHTML = `<app-powermeet-web-part></app-powermeet-web-part>`;
+    this.domElement.innerHTML = `<app-powermeet-web-part description="${ this.context }"></app-powermeet-web-part>`;
   }
 
   protected get dataVersion(): Version {

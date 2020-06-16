@@ -7,11 +7,12 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.Emulated
 })
 export class PowermeetWebPartComponent implements OnInit {
-  @Input() description: string;
+  @Input() description: any;
 
   constructor() { }
 
   ngOnInit() {
+    console.log('desc',this.description);
   }
 
 }

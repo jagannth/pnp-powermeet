@@ -285,6 +285,7 @@ export class DashboardComponent implements OnInit {
     }
   }
   editNote(val, Id) {
+    console.log('open pop-up');
     if (Id == 0) {
       this.note = new Note();
       this.note.NoteAudit = new NoteAudit();
@@ -461,6 +462,7 @@ export class DashboardComponent implements OnInit {
       [1, 2, 2, 5, 1, 2, 7],
     ];
   }
+  test: string = "working fine";
   searchData(event) {
     this.Meeting.forEach((x, index) => {
       (<HTMLDivElement>document.getElementById('collapseOne_' + index)).classList.add('show');
