@@ -1,0 +1,207 @@
+<!-- upcoming meetings section :start  -->
+<ngx-spinner bdColor = "rgba(0,0,0,0.4)" size = "medium" color = "#fff" type = "ball-spin-fade" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<div class="row ">
+    <div class="col-12">
+        <div class="card card-body shadow-sm p-3">
+
+            <!-- card header section :start  -->
+            <div class="row border-bottom no-gutters pb-2 mb-3">
+                <!-- <div class="col-6 ">
+                    <h6 class="f-600 pt-2">Upcoming</h6>
+                </div> -->
+                <!-- <div class="col-6 text-right ">
+                    <button class="btn btn-one shadow-sm-one">Add New</button>
+                </div> -->
+            </div>
+            <!-- card header section :end  -->
+
+            <!-- card body section : start  -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Meeting</th>
+                            <th class="text-center" scope="col">Agenda Items</th>
+                            <th class="text-center" scope="col">Attendees</th>
+                            <th class="text-center" scope="col">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="border-bottom" *ngFor="let meeting of meetingsList">
+
+                            <td>
+                                <span  class="td-main-text">
+                                    {{meeting?.MeetingName}}
+                                </span>
+                                <br>
+                                <span class="text-turncate td-secondary-text">
+                                    {{meeting?.MeetingDescription}}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="td-main-text ">
+                                    {{getapprovedcount(meeting.AgendaItems)}} approved
+                                    of {{meeting?.AgendaItems.length}}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span  *ngFor="let j = index;let attendee of meeting?.MeetingAttendees | slice:0:3">
+                                    <span class="td-attendee-more" *ngIf="!getStatus(attendee.Email)" [style.background-color]="colorsArray[0]">
+                                        {{getStatus(attendee.Email)?.displayName | uppercase}}
+                                    </span>
+                                    <span class="td-attendee" *ngIf="getStatus(attendee.Email)">
+                                        <img [src]="getStatus(attendee.Email)?.file" alt="" class="img-fluid">
+                                    </span>
+                                </span>
+                                <span class="td-attendee-more" *ngIf="meeting?.MeetingAttendees.length > 4">
+                                    +{{meeting?.MeetingAttendees.length - 3}}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class=" td-main-text" *ngIf="meeting?.IsRecurring">
+                                    Every Day
+                                </span>
+                                <br>
+                                <span class=" td-main-text">
+                                    {{meeting?.StartDate | date:'HH:mm'}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- card body section : end  -->
+
+        </div>
+    </div>
+</div>
+
+<!-- Moal Body -->
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure you want to delete Hotel</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger"  data-dismiss="modal">Yes</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- upcoming meetings section :start  -->
+<div class="divider-one"></div>
+
+<!-- completed meetings section :start  -->
+
+<div class="row d-none">
+    <div class="col-12">
+        <div class="card card-body shadow-sm p-3">
+
+            <!-- card header section :start  -->
+            <div class="row border-bottom no-gutters pb-2 mb-3">
+                <!-- <div class="col-6 ">
+                    <h6 class="f-600 pt-2">Completed</h6>
+                </div> -->
+
+            </div>
+            <!-- card header section :end  -->
+
+            <!-- card body section : start  -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Meeting</th>
+                            <th class="text-center" scope="col">Agenda Items</th>
+                            <th class="text-center" scope="col">Attendees</th>
+                            <th class="text-center" scope="col">Time</th>
+                            <th class="text-center" scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="border-bottom" *ngFor="let meeting1 of meetingsListcompleted">
+
+                            <td>
+                                <span  class="td-main-text">
+                                    {{meeting1?.MeetingName}}
+                                </span>
+                                <br>
+                                <span class="text-turncate td-secondary-text">
+                                    {{meeting1?.MeetingDescription}}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="td-main-text">
+                                    {{getapprovedcount(meeting1.AgendaItems)}}  approved
+                                    of {{meeting1?.AgendaItems.length}}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span  *ngFor="let j = index;let attendee of meeting1?.MeetingAttendees | slice:0:3">
+                                    <span class="td-attendee-more" *ngIf="!getStatus(attendee.Email)" [style.background-color]="colorsArray[0]">
+                                        {{getStatus(attendee.Email)?.displayName | uppercase}}
+                                    </span>
+                                    <span class="td-attendee" *ngIf="getStatus(attendee.Email)">
+                                        <img [src]="getStatus(attendee.Email)?.file" alt="" class="img-fluid">
+                                    </span>
+                                </span>
+                                <span class="td-attendee-more" *ngIf="meeting1?.MeetingAttendees.length > 4">
+                                    +{{meeting1?.MeetingAttendees.length - 3}}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class=" td-main-text" *ngIf="meeting1?.IsRecurring">
+                                    Every Day
+                                </span>
+                                <br>
+                                <span class=" td-main-text">
+                                    {{meeting1?.StartDate | date:'HH:mm'}}
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="td-main-text clr-four hover">
+                                    Meet Now
+                                </span>
+                                <br>
+                                <span class="td-action-icon mx-1">
+                                    <img src="../../../assets/images/edit-icon.svg" alt="" class="img-fluid">
+                                </span>
+                                <span class="td-action-icon mx-1">
+                                    <img src="../../../assets/images/AddNotes-icon.svg" alt="" class="img-fluid">
+                                </span>
+                                <span class="td-action-icon mx-1">
+                                    <img src="../../../assets/images/ViewNotes-icon.svg" alt="" class="img-fluid">
+                                </span>
+                                <span class="td-action-icon mx-1">
+                                    <img src="../../../assets/images/delete-icon.svg" alt="" class="img-fluid">
+                                </span>
+                            </td>
+
+
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- card body section : end  -->
+
+        </div>
+    </div>
+</div>
+
+<!-- completed meetings section :start  -->

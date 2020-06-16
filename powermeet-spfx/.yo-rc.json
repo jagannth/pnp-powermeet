@@ -1,0 +1,14 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.10.0",
+    "libraryName": "powermeet-spfx",
+    "libraryId": "f4a81ea7-a386-4e94-a233-f0370c28607a",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "powermeet-spfx",
+    "framework": "none",
+    "isCreatingSolution": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

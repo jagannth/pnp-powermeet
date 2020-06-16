@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "powermeet-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/powermeet/PowermeetWebPart.js",
+          "manifest": "./src/webparts/powermeet/PowermeetWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {
+    "jquery": {
+      "path": "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js",
+      "globalName": "jQuery"
+    },
+     "bootstrap": {
+      "path": "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css",
+      "globalName": "jQuery"
+    }
+  },
+  "localizedResources": {
+    "PowermeetWebPartStrings": "lib/webparts/powermeet/loc/{locale}.js"
+  }
+}
