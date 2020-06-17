@@ -727,6 +727,71 @@
         "webpack-sources": "1.3.0"
       }
     },
+    "@pnp/common": {
+      "version": "2.0.6",
+      "resolved": "https://registry.npmjs.org/@pnp/common/-/common-2.0.6.tgz",
+      "integrity": "sha512-/NghaEt1Q03+f1iAniRpxlciXmnTqvMFIdtjcA4HX80xVOtTiZT0Gz1GAjH7ebzBO1YtSiHri013/bhZM7beRQ==",
+      "requires": {
+        "tslib": "1.10.0"
+      },
+      "dependencies": {
+        "tslib": {
+          "version": "1.10.0",
+          "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz",
+          "integrity": "sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ=="
+        }
+      }
+    },
+    "@pnp/logging": {
+      "version": "2.0.6",
+      "resolved": "https://registry.npmjs.org/@pnp/logging/-/logging-2.0.6.tgz",
+      "integrity": "sha512-Jd63mqEarpuFsvy2EKNZpvsRHMaF1Ozo9/qHOZeKiSiZIvkNu4W41KgCD3BTS48saFY4870L5/gXzVo9Rkvqug==",
+      "requires": {
+        "tslib": "1.10.0"
+      },
+      "dependencies": {
+        "tslib": {
+          "version": "1.10.0",
+          "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz",
+          "integrity": "sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ=="
+        }
+      }
+    },
+    "@pnp/odata": {
+      "version": "2.0.6",
+      "resolved": "https://registry.npmjs.org/@pnp/odata/-/odata-2.0.6.tgz",
+      "integrity": "sha512-opU8Ifwmb/wbHtfmbBhsd2CzJhtAppNd7fbnW8dFOouCWa/udvsAc5NMuiT5sL8G9DDLQsnxZCxi83e5cao3aA==",
+      "requires": {
+        "@pnp/common": "2.0.6",
+        "@pnp/logging": "2.0.6",
+        "tslib": "1.10.0"
+      },
+      "dependencies": {
+        "tslib": {
+          "version": "1.10.0",
+          "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz",
+          "integrity": "sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ=="
+        }
+      }
+    },
+    "@pnp/sp": {
+      "version": "2.0.6",
+      "resolved": "https://registry.npmjs.org/@pnp/sp/-/sp-2.0.6.tgz",
+      "integrity": "sha512-AForkvQjGogym3z0bBS7XUZ7sNQDLuyE4CYAZBLUtsBS6BMr4r3QXpCSmFChgD6F8lG265Aw6IMnPzgiBDbQhQ==",
+      "requires": {
+        "@pnp/common": "2.0.6",
+        "@pnp/logging": "2.0.6",
+        "@pnp/odata": "2.0.6",
+        "tslib": "1.10.0"
+      },
+      "dependencies": {
+        "tslib": {
+          "version": "1.10.0",
+          "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz",
+          "integrity": "sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ=="
+        }
+      }
+    },
     "@schematics/angular": {
       "version": "7.3.10",
       "resolved": "https://registry.npmjs.org/@schematics/angular/-/angular-7.3.10.tgz",

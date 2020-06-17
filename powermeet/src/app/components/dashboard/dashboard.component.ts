@@ -77,6 +77,11 @@ export class DashboardComponent implements OnInit {
     // this.getGroupPlans();
     // this.postGroupTask();
     // this.getGroupTasks();
+
+    const val = sessionStorage.getItem('user');
+    if (!val) {
+      this.router.navigate(['/Login']);
+    }
     this.getGraphUsers();
     this.note = new Note();
     this.username = sessionStorage.getItem('user');

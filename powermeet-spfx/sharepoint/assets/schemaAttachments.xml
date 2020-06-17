@@ -1,0 +1,56 @@
+<List xmlns:ows="Microsoft SharePoint" Title="Attachments" EnableContentTypes="TRUE" FolderCreation="FALSE" Direction="$Resources:Direction;" Url="Attachments" BaseType="1" xmlns="http://schemas.microsoft.com/sharepoint/">
+ <MetaData>
+   <ContentTypes>    
+   </ContentTypes>
+   <Fields>
+      <Field 
+        ID="{c3a92d97-2b77-4a25-9698-3ab54874bc6f}" 
+        Name="Meeting"
+        Type="Lookup"        
+        Required="FALSE"        
+        StaticName="Meeting"
+        DisplayName="Meeting"
+        List="Lists/Meetings"
+        ShowField="LinkTitle" 
+        DisplaceOnUpgrade="TRUE" 
+        SourceID="http://schemas.microsoft.com/sharepoint/v3">
+      </Field>
+      <Field 
+        ID="{D4FF676B-480F-463E-9E75-469E42B6A3F2}" 
+        Name="Agenda"
+        Type="Lookup"        
+        Required="FALSE"        
+        StaticName="Agenda"
+        DisplayName="Agenda"
+        List="Lists/AgendaItems"
+        ShowField="LinkTitle" 
+        DisplaceOnUpgrade="TRUE" 
+        SourceID="http://schemas.microsoft.com/sharepoint/v3">
+      </Field>
+   </Fields>
+   <Views>
+     <View BaseViewID="1" Type="HTML" WebPartZoneID="Main" DisplayName="$Resources:core,objectiv_schema_mwsidcamlidC24;" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" SetupPath="pages\viewpage.aspx" ImageUrl="/_layouts/images/generic.png" Url="AllItems.aspx">
+       <XslLink Default="TRUE">main.xsl</XslLink>
+       <JSLink>clienttemplates.js</JSLink>
+       <RowLimit Paged="TRUE">30</RowLimit>
+       <Toolbar Type="Standard" />
+       <ViewFields>
+         <FieldRef Name="LinkFilename"></FieldRef>
+         <FieldRef Name="Meeting"></FieldRef>
+         <FieldRef Name="Agenda"></FieldRef>
+         <FieldRef Name="ID"></FieldRef>
+       </ViewFields>
+       <Query>
+         <OrderBy>
+           <FieldRef Name="ID" />
+         </OrderBy>
+       </Query>
+     </View>
+   </Views>
+   <Forms>
+     <Form Type="DisplayForm" Url="Forms/DispForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+     <Form Type="EditForm" Url="Forms/EditForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+     <Form Type="NewForm" Url="Forms/NewForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+   </Forms>
+ </MetaData>
+</List>

@@ -25,6 +25,7 @@ import { ChartsModule } from 'ng2-charts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MsalModule } from '@azure/msal-angular';
 import { DataService } from './services/data.service';
+import { SharePointDataServicesService } from './services/share-point-data-services.service';
 
 @NgModule({
   declarations: [
@@ -45,14 +46,10 @@ import { DataService } from './services/data.service';
     RouterModule,
     NgxSpinnerModule,
     MsalModule.forRoot({
-    clientID: OAuthSettings.appId,
-    // authority: "https://login.microsoftonline.com/84a9843b-0b29-4729-ba8a-8155cf55c7ae/oauth2/authorize",
-    // redirectUri: OAuthSettings.redirect_uri,
+    clientID: OAuthSettings.appId,    
     validateAuthority : true,
     cacheLocation : "sessionStorage",
-    storeAuthStateInCookie: false, // dynamically set to true when IE11
-   // postLogoutRedirectUri: "http://localhost:2400/",
-   // navigateToLoginRequestUrl : true,
+    storeAuthStateInCookie: false, // dynamically set to true when IE11   
     popUp: true,
     protectedResourceMap: [
       ['https://graph.microsoft.com/v1.0/me', ['user.read']]
