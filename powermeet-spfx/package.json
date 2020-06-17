@@ -23,7 +23,7 @@
     "@types/es6-promise": "0.0.33",
     "@types/webpack-env": "1.13.1",
     "bootstrap": "^4.5.0",
-    "jquery": "^2.2.4",
+    "jquery": "^3.5.0",
     "jqueryui": "^1.11.1",
     "powermeet": "file:../powermeet"
   },
