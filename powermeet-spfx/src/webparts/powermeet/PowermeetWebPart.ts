@@ -36,9 +36,10 @@ export default class PowermeetWebPart extends BaseClientSideWebPart<IPowermeetWe
   public async render(): Promise<void> {
 
     const tokenProvider = await this.context.aadTokenProviderFactory.getTokenProvider();
+    console.log('context', this.context.pageContext);
     const val = tokenProvider.getToken("https://graph.microsoft.com");
     val.then(res => {
-      this.domElement.innerHTML = `<app-powermeet-web-part description="${ res }"></app-powermeet-web-part>`;
+      this.domElement.innerHTML = `<app-powermeet-web-part description="${ res }" user="${this.context.pageContext.user.email}"></app-powermeet-web-part>`;
     })
     // this.domElement.innerHTML = `<button type="button" id="btnModel" class="btn btn-primary">Open Modal</button>
     // <div class="modal fade" id="myModal" role="dialog">
