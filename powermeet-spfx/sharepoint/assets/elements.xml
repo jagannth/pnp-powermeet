@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Elements
+	xmlns="http://schemas.microsoft.com/sharepoint/">
+	<Field ID="{D1562C59-7560-42B9-879D-D19443E42F26}" Name="MeetingID" DisplayName="Meeting ID" Type="Text" Required="TRUE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{01F0C01E-E32E-4D49-AC53-B4390403DBB3}" Name="MeetingDescription" DisplayName="Meeting Description" Type="Note" NumLines="5" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{A81CB859-F79B-4E5B-862E-987495679E6D}" Name="MeetingStatus" DisplayName="Meeting Status" Type="Boolean" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{466EE41F-3229-4472-BB3B-4E860D627C93}" Name="StartDateTime" DisplayName="Start DateTime" Type="DateTime" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{BD5774DA-DCFD-44D2-9A80-446021FB9C72}" Name="EndDateTime" DisplayName="End DateTime" Type="DateTime" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{B000DDEF-22D6-43CA-A18C-C092CC74F246}" Name="Organizer" DisplayName="Organizer" Type="User" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{D494BC5B-812F-4B2C-9B24-735824ED77E6}" Name="MeetingAttendees" DisplayName="Meeting Attendees" Type="UserMulti" Mult="TRUE" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{E9253E1E-81A3-4118-9D61-3B708A12F5AF}" Name="Time" DisplayName="Time" Type="Text" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{43097CCA-3257-4520-97B8-771735C08E5B}" Name="IsMeetingActive" DisplayName="Is Meeting Active" Type="Boolean" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{E4D2FAF4-F422-4892-86FE-46D677E530C6}" Name="IsRecurring" DisplayName="Is Recurring" Type="Boolean" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{18FC37A0-F478-40C0-BCC8-1C9321B7362F}" Name="IsGroup" DisplayName="Is Group" Type="Boolean" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{5CC38F52-F8D1-4D6C-9FBB-FBC9CBCEAAFF}" Name="GroupID" DisplayName="Group ID" Type="Text" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{58F2B3C2-D2F9-473E-9943-FD4065144895}" Name="AgendaDescription" DisplayName="Agenda Description" Type="Note" NumLines="5" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{656341CE-E911-416F-9857-A53CBEF361B5}" Name="AgendaAttendees" DisplayName="Agenda Attendees" Type="UserMulti" Mult="TRUE" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{F5E692F4-8533-4155-9346-BBC8E21EEDE6}" Name="AgendaAssignees" DisplayName="Agenda Assignees" Type="UserMulti" Mult="TRUE" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{F7D7A6E8-14B9-4300-B474-557FAABFA805}" Name="IsApproved" DisplayName="Is Approved" Type="Boolean" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{B14B6393-238E-4D59-B938-85796A1581A7}" Name="AgendaDuration" DisplayName="Agenda Duration" Type="Text" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{4BE971A8-85B8-4B9A-8242-0D0E9C7DBD71}" Name="AgendaItemStatus" DisplayName="Agenda Item Status" Type="Text" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{3EE9AC6F-5BC3-4CEA-BA86-EC7441035F19}" Name="NoteDescription" DisplayName="Note Description" Type="Note" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{7357F67C-90F2-4CA8-B10A-090500787B75}" Name="Type" DisplayName="Type" Type="Text" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{4A399EE8-D308-4FF4-AE39-E6B54B032D3A}" Name="AssignedDate" DisplayName="Assigned Date" Type="DateTime" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{A4DFE45C-CD1D-4348-BE3F-7A9C5706FFF0}" Name="NoteStatus" DisplayName="Note Status" Type="Text" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{C38B8E82-2C12-4F54-AB1F-B9E18346840B}" Name="UpdatedCount" DisplayName="Updated Count" Type="Number" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{A987D132-8E6B-4CB1-9164-E649D4C041DF}" Name="AssigneeName" DisplayName="Assignee Name" Type="User" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{BDF2A9B8-FA0D-46B6-B1DE-A929020B1C75}" Name="NotificationDateTime" DisplayName="Notification DateTime" Type="DateTime" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{25A79C8C-C3B9-463D-A729-830C86F903AA}" Name="NotificationStatus" DisplayName="Notification Status" Type="Text" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field ID="{FF36FB43-CDC5-446A-B82B-4CC874CB20C9}" Name="Active" DisplayName="Active" Type="Boolean" Required="FALSE" Group="SPFx-PowerMeet Columns" />
+	<Field Type="Lookup" ID="{4A2BEA85-7988-4E89-8240-0EFF1D226483}" Name="Meeting" StaticName="Meeting" DisplayName="Meeting" Required="FALSE" List="Lists/Meetings" ShowField="LinkTitle" UnlimitedLengthInDocumentLibrary="FALSE" SourceID="http://schemas.microsoft.com/sharepoint/v3/fields" Group="SPFx-PowerMeet Columns" />
+	<Field Type="Lookup" ID="{133684E4-D81C-4D2D-A7DF-E16E62D86D84}" Name="Agenda" StaticName="Agenda" DisplayName="Agenda" Required="FALSE" List="Lists/AgendaItems" ShowField="LinkTitle" UnlimitedLengthInDocumentLibrary="FALSE" SourceID="http://schemas.microsoft.com/sharepoint/v3/fields" Group="SPFx-PowerMeet Columns" />
+	<Field Type="Lookup" ID="{9676DA24-257D-486C-A7AD-57404ACDAF3C}" Name="Template" StaticName="Template" DisplayName="Template" Required="FALSE" List="Lists/Template" ShowField="LinkTitle" UnlimitedLengthInDocumentLibrary="FALSE" SourceID="http://schemas.microsoft.com/sharepoint/v3/fields" Group="SPFx-PowerMeet Columns" />
+	<ContentType ID="0x0100BCB391EA06DF42CE91B6D0EC83619718" Name="Meetings ContentType" Group="SPFx-PowerMeet Content Types" Description="Meetings content type from web part solution">
+		<FieldRefs>
+                        <FieldRef ID="{D1562C59-7560-42B9-879D-D19443E42F26}" />
+                        <FieldRef ID="{01F0C01E-E32E-4D49-AC53-B4390403DBB3}" />
+                        <FieldRef ID="{A81CB859-F79B-4E5B-862E-987495679E6D}" />
+			<FieldRef ID="{466EE41F-3229-4472-BB3B-4E860D627C93}" />
+			<FieldRef ID="{BD5774DA-DCFD-44D2-9A80-446021FB9C72}" />
+			<FieldRef ID="{B000DDEF-22D6-43CA-A18C-C092CC74F246}" />
+			<FieldRef ID="{D494BC5B-812F-4B2C-9B24-735824ED77E6}" />
+			<FieldRef ID="{E9253E1E-81A3-4118-9D61-3B708A12F5AF}" />
+			<FieldRef ID="{43097CCA-3257-4520-97B8-771735C08E5B}" />
+			<FieldRef ID="{E4D2FAF4-F422-4892-86FE-46D677E530C6}" />
+			<FieldRef ID="{18FC37A0-F478-40C0-BCC8-1C9321B7362F}" />
+			<FieldRef ID="{5CC38F52-F8D1-4D6C-9FBB-FBC9CBCEAAFF}" />
+		</FieldRefs>
+	</ContentType>
+        <ContentType ID="0x0100C365A5583D8D4D639B9D13CAB573FE9A" Name="AgendaItem ContentType" Group="SPFx-PowerMeet Content Types" Description="AgendaItem content type from web part solution">
+		<FieldRefs>
+			<FieldRef ID="{58F2B3C2-D2F9-473E-9943-FD4065144895}" />
+                        <FieldRef ID="{466EE41F-3229-4472-BB3B-4E860D627C93}" />
+			<FieldRef ID="{BD5774DA-DCFD-44D2-9A80-446021FB9C72}" />
+                        <FieldRef ID="{4A2BEA85-7988-4E89-8240-0EFF1D226483}" />
+			<FieldRef ID="{656341CE-E911-416F-9857-A53CBEF361B5}" />
+			<FieldRef ID="{F5E692F4-8533-4155-9346-BBC8E21EEDE6}" />
+			<FieldRef ID="{F7D7A6E8-14B9-4300-B474-557FAABFA805}" />
+			<FieldRef ID="{B14B6393-238E-4D59-B938-85796A1581A7}" />
+			<FieldRef ID="{4BE971A8-85B8-4B9A-8242-0D0E9C7DBD71}" />			                       
+		</FieldRefs>
+	</ContentType>
+	<ContentType ID="0x010073489AD7C7014D69B9DEE2CB6DFB2BED" Name="Meeting Notes ContentType" Group="SPFx-PowerMeet Content Types" Description="Meeting Notes content type from web part solution">
+		<FieldRefs>
+			<FieldRef ID="{53101f38-dd2e-458c-b245-0c236cc13d1a}" />
+			<FieldRef ID="{c1e86ea6-7603-493c-ab5d-db4bbfe8f96a}" />
+			<FieldRef ID="{3EE9AC6F-5BC3-4CEA-BA86-EC7441035F19}" />
+			<FieldRef ID="{7357F67C-90F2-4CA8-B10A-090500787B75}" />
+			<FieldRef ID="{4A399EE8-D308-4FF4-AE39-E6B54B032D3A}" />
+			<FieldRef ID="{A4DFE45C-CD1D-4348-BE3F-7A9C5706FFF0}" />
+			<FieldRef ID="{C38B8E82-2C12-4F54-AB1F-B9E18346840B}" />
+			<FieldRef ID="{133684E4-D81C-4D2D-A7DF-E16E62D86D84}" />                        
+		</FieldRefs>
+	</ContentType>
+	<ContentType ID="0x01004A2BEA8579884E8982400EFF1D226483" Name="Notifications ContentType" Group="SPFx-PowerMeet Content Types" Description="Notifications content type from web part solution">
+		<FieldRefs>
+			<FieldRef ID="{A987D132-8E6B-4CB1-9164-E649D4C041DF}" />
+			<FieldRef ID="{BDF2A9B8-FA0D-46B6-B1DE-A929020B1C75}" />
+			<FieldRef ID="{25A79C8C-C3B9-463D-A729-830C86F903AA}" />
+			<FieldRef ID="{FF36FB43-CDC5-446A-B82B-4CC874CB20C9}" />
+		</FieldRefs>
+	</ContentType>
+	<ContentType ID="0x0100133684E4D81C4D2DA7DFE16E62D86D84" Name="TemplateAgenda ContentType" Group="SPFx-PowerMeet Content Types" Description="TemplateAgenda content type from web part solution">
+		<FieldRefs>
+			<FieldRef ID="{133684E4-D81C-4D2D-A7DF-E16E62D86D84}" />
+			<FieldRef ID="{9676DA24-257D-486C-A7AD-57404ACDAF3C}" />
+		</FieldRefs>
+	</ContentType>
+	<ContentType ID="0x0101C66449F0FC9F4DB49BECAD9CC63CEBF1" Name="Attachments ContentType" Group="SPFx-PowerMeet Content Types" Description="Attachments content type from web part solution">
+		<FieldRefs>
+			<FieldRef ID="{4A2BEA85-7988-4E89-8240-0EFF1D226483}" />
+			<FieldRef ID="{133684E4-D81C-4D2D-A7DF-E16E62D86D84}" />
+		</FieldRefs>
+	</ContentType>        
+	<ListInstance CustomSchema="schemaMeeting.xml" FeatureId="00bfea71-de22-43b2-a848-c05709900100" Title="Meetings" Description="Meetings" TemplateType="100" Url="Lists/Meetings" />
+	<ListInstance CustomSchema="schemaAgendaItems.xml" FeatureId="00bfea71-de22-43b2-a848-c05709900100" Title="Agenda Items" Description="Agenda Items" TemplateType="100" Url="Lists/AgendaItems" />
+	<ListInstance CustomSchema="schemaNotes.xml" FeatureId="00bfea71-de22-43b2-a848-c05709900100" Title="Notes" Description="Notes" TemplateType="100" Url="Lists/Notes" />
+	<ListInstance CustomSchema="schemaNotifications.xml" FeatureId="00bfea71-de22-43b2-a848-c05709900100" Title="Notifications" Description="Notifications" TemplateType="100" Url="Lists/Notifications" />
+	<ListInstance CustomSchema="schemaAttachments.xml" FeatureId="00bfea71-e717-4e80-aa17-d0c71b360101" Title="Attachments" Description="Attachments" TemplateType="101" Url="Lists/Attachments" />        
+	<ListInstance CustomSchema="schemaTemplate.xml" FeatureId="00bfea71-de22-43b2-a848-c05709900100" Title="Template" Description="Template" TemplateType="100" Url="Lists/Template" />
+	<ListInstance CustomSchema="schemaTemplateAgenda.xml" FeatureId="00bfea71-de22-43b2-a848-c05709900100" Title="Template Agenda" Description="Template Agenda" TemplateType="100" Url="Lists/TemplateAgenda" />
+</Elements>

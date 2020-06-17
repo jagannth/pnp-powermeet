@@ -25,12 +25,12 @@ export class GraphService {
     });
   }
   async getEvents() {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     console.log('get event call',token);
     if(token){
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) {done(null, token);}
+          if (token) {done(null, token.accessToken);}
           else {done("Could not get an access token", null)}
         }
       });
@@ -45,12 +45,12 @@ export class GraphService {
     }
   }
   async getGroupEvents(Id) {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     console.log('get event call',token);
     if(token){
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) {done(null, token);}
+          if (token) {done(null, token.accessToken);}
           else {done("Could not get an access token", null)}
         }
       });
@@ -65,13 +65,11 @@ export class GraphService {
     }
   }
   async getUsers() {
-    console.log('userssssssssssssssssss');
-    let token = sessionStorage.getItem('authconfig');
-    console.log('tokennnnnn', token);
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if(token){
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) {done(null, token);}
+          if (token) {done(null, token.accessToken);}
           else {done("Could not get an access token", null)}
         }
       });
@@ -87,11 +85,11 @@ export class GraphService {
     }
   }
   getUserProfile(Id) {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if(token){
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) {done(null, token);}
+          if (token) {done(null, token.accessToken);}
           else {done("Could not get an access token", null)}
         }
       });
@@ -103,15 +101,15 @@ export class GraphService {
 
       return result;
     } catch (error) {
-      console.log('Could not get user profile', JSON.stringify(error, null, 2));
+      console.log('Could not get users', JSON.stringify(error, null, 2));
     }
   }
   getMyProfile() {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if(token){
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) {done(null, token);}
+          if (token) {done(null, token.accessToken);}
           else {done("Could not get an access token", null)}
         }
       });
@@ -127,11 +125,11 @@ export class GraphService {
     }
   }
   async getGroupUsers(Id) {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if (token) {
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) { done(null, token); }
+          if (token) { done(null, token.accessToken); }
           else { done("Could not get an access token", null) }
         }
       });
@@ -146,11 +144,11 @@ export class GraphService {
     }
   }
   async getGroupPlans() {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if (token) {
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) { done(null, token); }
+          if (token) { done(null, token.accessToken); }
           else { done("Could not get an access token", null) }
         }
       });
@@ -165,11 +163,11 @@ export class GraphService {
     }
   }
   async postGroupPlan(PlannerPlan) {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if (token) {
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) { done(null, token); }
+          if (token) { done(null, token.accessToken); }
           else { done("Could not get an access token", null) }
         }
       });
@@ -184,11 +182,11 @@ export class GraphService {
     }
   }
   async postGroupTask(PlannerTask) {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if (token) {
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) { done(null, token); }
+          if (token) { done(null, token.accessToken); }
           else { done("Could not get an access token", null) }
         }
       });
@@ -203,11 +201,11 @@ export class GraphService {
     }
   }
   async getGroupTasks(planId) {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if (token) {
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) { done(null, token); }
+          if (token) { done(null, token.accessToken); }
           else { done("Could not get an access token", null) }
         }
       });
@@ -224,11 +222,11 @@ export class GraphService {
 
   // send mail
   async sendMail(sendMail) {
-    let token = sessionStorage.getItem('authconfig');
+    let token = JSON.parse(sessionStorage.getItem('authconfig'));
     if (token) {
       this.graphClient = Client.init({
         authProvider: async (done) => {
-          if (token) { done(null, token); }
+          if (token) { done(null, token.accessToken); }
           else { done("Could not get an access token", null) }
         }
       });

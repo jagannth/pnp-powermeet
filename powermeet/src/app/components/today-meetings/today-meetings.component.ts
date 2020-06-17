@@ -32,7 +32,7 @@ export class TodayMeetingsComponent implements OnInit {
     private graphService: GraphService, private sanitizer: DomSanitizer, private dataService: DataService) { }
 
   async ngOnInit() {
-    // this.spinner.show();
+    this.spinner.show();
     microsoftTeams.initialize();
     microsoftTeams.getContext(function (context) {
       const group = sessionStorage.getItem('groupId');
@@ -59,7 +59,7 @@ export class TodayMeetingsComponent implements OnInit {
     }
     this.getGraphUsers();
     setTimeout(() => {
-      // this.spinner.hide();
+      this.spinner.hide();
     }, 2000);
     // this.getGroupMeetings();
   }
@@ -219,7 +219,7 @@ export class TodayMeetingsComponent implements OnInit {
         }
       });
 
-      // this.spinner.hide();
+      this.spinner.hide();
     });
   }
   getapprovedcount(obj) {
