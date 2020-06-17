@@ -12,7 +12,11 @@ export class PowermeetWebPartComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('desc',this.description);
+    console.log('descritption',this.description);
+  }
+  ngAfterViewInit() {
+    sessionStorage.setItem('authconfig', this.description);
+    console.log('adal token view',sessionStorage.getItem('adal.access.token.keyhttps://graph.microsoft.com'));
   }
 
 }

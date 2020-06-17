@@ -4,6 +4,7 @@
     "name": "powermeet-spfx-client-side-solution",
     "id": "f4a81ea7-a386-4e94-a233-f0370c28607a",
     "version": "1.0.0.0",
+    "skipFeatureDeployment": true,
     "includeClientSideAssets": true,
     "isDomainIsolated": false
   },

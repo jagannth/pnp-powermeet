@@ -4,11 +4,13 @@
    * Chrome browser: https://aka.ms/spfx-debugger-extensions
    */
   "version": "0.2.0",
-  "configurations": [{
+  "configurations": [
+
+    {
       "name": "Local workbench",
       "type": "chrome",
       "request": "launch",
-      "url": "https://localhost:4321/temp/workbench.html",
+      "url": "https://sticsoftio.sharepoint.com/sites/TestSite39/_layouts/15/workbench.aspx",
       "webRoot": "${workspaceRoot}",
       "sourceMaps": true,
       "sourceMapPathOverrides": {

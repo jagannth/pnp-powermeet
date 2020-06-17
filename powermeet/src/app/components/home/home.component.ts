@@ -14,9 +14,9 @@ export class HomeComponent implements OnInit {
   constructor(public spinner: NgxSpinnerService, private router: Router) { }
 
   ngOnInit(): void {
-    const val = sessionStorage.getItem('user');
-    if (!val) {
-      this.router.navigate(['/Login']);
-    }
+    // const val = sessionStorage.getItem('user');
+    // if (!val) {
+    //   this.router.navigate(['/Login']);
+    // }
   }
 }

@@ -12,14 +12,8 @@
     }
   },
   "externals": {
-    "jquery": {
-      "path": "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js",
-      "globalName": "jQuery"
-    },
-     "bootstrap": {
-      "path": "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css",
-      "globalName": "jQuery"
-    }
+    "jquery":"node_modules/jquery/dist/jquery.min.js",
+    "jqueryui":"node_modules/jqueryui/jquery-ui.min.js"
   },
   "localizedResources": {
     "PowermeetWebPartStrings": "lib/webparts/powermeet/loc/{locale}.js"
