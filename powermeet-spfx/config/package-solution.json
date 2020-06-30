@@ -6,6 +6,7 @@
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
+    "skipFeatureDeployment": true,
     "features": [{
       "title": "powermeet-spfx-client-side-solution",
       "description": "powermeet-spfx-client-side-solution",
@@ -26,12 +27,16 @@
         ]
       }
     }],
-    "webApiPermissionRequests": [  
-      {  
-        "resource": "Microsoft Graph",  
-        "scope": "Calendars.Read"  
-      }  
-    ]  
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Calendars.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Sites.ReadWrite.All"
+      }      
+    ] 
   },
   "paths": {
     "zippedPackage": "solution/powermeet-spfx.sppkg"

@@ -13,9 +13,7 @@ import { TodayMeetingsComponent } from './components/today-meetings/today-meetin
 import { MeetingDetailsComponent } from './components/meeting-details/meeting-details.component';
 import { PastMeetingsComponent } from './components/past-meetings/past-meetings.component';
 import { AgendaNotesComponent } from './components/agenda-notes/agenda-notes.component';
-import { ConfigComponent } from './components/config/config/config.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AdminComponent } from './components/config/admin/admin.component';
 import { SearchPipe } from './common/search.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -25,7 +23,6 @@ import { ChartsModule } from 'ng2-charts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MsalModule } from '@azure/msal-angular';
 import { DataService } from './services/data.service';
-import { SharePointDataServicesService } from './services/share-point-data-services.service';
 
 @NgModule({
   declarations: [
@@ -34,7 +31,7 @@ import { SharePointDataServicesService } from './services/share-point-data-servi
     HeaderComponent,
     NotificationsComponent,
     TodayMeetingsComponent,
-    MeetingDetailsComponent, PastMeetingsComponent, AgendaNotesComponent, ConfigComponent, DashboardComponent, AdminComponent, SearchPipe
+    MeetingDetailsComponent, PastMeetingsComponent, AgendaNotesComponent, DashboardComponent, SearchPipe
   ],
   imports: [
     BrowserModule,

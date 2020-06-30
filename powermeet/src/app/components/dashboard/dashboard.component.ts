@@ -15,6 +15,8 @@ import { Meeting } from 'src/app/models/Meeting';
 
 import { ChartType } from 'chart.js';
 import { MultiDataSet, Label } from 'ng2-charts';
+import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
+import { AgendaItems } from 'src/app/models/AgendaItem';
 declare var $: any;
 
 @Component({
@@ -46,17 +48,12 @@ export class DashboardComponent implements OnInit {
   public doughnutChartData: MultiDataSet = [];
   public doughnutChartType: ChartType = 'doughnut';
 
-  constructor(public spinner: NgxSpinnerService, private proxy: ProxyService, private dataService: DataService, private graphService: GraphService, private router: Router, private fb: FormBuilder) {
+  constructor(public spinner: NgxSpinnerService, private shrService: SharePointDataServicesService, private proxy: ProxyService, private dataService: DataService, private graphService: GraphService, private router: Router, private fb: FormBuilder) {
     this.dashBoard = new Array<Dashboard>();
     this.Meeting = new Array<Meeting>();
     this.doughnutChartData = [
-      [1, 3, 4, 0, 4, 2, 0],
-      [4, 5, 4, 2, 3, 2, 4],
-      [3, 2, 2, 1, 3, 2, 3],
-      [4, 3, 4, 2, 4, 2, 5],
-      [5, 5, 6, 0, 5, 2, 5],
-      [2, 6, 7, 3, 5, 2, 6],
-      [1, 2, 2, 5, 1, 2, 7],
+      [1, 1, 2, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0, 2, 0],
     ];
 
     this.meetingDashboard = new MeetingDashboard();
@@ -67,77 +64,120 @@ export class DashboardComponent implements OnInit {
       AssignedTo: '',
       AssignedDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
       DueDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+      NoteID: ''
     });
   }
-
   ngOnInit(): void {
-    this.spinner.show();
-    // sessionStorage.setItem('groupId', '120da134-9386-48f0-8aba-36fe0444a163');
-    // this.postGroupPlan();
-    // this.getGroupPlans();
-    // this.postGroupTask();
-    // this.getGroupTasks();
+    // this.getGraphUsers();
+    // this.note = new Note();
+    // this.username = sessionStorage.getItem('user');
+    // this.isGroup = sessionStorage.getItem('groupId');
+    // console.log('group id', this.isGroup);
+    // setTimeout(() => {
+    //   if (this.isGroup) this.getMeetingsDashboard('group', this.isGroup);
+    //   else this.getMeetingsDashboard(this.username, 0);
+    // }, 100);
+  }
+  changeFileInput(response) {
+    const file = response.target.files[0];
+    this.shrService.UploadAttachments(sessionStorage.getItem('groupId'), file, file.name, 1, 1).then(res => {
+      console.log('file upload response', res);
+    })
+  }
+  clear() {
+    this.dashBoard = new Array<Dashboard>();
+    this.Meeting = new Array<Meeting>();
+    this.doughnutChartData = [
+      [1, 1, 2, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0, 2, 0],
+    ];
 
-    const val = sessionStorage.getItem('user');
-    if (!val) {
-      this.router.navigate(['/Login']);
-    }
-    this.getGraphUsers();
-    this.note = new Note();
-    this.username = sessionStorage.getItem('user');
-    // this.getDashboard();
-    // if (sessionStorage.getItem('groupId')) {
-    //   this.getGroupUser(sessionStorage.getItem('groupId'));
-    // }
-    this.isGroup = sessionStorage.getItem('groupId');
-    console.log('group id', this.isGroup);
-    setTimeout(() => {
-      if (this.isGroup) this.getMeetingsDashboard('group', this.isGroup);
-      else this.getMeetingsDashboard(this.username, 0);
-    }, 100);
+    this.meetingDashboard = new MeetingDashboard();
+    this.noteForm = this.fb.group({
+      Description: '',
+      Type: '',
+      Status: '',
+      AssignedTo: '',
+      AssignedDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+      DueDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+      NoteID: ''
+    });
   }
   isGroup: string;
   getMeetingsDashboard(Id, groupId) {
-    this.proxy.Get('meetings/dashboard/' + Id + '/' + groupId).subscribe(res => {
-      this.Meeting = res.Data.Meetings;
-      console.log('meetings', this.Meeting);
-      for (let i = 0; i < this.Meeting.length; i++) {
-        if (this.Meeting[i].MeetingName != 'External Items') {
-          if (this.Meeting[i].AgendaItems.length == 0) {
-            this.Meeting.splice(i, 1);
+    this.spinner.show();
+    this.shrService.getMeetings(sessionStorage.getItem('groupId')).then((res) => {
+      console.log('meetings response', res);
+      res.forEach(x => {
+        const meeting = new Meeting();
+        meeting.MeetingID = x.fields.id;
+        meeting.MeetingName = x.fields.Title;
+        meeting.MeetingDescription = x.fields.MeetingDescription;
+        meeting.StartDate = x.fields.StartDateTime;
+        this.shrService.getAgendaItems(sessionStorage.getItem('groupId'), parseInt(meeting.MeetingID)).then(res => {
+          console.log('agenda items res', res);
+          res.forEach(y => {
+            const agenda = new AgendaItems();
+            agenda.AgendaName = y.fields.Title;
+            agenda.AgendaDescription = y.fields.AgendaDescription;
+            agenda.Duration = y.fields.AgendaDuration;
+            agenda.StartTime = y.fields.EndDateTime;
+            agenda.EndTime = y.fields.StartDateTime;
+            agenda.AgendaID = y.fields.id;
+            agenda.MeetingID = y.fields.MeetingLookupId;
+            agenda.Status = y.fields.AgendaItemStatus;
+            agenda.IsApproved = y.fields.IsApproved;
+            this.shrService.getNotes(sessionStorage.getItem('groupId'), parseInt(agenda.AgendaID)).then(res => {
+              console.log('get notes by agenda id', res);
+              res.forEach(z => {
+                const note = new Note();
+                note.AgendaID = agenda.AgendaID;
+                note.NoteID = z.fields.id;
+                note.Description = z.fields.NoteDescription;
+                note.Status = z.fields.NoteStatus;
+                note.Type = z.fields.Type;
+                note.AssignedTo = z.fields.CustomAssignedTo;
+                note.AssignedDate = z.fields.AssignedDate;
+                note.DueDate = z.fields.CustomDueDate;
+                agenda.Notes.push(note);
+              });
+            });
+            meeting.AgendaItems.push(agenda);
+          });
+        });
+        this.Meeting.push(meeting);
+      });
+      const met = new Meeting();
+      met.MeetingName = "External";
+      met.AgendaItems.push(new AgendaItems());
+      this.shrService.getExternalNotes(sessionStorage.getItem('groupId')).then(res => {
+        console.log('external notes', res);
+        res.forEach(z => {
+          if (z.fields.Title == "External") {
+            const note = new Note();
+            note.NoteID = z.fields.id;
+            note.Description = z.fields.NoteDescription;
+            note.Status = z.fields.NoteStatus;
+            note.Type = z.fields.Type;
+            note.AssignedTo = z.fields.CustomAssignedTo;
+            note.AssignedDate = z.fields.AssignedDate;
+            note.DueDate = z.fields.CustomDueDate;
+            met.AgendaItems[0].Notes.push(note);
           }
-        }
-      }
 
-      // var array = [];
-      // this.Meeting.forEach((x, index) => {
-      //   if (x.MeetingName != 'External Items') {
-      //     if (x.AgendaItems.length == 0) {
-      //       array.push(x.MeetingName);
-      //       // this.Meeting.splice(index,1);
-      //       // return;
-      //     } else {
-      //       x.AgendaItems.forEach(y => {
-      //         if (y.Notes.length == 0) {
-      //           // this.Meeting.splice(index,1);
-      //           array.push(x.MeetingName);
-      //           // return;
-      //         }
-      //       });
-      //     }
-      //   }
-      // });
-      // console.log('array', array);
-      // array.forEach(x => {
-      //   this.Meeting.splice(this.Meeting.findIndex(y => y.MeetingName == x), 1);
-      // });
-      sessionStorage.setItem('orgMeeting', JSON.stringify(this.Meeting));
-      this.Meeting = this.usermeet();
-      this.spinner.hide();
+        });
+      })
+      this.Meeting.push(met);
       setTimeout(() => {
-        this.donaughtChart('u');
-      }, 2000);
+        sessionStorage.setItem('orgMeeting', JSON.stringify(this.Meeting));
+        this.Meeting = this.usermeet();
+        this.spinner.hide();
+        setTimeout(() => {
+          this.donaughtChart('u');
+        }, 2000);
+      }, 4000);
     });
+    this.spinner.hide();
 
   }
   usermeet() {
@@ -296,6 +336,7 @@ export class DashboardComponent implements OnInit {
         AssignedTo: '',
         AssignedDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
         DueDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+        NoteID: ''
       });
     } else {
       this.note = val;
@@ -305,29 +346,49 @@ export class DashboardComponent implements OnInit {
         Status: this.note.Status,
         AssignedTo: this.note.AssignedTo,
         AssignedDate: formatDate(this.note.AssignedDate, 'yyyy-MM-dd', 'en'),
-        DueDate: formatDate(this.note.DueDate, 'yyyy-MM-dd', 'en')
+        DueDate: formatDate(this.note.DueDate, 'yyyy-MM-dd', 'en'),
+        NoteID: this.note.NoteID
       })
     }
   }
   saveChanges() {
-    this.note.Description = this.noteForm.value.Description;
-    this.note.Type = this.noteForm.value.Type;
-    this.note.Status = this.noteForm.value.Status;
-    this.note.AssignedDate = this.noteForm.value.AssignedDate;
-    this.note.DueDate = this.noteForm.value.DueDate;
-    this.note.GroupID = sessionStorage.getItem('groupId');;
-    this.note.AssignedTo = this.noteForm.value.AssignedTo;
-    this.note.NoteAudit.UpdatedCount += 1;
-    this.note.NoteAudit.LastUpdatedDate = new Date();
-    this.note.NoteAudit.LastUpdatedBy = this.username;
-    this.spinner.show();
-    console.log(';this.note', this.note);
-    this.proxy.Post('meetings/notes', this.note).subscribe(res => {
-      console.log('post note res', res);
-      this.note = new Note();
-      if (this.isGroup) this.getMeetingsDashboard('group', this.isGroup);
-      else this.getMeetingsDashboard(this.username, 0);
-    });
+    console.log('id', this.noteForm.value.NoteID);
+    const inx = this.Meeting.findIndex(x => x.MeetingName == "External");
+    if (this.noteForm.value.NoteID == '') {
+      const listItem = {
+        "fields": {
+          "Title": "External",
+          "NoteDescription": this.noteForm.value.Description,
+          "Type": this.noteForm.value.Type,
+          "AssignedDate": this.noteForm.value.AssignedDate,
+          "NoteStatus": this.noteForm.value.Status,
+          "CustomDueDate": this.noteForm.value.DueDate,
+          "CustomAssignedTo": this.noteForm.value.AssignedTo
+        }
+      };
+      this.shrService.postNote(sessionStorage.getItem('groupId'), listItem).then(res => {
+        console.log('post notes response', res);
+        this.clear();
+        this.getMeetingsDashboard('group', this.isGroup);
+      });
+    } else {
+      const listItem = {
+        "fields": {
+          "NoteDescription": this.noteForm.value.Description,
+          "Type": this.noteForm.value.Type,
+          "AssignedDate": this.noteForm.value.AssignedDate,
+          "NoteStatus": this.noteForm.value.Status,
+          "CustomDueDate": this.noteForm.value.DueDate,
+          "CustomAssignedTo": this.noteForm.value.AssignedTo
+        }
+      };
+      this.shrService.putNote(sessionStorage.getItem('groupId'), listItem, this.noteForm.value.NoteID).then(res => {
+        console.log('post notes response', res);
+        this.clear();
+        this.getMeetingsDashboard('group', this.isGroup);
+      });
+    }
+
   }
   toggle: number = 0;
   btnToggle: string = 'outline-primary'
@@ -443,23 +504,10 @@ export class DashboardComponent implements OnInit {
     const completed = parseInt(document.getElementById('completed-' + id).innerText);
     const total1 = risk + action + decision;
     const total2 = planned + inpro + close + completed;
-    // this.doughnutChartData = [
-    //   [risk, 0, 0, 0, 0, 0, 0, total1 - risk],
-    //   [0, 0, decision, 0, 0, 0, 0, total1 - decision],
-    //   [0, action, 0, 0, 0, 0, 0, total1 - action],
-    //   [0, 0, 0, planned, 0, 0, 0, total2 - planned],
-    //   [0, 0, 0, 0, inpro, 0, 0, total2 - inpro],
-    //   [0, 0, 0, 0, 0, close, 0, total2 - close],
-    //   [0, 0, 0, 0, 0, 0, completed, total2 - completed],
-    // ];
+    // [risk, action, decision, 0, 0, 0, 0, total1 - risk],
     this.doughnutChartData = [
-      [1, 3, 4, 0, 4, 2, 0],
-      [4, 5, 4, 2, 3, 2, 4],
-      [3, 2, 2, 1, 3, 2, 3],
-      [4, 3, 4, 2, 4, 2, 5],
-      [5, 5, 6, 0, 5, 2, 5],
-      [2, 6, 7, 3, 5, 2, 6],
-      [1, 2, 2, 5, 1, 2, 7],
+      [risk, action, decision, 0, 0, 0, 0, 0],
+      [0, 0, 0, planned, inpro, completed, 0, 0]
     ];
   }
   test: string = "working fine";

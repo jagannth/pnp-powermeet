@@ -205,10 +205,9 @@
                                             </td>
 
                                             <td class="text-center">
-                                                <span class="td-main-text" (click)="startTimer(i,agendaitem.Duration)"
-                                                    *ngIf="!(i == colorInx)">{{agendaitem.Duration}}</span>
-                                                <span class="td-main-text  text-success" *ngIf="i == colorInx"><i
-                                                        class="fas fa-clock">{{timeLeft}}</i></span>
+                                                <span class="td-main-text">{{agendaitem.Duration}}</span>
+                                                <!-- <span class="td-main-text  text-success" *ngIf="i == colorInx"><i
+                                                        class="fas fa-clock">{{timeLeft}}</i></span> -->
                                             </td>
 
 
@@ -216,14 +215,15 @@
 
                                                 <span data-toggle="modal" (click)="editagenda(agendaitem)"
                                                     data-target="#Addagenda" class="td-action-icon mx-1">
-                                                    <img src="../../../assets/images/edit-icon.svg" alt=""
-                                                        class="img-fluid">
+                                                   <i class="fas fa-edit"></i>
                                                 </span>
 
                                                 <span data-toggle="modal" (click)="deleteagenda(agendaitem)"
                                                     data-target="#delete" class="td-action-icon mx-1">
-                                                    <img src="../../../assets/images/delete-icon.svg" alt=""
-                                                        class="img-fluid">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                                <span class="td-action-icon mx-1" [routerLink]="['/Notes']" [queryParams]="{ Id:MeetingID,'start': 'false'}">
+                                                    <i class="fa fa-plus-square-o"></i>
                                                 </span>
 
                                                 <!-- Delete Agenda Item Modal :start-->
@@ -268,7 +268,7 @@
                                 </div>
                                 <div class="input-content">
                                     <input type="text" name="" id="" class="form-control input-agenda"
-                                        [(ngModel)]="agendaName" placeholder="Add item" (keyup.enter)="saveAgenda(1)">
+                                        [(ngModel)]="agendaName" placeholder="Add quick agenda" (keyup.enter)="saveAgenda(1)">
                                     <button class="send-icon send_button" (click)="saveAgenda(1)">
                                         <img src="{{imgUrl}}" style="color: blue;" alt="" class="img-fluid">
                                     </button>
@@ -291,17 +291,16 @@
                                             <div class="row ">
                                                 <div class="form-group col-12 mb-2">
 
-                                                    <div *ngIf="displayform">
+                                                    <div>
                                                         <input id="agenda-title" class="form-control"
                                                             [(ngModel)]="AgendaItem.AgendaName"
-                                                            placeholder="Agenda title" type="text" name=""
-                                                            (blur)="hiding()">
+                                                            placeholder="Agenda title" type="text" name="">
                                                     </div>
-                                                    <div class="m-1" *ngIf="displayName"
+                                                    <!-- <div class="m-1" *ngIf="displayName"
                                                         (click)="displayform = true; displayName = false;">
                                                         <h4>{{AgendaItem.AgendaName}}</h4>
-                                                    </div>
-                                                    <div *ngIf="agendatitle">
+                                                    </div> -->
+                                                    <!-- <div *ngIf="agendatitle">
                                                         <h6 class="agenda-title-plain-text">
                                                             {{title}}
                                                             <span (click)="generateform()" class="td-action-icon mx-1">
@@ -309,14 +308,14 @@
                                                                     class="img-fluid">
                                                             </span>
                                                         </h6>
-                                                    </div>
+                                                    </div> -->
 
 
                                                 </div>
 
                                                 <div class="form-group col-12">
                                                     <label for="agenda-description">Agenda Description</label>
-                                                    <textarea id="agenda-description"
+                                                    <textarea id="agenda-description" rows="6"
                                                         [(ngModel)]="AgendaItem.AgendaDescription"
                                                         placeholder="Tell more about this agenda" class="form-control"
                                                         type="text" name="">{{AgendaItem.AgendaDescription}}</textarea>
@@ -340,10 +339,7 @@
                                                     style="padding-left: 20px;">
                                                     <div class=" " data-toggle="dropdown" aria-haspopup="true"
                                                         aria-expanded="false">
-                                                        <label for=""> <span class="td-attendee-add" style="padding: 0.5rem 0.8rem !important;
-                                                            margin-left: -0.8rem!important;">
-                                                                <i class="fas fa-user"></i>
-                                                            </span>Presenter</label>
+                                                        <label for="">Presenter&nbsp; &nbsp;<i class="fas fa-plus"></i></label>
                                                     </div>
                                                     <div class="dropdown-menu dd">
                                                         <div class="form-group px-2 mb-0">
@@ -394,10 +390,7 @@
                                                 <div class="form-group col-md-5 dropdown dropright attendee-parent">
                                                     <div class=" " data-toggle="dropdown" aria-haspopup="true"
                                                         aria-expanded="false">
-                                                        <label for=""> <span class="td-attendee-add" style="padding: 0.5rem 0.8rem !important;
-                                                            margin-left: -0.8rem!important;">
-                                                                <i class="fas fa-user"></i>
-                                                            </span>Targeted Audience</label>
+                                                        <label for="">Targeted Audience&nbsp; &nbsp;<i class="fas fa-plus"></i></label>
                                                     </div>
                                                     <div class="dropdown-menu dd">
                                                         <div class="form-group px-2 mb-0">
@@ -460,7 +453,7 @@
                                             </p>
                                         </div> -->
 
-                                                <div class="form-group col-md-12 d-flex justify-content-start">
+                                                <!-- <div class="form-group col-md-12 d-flex justify-content-start">
                                                     <div class="cust-input-container ">
                                                         <label class="d-block" for="input-file">Attatchments</label>
                                                         <input type="file" name="" id="input-file"
@@ -530,7 +523,7 @@
                                                         {{uploadedFilePath}}
                                                     </div>
 
-                                                </div>
+                                                </div> -->
 
 
                                             </div>
@@ -608,14 +601,13 @@
                                         <div class="temp-card-container">
 
                                             <div class="temp-card blank-temp">
-                                                <img src="../../../assets/images/plus-icon.svg" alt="" class="img-fluid"
-                                                    (click)="Shownewtemplate(true)">
+                                                <!-- <img src="../../../assets/images/plus-icon.svg" alt="" class="img-fluid"> -->
+                                                <i class="fas fa-plus tempp" (click)="Shownewtemplate(true)"></i>
                                                 <p class="">New</p>
                                             </div>
                                             <div class="temp-card" (click)="getTemplateDetails(template)"
                                                 *ngFor="let template of TemplateArray">
-                                                <img src="../../../assets/images/templetes/Templete (2).png" alt=""
-                                                    class="img-fluid">
+                                                <i class="fa fa-file tempp"></i>
                                                 <p>{{template.Name}}</p>
                                             </div>
                                         </div>
@@ -650,7 +642,7 @@
                                         <div class="d-flex justify-content-between pb-2 mb-3 border-bottom">
                                             <div class="">
                                                 <input type="text" name="" id="" class="form-control input-agenda"
-                                                    [(ngModel)]="templatenamengmodel" placeholder="template name">
+                                                    [(ngModel)]="templatenamengmodel" placeholder="Template Name">
                                             </div>
                                         </div>
                                         <div class="temp-preview" *ngFor="let item of tempAgenda; let i = index">

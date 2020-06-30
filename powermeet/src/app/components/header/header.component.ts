@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +14,7 @@ export class HeaderComponent implements OnInit {
   isWeb: boolean = true;
   @Input('value') notifLnt: number;
 
-  constructor(private authService: AuthService) { }
+  constructor() { }
 
   ngOnInit(): void {
     // let token = JSON.parse(sessionStorage.getItem('authconfig'));
@@ -31,6 +30,5 @@ export class HeaderComponent implements OnInit {
   }
 
   signOut(): void {
-    this.authService.signOut();
   }
 }

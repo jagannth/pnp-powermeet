@@ -40,12 +40,10 @@ a[aria-expanded="true"]>i {
 }
 
 .temp-card {
-  width: 8rem;
-  height: 9rem;
-  margin: 0.5rem;
+  width: 4rem;
+  height: 4rem;
   border: 1px solid #ddd;
   border-radius: 0.25rem;
-  margin-bottom: 2.5rem;
   cursor: pointer;
 }
 
@@ -59,7 +57,10 @@ a[aria-expanded="true"]>i {
 .temp-card.active {
   border: 2px solid #00A3FF;
 }
-
+.tempp{
+  font-size: 1rem;
+  padding: 1.5rem;
+}
 .blank-temp {
   background: #f1f1f1;
 }
@@ -440,5 +441,11 @@ padding: 1.5rem;
 border: 2px dotted #ddd;
 border-radius: 0.25rem;
 cursor: pointer;
+}
+.bdr{
+  border-radius: 50%;
+}
+.sz{
+  font-size: 18px;
 }
 

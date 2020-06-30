@@ -1,3 +1,6 @@
+<ngx-spinner bdColor="rgba(0,0,0,0.4)" size="medium" color="#fff" type="ball-spin-fade" [fullScreen]="true">
+    <p style="color: white"> Loading... </p>
+</ngx-spinner>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -5,8 +8,8 @@
 
                 <div class="px-3 pt-3">
                     <!-- card header section :start  -->
-                    <div class="d-flex justify-content-between">
-                        <div class="">
+                    <div class="row">
+                        <div class="col-2">
                             <h6 class="f-600 pt-2">
                                 <span class="mr-2 hover" routerLink="/Home"><i class="fas fa-arrow-left"></i></span>
                                 {{meetingObject?.MeetingName}}</h6>
@@ -14,17 +17,19 @@
                             <!-- <countdown [config]="{leftTime: 30}"></countdown> -->
 
                         </div>
-                        <div>
+                        <!-- <div>
                             <h6 class="text-danger pt-2" style="cursor: pointer;" (click)="startMeeting(0)">
-                                {{timer.status}}
+                               Status: {{timer.status}}
                                 <span style="margin-left: 5rem;" *ngIf="stopObject.status"><i
                                         class="fas fa-stopwatch text-danger">{{stopObject.hour}} : {{stopObject.minute}}
                                         : {{stopObject.second}}</i></span></h6>
+                        </div> -->
+                        <div class="col-2">
+                            <h6 class="pt-2">Start Time: {{meetingObject.StartDate | date:'h:mm a'}}</h6>
+                            <h6 class="pt-2">Duration: {{diffTimes(meetingObject.StartDate, meetingObject.EndDate)}}
+                            </h6>
                         </div>
-                        <div>
-                            <button class="btn btn-outline-primary" (click)="getAllNotes()" data-toggle="modal"
-                                data-target="#generateNotes">Generate
-                                Meeting Notes</button>
+                        <div class="col-4 mb-2 text-right">
                             <span class="pl-4" *ngFor="let mattendee of meetingObject?.MeetingAttendees;let i = index">
                                 <span class="td-attendee-more" style="margin-right: 2rem;"
                                     *ngIf="!getStatus(mattendee?.Email)?.status"
@@ -35,6 +40,18 @@
                                     <img [src]="getStatus(mattendee?.Email)?.file" alt="" class="img-fluid">
                                 </span>
                             </span>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button class="btn btn-outline-primary mb-2 mr-2" *ngIf="meetingObject?.AgendaItems.length != 0" [disabled]="timer.status == 'In Progress'"
+                                (click)="startMeeting(0)">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <button class="btn btn-outline-primary mb-2 mr-2" data-toggle="modal" data-target="#noteEdit" *ngIf="meetingObject?.AgendaItems.length == 0">
+                                Add Notes/Summary
+                            </button>
+                            <button class="btn btn-outline-primary mb-2" (click)="getAllNotes()" data-toggle="modal" data-backdrop="static"
+                                data-target="#generateNotes">Generate
+                                Meeting Notes</button>
                         </div>
                         <!-- <div class="">
                             <h6 class="pt-2">
@@ -64,48 +81,73 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-5 pr-0">
+        <div class="col-md-5 pr-0" *ngIf="meetingObject?.AgendaItems.length != 0">
             <div class="card card-body shadow-sm p-0">
                 <h6 class="p-4 border-bottom">Agenda Items</h6>
                 <div class="table-responsive" style="height:32rem">
                     <table class="table table-hover agenda-items">
                         <tbody>
+                            <tr class="border-bottom">
+                                <td>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <span class="text-primary">
+                                                Presenter
+                                            </span>
+                                        </div>
+                                        <div class="col-8 pl-0"> <span class="text-primary">
+                                                Item
+                                            </span></div>
+                                    </div>
+                                </td>
+                                <!-- <td class="text-center"><span class="text-primary">Start Time</span></td>
+                                <td class="text-center"><span class="text-primary">End Time</span></td> -->
+                                <td class="text-center"><span class="text-primary">Duration</span></td>
+                                <td class="text-right"><span class="text-primary">Allocated time</span></td>
+
+                            </tr>
                             <tr class="border-bottom" *ngFor="let agenda of meetingObject?.AgendaItems;let i = index"
-                                [style.background-color]="agenda.Color"
-                                [style.background-image]="i == colorInx?progressColor: ''">
+                                [style.background-image]="agenda.Color">
                                 <td class="pl-4" (click)="getNotes(i)">
                                     <div class="row">
-                                        <div class="col-2">
-                                            <span class="td-attendee-more"
+                                        <div class="col-3">
+                                            <span class="td-attendee-more1"
                                                 *ngIf="!getStatus(agenda.AgendaAssignees?.Email)?.status"
                                                 [style.background-color]="colorsArray[0]">
                                                 {{getStatus(agenda.AgendaAssignees?.Email)?.displayName | uppercase}}
                                             </span>
-                                            <span class="td-attendee" *ngIf="getStatus(agenda.AgendaAssignees?.Email)">
+                                            <span class="td-attendee1" *ngIf="getStatus(agenda.AgendaAssignees?.Email)">
                                                 <img [src]="getStatus(agenda.AgendaAssignees?.Email)?.file" alt=""
                                                     class="img-fluid">
                                             </span>
                                         </div>
-                                        <div class="col-10 pl-0"><span>{{agenda?.AgendaName}}</span></div>
+                                        <div class="col-9 pl-0"><span>{{agenda?.AgendaName}}</span></div>
                                     </div>
                                 </td>
+                                <!-- <td class="text-center">{{agenda?.StartTime | date:'h:mm a'}}</td>
+                                <td class="text-center">{{agenda?.EndTime | date:'h:mm a'}}</td> -->
+                                <td class="text-center">{{diffTimes(agenda?.StartTime,agenda?.EndTime)}}</td>
                                 <td class="float-right text-danger px-0 pr-2" style="font-size:9px;">
-                                    {{agenda?.Duration}}</td>
+                                    <div> {{agenda?.Duration}}</div>
+                                    <button class="btn btn-outline-success px-2 bdr"
+                                        [disabled]="timer.status != 'In Progress'" (click)="startMeeting(1)"><i
+                                            class="fa fa-check-circle sz"></i></button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="col-md-7 pl-1">
+        <div class="col-md-{{meetingObject?.AgendaItems.length == 0?12:7}} pl-1">
             <div class="card card-body shadow-sm p-0" style="height:37rem">
-                <div class="row border-bottom">
-                    <div class="col-md-8 pl-4">
+                <div class="row" *ngIf="meetingObject?.AgendaItems.length != 0">
+                    <div class="col-md-8 pl-4" id="agenda-desc">
                         <h6 class="py-2">{{meetingObject?.AgendaItems[agendaInx]?.AgendaName}}</h6>
-                        <p>Agenda Description: {{meetingObject?.AgendaItems[agendaInx]?.AgendaDescription}}</p>
+                        <p >Agenda Description: {{meetingObject?.AgendaItems[agendaInx]?.AgendaDescription}}</p>
                     </div>
-                    <div class="col-md-4 px-4 mt-2 text-right">
-                        <button class="btn btn-outline-primary" (click)="startMeeting(1)">Mark as complete</button>
+                    <div class="col-md-4 px-4 mt-2 text-right" id="agenda-att">
+                        <!-- <button class="btn btn-outline-primary">Mark as complete</button> -->
                         <div class="pr-3 py-1">
                             <span class="pl-2"
                                 *ngFor="let attendee of meetingObject?.AgendaItems[agendaInx]?.AgendaAttendees;let i = index">
@@ -120,75 +162,95 @@
                         </div>
                     </div>
                 </div>
-                <div class="m-2">
+                <h6 class="pl-4 pt-2">{{noteTxt}}</h6>
+                <div class="m-2" id="noteList">
                     <nav>
+                        <div class="float-right mr-2">
+                            <button class="btn btn-primary"  *ngIf="meetingObject?.AgendaItems.length != 0" (click)="addNoteBt()"><i class="fa fa-plus">&nbsp;Add
+                                    Note</i></button>
+                        </div>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home"
                                 role="tab" aria-controls="nav-home" aria-selected="true">Notes</a>
-                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                                role="tab" aria-controls="nav-profile" aria-selected="false">Attachment</a>
+
                         </div>
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
                             aria-labelledby="nav-home-tab">
                             <div class="p-4" style="overflow-y: scroll" [style.height]="collpsHeight">
-                                <div class="m-2" *ngFor="let note of notesArray;let j=index">
+                                <div class="row border-bottom">
+                                    <div class="col-1"></div>
+                                    <div class="col-5">Note</div>
+                                    <div class="col-1">Type</div>
+                                    <div class="col-2">Status</div>
+                                    <div class="col-1">Assigned Date</div>
+                                    <div class="col-1">Due Date</div>
+                                    <div class="col-1">Actions</div>
+                                </div>
+                                <div *ngFor="let note of notesArray;let j=index">
                                     <div class="row">
-                                        <div class="col-2 pr-0">
-                                            <span class="td-attendee-more" *ngIf="!getStatus(note.CreatedBy)?.status"
+                                        <div class="col-1 pr-0">
+                                            <span class="td-attendee1-more" *ngIf="!getStatus(note.CreatedBy)?.status"
                                                 [style.background-color]="colorsArray[0]">
                                                 {{getStatus(note.CreatedBy)?.displayName | uppercase}}
                                             </span>
-                                            <span class="td-attendee" *ngIf="getStatus(note.CreatedBy)">
+                                            <span class="td-attendee1" *ngIf="getStatus(note.CreatedBy)">
                                                 <img [src]="getStatus(note.CreatedBy)?.file" alt="" class="img-fluid">
                                             </span>
                                         </div>
-                                        <div class="col-10">
+                                        <div class="col-5 p-0">
 
                                             <span>
                                                 {{note.Description}}
                                             </span>
                                         </div>
+                                        <div class="col-1 p-0">
+                                            <span>
+                                                {{note.Type}}
+                                            </span>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <span>
+                                                {{note.Status}}
+                                            </span>
+                                        </div>
+                                        <div class="col-1 p-0">
+                                            <span>
+                                                {{note.AssignedDate | date:'shortDate'}}
+                                            </span>
+                                        </div>
+                                        <div class="col-1 p-0">
+                                            <span>
+                                                {{note.DueDate | date:'shortDate'}}
+                                            </span>
+                                        </div>
+                                        <div class="col-1">
+                                            <i class="fas fa-edit sz pr-2" (click)="editNote(note)" data-toggle="modal" data-target="#noteEdit" *ngIf="meetingObject?.AgendaItems.length == 0"></i>
+                                            <i class="fas fa-edit sz pr-2" (click)="editNote(note)" *ngIf="meetingObject?.AgendaItems.length != 0"></i>
+                                            <i class="fa fa-trash sz text-danger" (click)="deleteNote(note)"></i>
+                                        </div>
+                                        <!-- <div class="col-1">
+                                            <button class="btn btn-danger bdr px-2" ></button>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            attachments</div>
                     </div>
                 </div>
-                <div class="agenda-footer">
-                    <div class="input-user" id="descToggleImg">
-                        <span class="td-attendee pl-3" *ngIf="getStatus(username)">
-                            <img [src]="getStatus(username)?.file" alt="" class="img-fluid">
-                        </span>
-                        <!-- <span class="td-attendee-more" *ngIf="!getStatus(username)?.status"
-                            [style.background-color]="colorsArray[0]">
-                            {{getStatus(username)?.displayName | uppercase}}
-                        </span> -->
-                    </div>
-                    <div class="input-content">
-                        <input type="text" id="descToggle" class="form-control input-agenda"
-                            [(ngModel)]="noteDetail.Description" placeholder="Add Note .." (keyup.enter)="addNotes()">
-                        <!-- <button class="send-icon send_button" data-toggle="modal" data-target="#moreItes">
-                            <i class="fas fa-plus-circle" style="font-size: 22px;"></i>
-                        </button> -->
-                        <button class="send-icon send_button" id="addMoreBtn" data-toggle="collapse"
-                            href="#collapseExample" (click)="collapseBtn()" role="button" aria-expanded="false"
-                            aria-controls="collapseExample">
-                            <i class="fas fa-plus-circle" style="font-size: 22px;"></i>
-                        </button>
-                    </div>
-                </div>
+
+                <button class="send-icon send_button" hidden id="addMoreBtn" data-toggle="collapse"
+                    href="#collapseExample" (click)="collapseBtn()" role="button" aria-expanded="false"
+                    aria-controls="collapseExample">
+                    <i class="fas fa-plus-circle" style="font-size: 22px;"></i>
+                </button>
                 <div class="collapse m-1 p-4" id="collapseExample">
-                    <textarea placeholder="Description" class="form-control" rows="5"
+                    <textarea placeholder="Description" class="form-control" rows="9"
                         [(ngModel)]="noteDetail.Description"></textarea>
                     <div class="row mt-3">
-                        <div class="form-group col-md-4">
-                            <label for="Duration"><span class="td-attendee-add"
-                                    style="padding: 0.5rem 0.725rem!important;"><i class="fas fa-file"></i>
-                                </span>&nbsp;&nbsp;Type</label>
+                        <div class="form-group col-md-6">
+                            <label for="Duration">Type</label>
                             <select id="Duration" class="form-control mt-1" [(ngModel)]="noteDetail.Type">
                                 <option value="">Select</option>
                                 <option value="Risk">Risk</option>
@@ -196,12 +258,10 @@
                                 <option value="Decision">Decision</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-4 dropdown dropright attendee-parent">
+                        <div class="form-group col-md-6 dropdown dropright attendee-parent">
                             <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <label for="">
-                                    <span class="td-attendee-add" style="padding: 0.5rem 0.725rem!important;"><i
-                                            class="fas fa-user"></i> </span>
-                                    &nbsp;&nbsp;Assigned To</label>
+                                    Assigned To &nbsp; &nbsp;<i class="fas fa-plus"></i></label>
                             </div>
                             <div class="dropdown-menu dd mt-1">
                                 <ul *ngFor="let attendies of usersList;let j=index" class="members-list mb-0">
@@ -240,25 +300,39 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 p-4">
-
-                        </div>
 
                     </div>
                     <div class="row">
-                        <div class="col-4 form-group">
+                        <div class="col-6 form-group">
                             <label for="assigneddate">Assigned Date</label>
                             <input type="date" id="assigneddate" [(ngModel)]="noteDetail.AssignedDate"
                                 class="form-control" />
                         </div>
-                        <div class="col-4 form-group">
+                        <div class="col-6 form-group">
                             <label for="duedate">Due Date</label>
                             <input type="date" id="duedate" [(ngModel)]="noteDetail.DueDate" class="form-control" />
                         </div>
-                        <div class="col-4 mt-4">
-                            <button class="btn btn-primary btn-block" (click)="addNotes()">Add</button>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 form-group">
+                            <label for="assigneddate">Attachments</label>
+                            <div class="temp-card blank-temp">
+                                <i class="fas fa-plus tempp"></i>
+                            </div>
+                        </div>
+                        <div class="col-8 text-right mt-5 pt-4">
+                            <button class="btn btn-secondary mr-2" (click)="addNoteBt()">Close</button>
+                            <button class="btn btn-primary" (click)="addNotes(1,'')">Save Changes</button>
                         </div>
                     </div>
+                    <!-- <div class="row">
+                        <div class="col-6">
+                       
+                        </div>
+                        <div class="col-6 float-right">
+                            <button class="btn btn-primary" (click)="addNotes(1)">Save</button>
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -274,8 +348,12 @@
                 <div class="col-8 text-primary">
                     <h5>{{meetingObject?.MeetingDescription}}</h5>
                 </div>
-                <div class="col-4 text-right"><button class="btn btn-outline-primary"
-                        (click)="sendMeetingNotes(meetingObject.MeetingAttendees)">Send Meeting Notes</button></div>
+                <div class="col-4 text-right">
+                    <button class="btn btn-outline-primary"
+                        (click)="sendMeetingNotes(meetingObject.MeetingAttendees)">Send Meeting Notes</button>
+                    <button class="btn btn-outline-secondary ml-2" data-dismiss="modal"
+                        aria-label="Close" (click)="externalClose()">Close</button>
+                </div>
             </div>
             <div class="alert alert-success alert-dismissible mt-2" id="alert" style="display: none;">
                 <button type="button" class="close" (click)="alertBtn()">&times;</button>
@@ -392,3 +470,107 @@
     </div>
 </div>
 <!-- modals end-->
+<!-- Modal -->
+<div class="modal fade" id="noteEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLabel">Notes/Summery</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="">Note</label>
+                    <textarea class="form-control" rows="10" placeholder="Enter your note.."[(ngModel)]="noteDetail.Description"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <label for="type">Type</label>
+                        <select id="type" class="form-control mt-1" [(ngModel)]="noteDetail.Type">
+                            <option value="">Select</option>
+                            <option value="Risk">Risk</option>
+                            <option value="Action">Action</option>
+                            <option value="Decision">Decision</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control mt-1" [(ngModel)]="noteDetail.Status">
+                            <option value="">Select</option>
+                            <option value="Planned">Planned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4 dropdown dropright attendee-parent">
+                        <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <label for="">
+                                Assigned To &nbsp; &nbsp;<i class="fas fa-plus"></i></label>
+                        </div>
+                        <div class="dropdown-menu dd mt-1">
+                            <ul *ngFor="let attendies of usersList;let j=index" class="members-list mb-0">
+                                <li class="mb-1" (click)="changeAssignedTo(attendies.email)">
+                                    <span class="user-img">
+                                        <span class="td-attendee-more" *ngIf="!getStatus(attendies.email)?.status"
+                                            style="padding: 0.5rem!important;
+                                margin-left: 0rem!important;" [style.background-color]="colorsArray[0]">
+                                            {{getStatus(attendies.email)?.displayName | uppercase}}
+                                        </span>
+                                        <span class="td-attendee" *ngIf="getStatus(attendies.email)" style="padding: 0.5rem!important;
+                                margin-left: 0rem!important;">
+                                            <img [src]="getStatus(attendies.email)?.file" alt="" class="img-fluid">
+                                        </span>
+                                    </span>
+                                    <span class="mbmr-name">
+                                        {{attendies.email}}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div *ngIf="noteDetail?.AssignedTo != ''" class="ml-3">
+                                <span class="td-attendee-more1 mr-3"
+                                    *ngIf="!getStatus(noteDetail?.AssignedTo)?.status"
+                                    [style.background-color]="colorsArray[0]">
+                                    {{getStatus(noteDetail?.AssignedTo)?.displayName | uppercase}}
+                                </span>
+                                <span class="td-attendee1" *ngIf="getStatus(noteDetail?.AssignedTo)">
+                                    <img [src]="getStatus(noteDetail?.AssignedTo)?.file" alt="" class="img-fluid">
+                                </span>
+                                {{noteDetail?.AssignedTo | slice:0:25}}..
+                            </div>
+                            <div *ngIf="noteDetail?.AssignedTo == ''" class="mt-2">
+                                <span>Click on user icon</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-4">
+                        <label for="status">Assigned To</label>
+                        <select id="status" class="form-control mt-1" formControlName="AssignedTo">
+                            <option value="">Select</option>
+                            <option *ngFor="let user of usersList" value="{{user.email}}">{{user.email}}</option>
+                        </select>
+                    </div> -->
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <label for="assigneddate">Assigned Date</label>
+                        <input type="date" class="form-control"  [(ngModel)]="noteDetail.AssignedDate" />
+                    </div>
+                    <div class="col-4">
+                        <label for="duedate">Due Date</label>
+                        <input type="date" class="form-control"  [(ngModel)]="noteDetail.DueDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="addNotes(0,'External')" data-dismiss="modal">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>

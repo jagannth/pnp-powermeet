@@ -12,13 +12,13 @@
                             <img [src]="getUserStatus(notif.AssigneeName)?.file" alt="" class="img-fluid">
                         </span>
                         <span class="text-info">
-                            {{notif.AssigneeName}} <a style="color: brown!important;">{{notif.Status}}</a>
+                            {{notif?.AssigneeName}} <a style="color: brown!important;">{{notif.NotificationStatus}}</a>
                         </span>
                             
                     </div>
 
                     <div class="notification-time">
-                        <p class="clr-one f-600">{{ConvertTolocal(notif.Date) | date:'medium'}}</p>
+                        <p class="clr-one f-600">{{ConvertTolocal(notif.NotificationDateTime) | date:'medium'}}</p>
                     </div>
 
                 </div>

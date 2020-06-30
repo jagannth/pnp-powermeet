@@ -16,11 +16,11 @@
           <FieldRef Name="NoteDescription"></FieldRef>
           <FieldRef Name="Agenda"></FieldRef>         
           <FieldRef Name="Type"></FieldRef>
-          <FieldRef Name="AssignedTo"></FieldRef> 
+          <FieldRef Name="CustomAssignedTo"></FieldRef> 
           <FieldRef Name="AssignedDate"></FieldRef>
           <FieldRef Name="NoteStatus"></FieldRef>
           <FieldRef Name="UpdatedCount"></FieldRef> 
-          <FieldRef Name="DueDate"></FieldRef>          
+          <FieldRef Name="CustomDueDate"></FieldRef>          
           <FieldRef Name="ID"></FieldRef>
         </ViewFields>
         <Query>

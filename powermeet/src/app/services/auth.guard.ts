@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     if(token)return true;
     else {
       // this.router.navigate(['/Login']);
-      this.authService.partialsignIn();
+      // this.authService.partialsignIn();
       return false;
     }
     // return true;

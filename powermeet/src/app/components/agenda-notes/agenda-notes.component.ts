@@ -7,6 +7,16 @@ import { DataService } from 'src/app/services/data.service';
 import { Note } from 'src/app/models/Note';
 import { ActivatedRoute } from '@angular/router';
 import { NoteAudit } from 'src/app/models/NoteAudit';
+import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
+import { AgendaItems } from 'src/app/models/AgendaItem';
+import { AgendaDto } from 'src/app/services/dto';
+import { AgendaAssignees } from 'src/app/models/AgendaAssigees';
+import { AgendaAttendees } from 'src/app/models/AgendaAttendees';
+import * as moment from 'moment';
+import { formatDate } from '@angular/common';
+import { MeetingAttendees } from 'src/app/models/MeetingAttendees';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-agenda-notes',
@@ -15,34 +25,105 @@ import { NoteAudit } from 'src/app/models/NoteAudit';
 })
 export class AgendaNotesComponent implements OnInit {
 
-  constructor(private proxy: ProxyService, private dataService: DataService, private graphService: GraphService, private route: ActivatedRoute) { }
+  constructor(private proxy: ProxyService,public spinner :NgxSpinnerService, private dataService: DataService, private graphService: GraphService, private route: ActivatedRoute, private shrService: SharePointDataServicesService, private fb: FormBuilder) { 
+    this.noteForm = this.fb.group({
+      Description: '',
+      Type: '',
+      Status: '',
+      AssignedTo: '',
+      AssignedDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+      DueDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+      NoteID: ''
+    });
+  }
+  
+  noteForm: FormGroup;
   meetingObject: Meeting;
   noteDescription: any;
   agendaInx: number = 0;
-  notesArray: Array<Note>;
+  notesArray = [];
   noteDetail: Note;
   username: string;
   imgUrl: string = "../../../assets/images/Send-Icon.svg";
   colorsArray: any = ['lightgray', 'darkcyan', 'crimson', 'chocolate', 'darkgoldenrod', 'blue', 'purple', 'brown', 'chartreuse'];
   timer: any = { status: 'Start Meeting', time: '23' };
   ngOnInit(): void {
+    this.spinner.show();
+    this.meetingObject = new Meeting();
     this.username = sessionStorage.getItem('user');
     this.noteDetail = new Note();
     this.getGraphUsers();
     this.route.queryParams.subscribe(params => {
-      this.getMeetingByID(params.Id);
+      this.getMeetingByID(params.Id, params.start);
       console.log('params', params);
     });
-    document.getElementById('addMoreBtn').click();
-    document.getElementById('descToggle').style.display = 'none';
-    document.getElementById('descToggleImg').style.display = 'none';
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 2000);
+    // document.getElementById('addMoreBtn').click();
+    // document.getElementById('descToggle').style.display = 'none';
+    // document.getElementById('descToggleImg').style.display = 'none';
   }
-  getMeetingByID(Id) {
-    this.proxy.Get('meetings/' + Id).subscribe(res => {
-      console.log('response', res);
-      this.meetingObject = res.Data.Meeting;
-      this.getNotes(0);
-    })
+  addNoteBt() {
+    document.getElementById('addMoreBtn').click();
+  }
+  getMeetingByID(Id, start) {
+    // this.proxy.Get('meetings/' + Id).subscribe(res => {
+    //   console.log('response', res);
+    //   this.meetingObject = res.Data.Meeting;
+    //   this.getNotes(0);
+    // })
+    this.shrService.getMeetingByID(sessionStorage.getItem('groupId'), parseInt(Id)).then(res => {
+      console.log('resssss by id', res);
+      this.meetingObject.MeetingID = res.fields.id;
+      this.meetingObject.MeetingName = res.fields.Title;
+      this.meetingObject.MeetingDescription = res.fields.MeetingDescription;
+      this.meetingObject.StartDate = res.fields.StartDateTime;
+      this.meetingObject.EndDate = res.fields.EndDateTime;
+      if (res.fields.MeetingAttendees) {
+        var nameArr = res.fields.MeetingAttendees.split('|');
+        nameArr.forEach(element => {
+          const attendee = new MeetingAttendees();
+          attendee.Email = element;
+          console.log('element', element);
+          if (element != '' && element != 'TestSite99@sticsoft.io') { this.meetingObject.MeetingAttendees.push(attendee); }
+        });
+      }
+      console.log('element', this.meetingObject.MeetingAttendees);
+      this.shrService.getAgendaItems(sessionStorage.getItem('groupId'), parseInt(Id)).then(res => {
+        console.log('agenda items res', res);
+        if(res.length == 0){
+          this.externalNotes();
+        }
+        res.forEach(x => {
+          const agenda = new AgendaItems();
+          agenda.AgendaName = x.fields.Title;
+          agenda.AgendaDescription = x.fields.AgendaDescription;
+          agenda.Duration = x.fields.AgendaDuration;
+          // agenda.StartTime = x.fields.EndDateTime;
+          // agenda.EndTime = x.fields.StartDateTime;
+          agenda.AgendaID = x.fields.id;
+          agenda.AgendaAssignees = new AgendaAssignees();
+          agenda.AgendaAssignees.Email = x.fields.AgendaAssignees;
+          var nameArr = x.fields.AgendaAttendees.split('|');
+          nameArr.forEach(element => {
+            const attendee = new AgendaAttendees();
+            attendee.Email = element;
+            if (element != '') { agenda.AgendaAttendees.push(attendee); }
+          });
+          agenda.MeetingID = x.fields.MeetingLookupId;
+          agenda.Status = x.fields.AgendaItemStatus;
+          agenda.IsApproved = x.fields.IsApproved;
+          this.meetingObject.AgendaItems.push(agenda);
+        });
+        if (start == 'true') {
+          this.startMeeting(0);
+        }
+        setTimeout(() => {
+         if(this.meetingObject.AgendaItems.length > 0){ this.getNotes(0);}
+        }, 1000);
+      });
+    });
   }
   usersList: Array<User>;
   getUsersList() {
@@ -54,27 +135,118 @@ export class AgendaNotesComponent implements OnInit {
     const data = this.usersList.find(x => x.email === email);
     return data;
   }
-  addNotes() {
-    this.noteDetail.NoteAudit = new NoteAudit();
-    this.noteDetail.AgendaID = this.meetingObject.AgendaItems[this.agendaInx].AgendaID;
-    this.noteDetail.NoteAudit.CreatedDate = new Date();
-    this.noteDetail.NoteAudit.UpdatedCount = 0;
-    this.noteDetail.Status = 'Planned';
-    this.noteDetail.GroupID = sessionStorage.getItem('groupId');
-
-    console.log('this.note', this.noteDetail);
-    this.proxy.Post('meetings/notes', this.noteDetail).subscribe(res => {
-      console.log('post note res', res);
-      this.noteDetail = new Note();
-      this.getNotes(this.agendaInx);
-    });
+  deleteNote(note: Note) {
+    this.shrService.deleteListItem(sessionStorage.getItem('groupId'), "Notes", parseInt(note.NoteID), "Note").then(res => {
+      console.log('deleted note res', res);
+      const inx = this.notesArray.findIndex(x => x.NoteID == note.NoteID);
+      this.notesArray.splice(inx, 1);
+    })
   }
+  isEdited: boolean = false;
+  editNote(note: Note) {
+    this.isEdited = true;
+    this.noteDetail = note;
+   if(this.meetingObject.AgendaItems.length > 0){
+    document.getElementById('addMoreBtn').click();
+   }
+    console.log('noteeee details', this.noteDetail);
+  }
+  addNotes(toggle: number, type: string) {
+    console.log('this.note', this.noteDetail);
+    // this.noteDetail.NoteAudit = new NoteAudit();
+    // this.noteDetail.AgendaID = this.meetingObject.AgendaItems[this.agendaInx].AgendaID;
+    var id =  '0';
+    if(type != 'External'){
+     id = this.meetingObject.AgendaItems[this.agendaInx].AgendaID;
+    }
+    // this.noteDetail.Status = 'Planned';
+    let listItem = {
+      "fields": {
+        "Title": this.meetingObject.MeetingName,
+        "NoteDescription": this.noteDetail.Description,
+        "Type": this.noteDetail.Type,
+        "AssignedDate": this.noteDetail.AssignedDate,
+        "NoteStatus": this.noteDetail.Status,
+        "AgendaLookupId":id,
+        "CustomDueDate": this.noteDetail.DueDate,
+        "CustomAssignedTo": this.noteDetail.AssignedTo
+      }
+    };
+    if (this.isEdited == false) {
+      this.shrService.postNote(sessionStorage.getItem('groupId'), listItem).then(res => {
+        console.log('post notes response', res);
+        this.noteResponse(res, toggle, false,id);
+      });
+    } else {
+      this.shrService.putNote(sessionStorage.getItem('groupId'), listItem, this.noteDetail.NoteID).then(res => {
+        console.log('put notes response', res);
+        this.noteResponse(res, toggle, true,id);
+      });
+    }
 
+  }
+  noteResponse(res, toggle, status,id) {
+    const note = new Note();
+    note.AgendaID = id;
+    note.NoteID = res.fields.id;
+    note.Description = res.fields.NoteDescription;
+    note.Status = res.fields.NoteStatus;
+    note.AssignedTo = res.fields.CustomAssignedTo;
+    note.AssignedDate = res.fields.AssignedDate;
+    note.DueDate = res.fields.CustomDueDate;
+    note.Type = res.fields.Type;
+    if (status == false) {
+      this.notesArray.push(note);
+    } else {
+      const inx = this.notesArray.findIndex(x => x.NoteID == note.NoteID);
+      this.notesArray[inx] = note;
+    }
+    this.noteDetail = new Note();
+    if (toggle == 1) {
+      document.getElementById('addMoreBtn').click();
+    }
+    this.isEdited = false;
+  }
   getNotes(inx) {
     this.agendaInx = inx;
-    this.proxy.Get('meetings/notes/' + this.meetingObject.AgendaItems[inx].AgendaID).subscribe(res => {
-      console.log('notes', res.Data);
-      this.notesArray = res.Data;
+    this.notesArray = [];
+    console.log('agenda id', this.meetingObject.AgendaItems[inx].AgendaID);
+    this.shrService.getNotes(sessionStorage.getItem('groupId'), parseInt(this.meetingObject.AgendaItems[inx].AgendaID)).then(res => {
+      console.log('get notes by agenda id', res);
+      res.forEach(y => {
+        const note = new Note();
+        note.AgendaID = this.meetingObject.AgendaItems[inx].AgendaID;
+        note.NoteID = y.fields.id;
+        note.Description = y.fields.NoteDescription;
+        note.Status = y.fields.NoteStatus;
+        note.AssignedTo = y.fields.CustomAssignedTo;
+        note.AssignedDate = y.fields.AssignedDate;
+        note.DueDate = y.fields.CustomDueDate;
+        note.Type = y.fields.Type;
+        this.notesArray.push(note);
+      });
+    });
+    // this.proxy.Get('meetings/notes/' + this.meetingObject.AgendaItems[inx].AgendaID).subscribe(res => {
+    //   console.log('notes', res.Data);
+    //   this.notesArray = res.Data;
+    // });
+  }
+  externalNotes(){
+    this.shrService.getExternalNotes(sessionStorage.getItem('groupId')).then(res => {
+      console.log('external notes', res);
+      res.forEach(y => {
+        if(y.fields.Title == this.meetingObject.MeetingName){
+          const note = new Note();
+          note.NoteID = y.fields.id;
+          note.Description = y.fields.NoteDescription;
+          note.Status = y.fields.NoteStatus;
+          note.AssignedTo = y.fields.CustomAssignedTo;
+          note.AssignedDate = y.fields.AssignedDate;
+          note.DueDate = y.fields.CustomDueDate;
+          note.Type = y.fields.Type;
+          this.notesArray.push(note);
+        }
+      });
     });
   }
   getReportNotes(Id) {
@@ -119,34 +291,67 @@ export class AgendaNotesComponent implements OnInit {
   timeLeft: number = 0;
   interval;
   colorInx: number;
+  noteTxt: string = '';
   collapseBtn() {
     this.colpsBtn++;
-    if (this.colpsBtn % 2 != 0) {
-      this.collpsHeight = '8rem';
-      document.getElementById('descToggle').style.display = 'none';
-      document.getElementById('descToggleImg').style.display = 'none';
+    if (this.colpsBtn % 2 == 0) {
+      this.collpsHeight = '20rem';
+      // document.getElementById('descToggle').style.display = 'block';
+      // document.getElementById('descToggleImg').style.display = 'block';
+      // document.getElementById('quick').style.display = 'block';
+      // document.getElementById('quick-func').style.display = 'block';
+      document.getElementById('noteList').style.display = 'block';
+      document.getElementById('agenda-desc').style.display = 'block';
+      document.getElementById('agenda-att').style.display = 'block';
+      this.noteTxt = "";
     }
     else {
-      this.collpsHeight = '22rem';
-      document.getElementById('descToggle').style.display = 'block';
-      document.getElementById('descToggleImg').style.display = 'block';
+      this.collpsHeight = '0rem';
+      // document.getElementById('descToggle').style.display = 'none';
+      // document.getElementById('descToggleImg').style.display = 'none';
+      // document.getElementById('quick').style.display = 'none';
+      // document.getElementById('quick-func').style.display = 'none';
+
+      document.getElementById('noteList').style.display = 'none';
+      document.getElementById('agenda-desc').style.display = 'none';
+      document.getElementById('agenda-att').style.display = 'none';
+      this.noteTxt = "Add New Note";
     }
   }
   pauseTimer() {
     clearInterval(this.interval);
+  }
+  diffTimes(start, end) {
+    // console.log('start end', start, end);
+    if (start == undefined || end == undefined) {
+      return '';
+    } else {
+      const firstDate = moment(start);
+      const secondDate = moment(end);
+      const diffInMins = Math.abs(firstDate.diff(secondDate, 'minutes'));
+      console.log('difff', diffInMins);
+      if (diffInMins <= 0) {
+        return 'Less than a min';
+      } else {
+        return diffInMins + ' min';
+      }
+    }
+
   }
   startMeeting(Id) {
     if (this.meetingObject.AgendaItems.length == this.agendaInx + 1) {
       this.timer.status = 'Completed';
       this.stopObject.status = false;
       this.pauseTimer();
-      this.meetingObject.AgendaItems[this.agendaInx].Color = '#28a745';
+      // this.meetingObject.AgendaItems[this.agendaInx].Color = '#28a745';
+      this.meetingObject.AgendaItems[this.agendaInx].EndTime = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
       this.progressColor = '';
     }
     if (this.meetingObject.AgendaItems.length > this.agendaInx + 1) {
       if (Id == 0) { this.agendaInx = 0; this.stopWatch(); }
       else {
-        this.meetingObject.AgendaItems[this.agendaInx].Color = '#28a745';
+        // this.meetingObject.AgendaItems[this.agendaInx].Color = '#28a745';
+        this.meetingObject.AgendaItems[this.agendaInx].EndTime = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
         this.agendaInx += 1
       };
       this.timer.status = 'In Progress';
@@ -154,9 +359,11 @@ export class AgendaNotesComponent implements OnInit {
       this.progressColor = '';
       this.getNotes(this.agendaInx);
       this.startTimer(this.agendaInx);
+      this.meetingObject.AgendaItems[this.agendaInx].StartTime = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
     }
 
   }
+ 
   startTimer(inx) {
     this.pauseTimer();
     const res = parseInt(this.meetingObject.AgendaItems[inx].Duration.slice(0, 2)) * 60;
@@ -167,9 +374,10 @@ export class AgendaNotesComponent implements OnInit {
       if (this.timeLeft < res) {
         this.timeLeft++;
         const val = (this.timeLeft / res) * 100
-        this.progressColor = 'linear-gradient(to right,green ' + val + '%,lightgreen ' + val + '%)';
+        this.meetingObject.AgendaItems[inx].Color = 'linear-gradient(to right,green ' + val + '%,lightgreen ' + val + '%)';
+        // this.progressColor = 'linear-gradient(to right,green ' + val + '%,lightgreen ' + val + '%)';
       } else {
-        this.meetingObject.AgendaItems[inx].Color = '#28a745';
+        // this.meetingObject.AgendaItems[inx].Color = '#28a745';
         this.startMeeting(1);
       }
     }, 1000)
@@ -192,12 +400,38 @@ export class AgendaNotesComponent implements OnInit {
   ngOnDestroy() {
     clearInterval(this.stopInterval);
   }
+  externalClose(){
+    if(this.meetingObject.AgendaItems[0].AgendaName == "External Notes"){
+      this.meetingObject.AgendaItems = [];
+    }
+  }
   getAllNotes() {
-    this.meetingObject.AgendaItems.forEach(x => {
-      this.proxy.Get('meetings/notes/' + x.AgendaID).subscribe(res => {
-        x.Notes = res.Data;
-      });
-    })
+    if(this.meetingObject.AgendaItems.length > 0){
+      this.meetingObject.AgendaItems.forEach(x => {
+        x.Notes = [];
+        this.shrService.getNotes(sessionStorage.getItem('groupId'), parseInt(x.AgendaID)).then(res => {
+          console.log('get notes by agenda id', res);
+          res.forEach(y => {
+            const note = new Note();
+            note.AgendaID = x.AgendaID;
+            note.NoteID = y.fields.id;
+            note.Description = y.fields.NoteDescription;
+            note.Status = y.fields.NoteStatus;
+            note.AssignedTo = y.fields.CustomAssignedTo;
+            note.AssignedDate = y.fields.AssignedDate;
+            note.DueDate = y.fields.CustomDueDate;
+            note.Type = y.fields.Type;
+            x.Notes.push(note);
+          });
+        });
+      })
+    }else{
+      const agenda = new AgendaItems();
+      agenda.AgendaName = "External Notes";
+      agenda.Notes = this.notesArray;
+      this.meetingObject.AgendaItems.push(agenda);
+    }
+  
   }
   getBtnColor(type) {
     return 'warning';
@@ -230,7 +464,7 @@ export class AgendaNotesComponent implements OnInit {
       console.log('res', res);
     });
   }
-  alertBtn(){
+  alertBtn() {
     (<HTMLDivElement>document.getElementById('alert')).style.display = 'none';
   }
 }

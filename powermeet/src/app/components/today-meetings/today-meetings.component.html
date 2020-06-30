@@ -25,6 +25,7 @@
                             <th class="text-center" scope="col">Attendees</th>
                             <th class="text-center" scope="col">Time</th>
                             <th class="text-center" scope="col">Action</th>
+                            <th class="text-center" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +42,7 @@
                                 </span> -->
                             </td>
                             <td class="text-center">
-                                <span class="td-main-text" *ngIf="meeting?.AgendaItems.length!=0">
+                                <span class="td-main-text" *ngIf="meeting?.AgendaItems.length != 0">
                                     {{getapprovedcount(meeting?.AgendaItems)}} approved
                                     of {{meeting?.AgendaItems.length}}
                                 </span>
@@ -62,19 +63,6 @@
                                     +{{meeting?.MeetingAttendees.length - 3}}
                                 </span>
                             </td>
-                            <!-- <td class="text-center">
-                                <span  *ngFor="let j = index;let attendee of meeting?.MeetingAttendees | slice:0:3">
-                                    <span class="td-attendee-more" *ngIf="!attendee.Status" [style.background-color]="colorsArray[j]">
-                                        {{attendee.Email | uppercase | slice:0:2}}
-                                    </span>
-                                    <span class="td-attendee" *ngIf="attendee.Status">
-                                        <img [src]="attendee?.File" alt="" class="img-fluid">
-                                    </span>
-                                </span>
-                                <span class="td-attendee-more" *ngIf="meeting?.MeetingAttendees.length > 4">
-                                    +{{meeting?.MeetingAttendees.length - 3}}
-                                </span>
-                            </td> -->
                             <td class="text-center">
                                 <span class=" td-main-text" *ngIf="meeting?.IsRecurring">
                                     Every Day
@@ -85,14 +73,24 @@
                                 </span>
                             </td>
 
-                            <td class="text-center">
+                            <td class="text-center"  [routerLink]="['/Notes']" [queryParams]="{ Id: meeting?.MeetingID,'start': 'false'}">
                                 <span class="td-main-text clr-four hover">
                                     Notes
                                 </span>
                                 <br>
-                                <span class="td-action-icon mx-1" [routerLink]="['/Notes']" [queryParams]="{ Id: meeting?.MeetingID}">
+                                <span class="td-action-icon mx-1">
                                     <!-- <img src="../../../assets/images/AddNotes-icon.svg" alt="" class="img-fluid"> -->
                                     <i class="fa fa-plus-square-o" style="font-size: 20px;"></i>
+
+                                </span>
+                            </td>
+                            <td class="text-center" [routerLink]="['/Notes']" [queryParams]="{ Id: meeting?.MeetingID,'start': 'true'}">
+                                <span class="td-main-text clr-four hover">
+                                    Start
+                                </span>
+                                <br>
+                                <span class="td-action-icon mx-1" >
+                                    <i class="fa fa-play text-success" style="font-size: 20px;"></i>
 
                                 </span>
                             </td>
@@ -162,6 +160,7 @@
                             <th class="text-center" scope="col">Attendees</th>
                             <th class="text-center" scope="col">Time</th>
                             <th class="text-center" scope="col">Action</th>
+                            <th class="text-center" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -213,11 +212,21 @@
                                    Notes
                                 </span>
                                 <br>
-                                <span class="td-action-icon mx-1" [routerLink]="['/Notes']" [queryParams]="{ Id: meeting1?.MeetingID}">
-                                    <img src="../../../assets/images/AddNotes-icon.svg" alt="" class="img-fluid">
+                                <span class="td-action-icon mx-1" [routerLink]="['/Notes']" [queryParams]="{ Id: meeting1?.MeetingID,'start': 'false'}">
+                                    <i class="fa fa-plus-square-o" style="font-size: 20px;"></i>
                                 </span>
                             </td>
 
+                            <td class="text-center">
+                                <span class="td-main-text clr-four hover">
+                                    Start
+                                </span>
+                                <br>
+                                <span class="td-action-icon mx-1" [routerLink]="['/Notes']" [queryParams]="{ Id: meeting1?.MeetingID,'start': 'true'}">
+                                    <i class="fa fa-hand-o-right text-success" style="font-size: 20px;"></i>
+
+                                </span>
+                            </td>
 
                         </tr>
 

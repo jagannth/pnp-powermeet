@@ -3,6 +3,7 @@ import { ProxyService } from 'src/app/services/proxy.service';
 import * as moment from 'moment';
 import { DataService } from 'src/app/services/data.service';
 import { User } from 'src/app/models/User';
+import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
 
 @Component({
   selector: 'app-notifications',
@@ -13,7 +14,7 @@ export class NotificationsComponent implements OnInit {
   notificationList: any = [];
   colorsArray: any = ['lightgray', 'darkcyan', 'crimson', 'chocolate', 'darkgoldenrod', 'blue', 'purple', 'brown', 'chartreuse', 'pink', 'gold', 'green']
 
-  constructor(private proxy: ProxyService, private dataService: DataService) { }
+  constructor(private proxy: ProxyService, private dataService: DataService, private shrService: SharePointDataServicesService) { }
 
   ngOnInit(): void {
     this.getNotifcations();
@@ -32,9 +33,15 @@ export class NotificationsComponent implements OnInit {
     return data;
   }
   getNotifcations() {
-    this.proxy.Get('meetings/notifications').subscribe(res => {
-      console.log('notifications', res.Data);
-      this.notificationList = res.Data;
+    // this.proxy.Get('meetings/notifications').subscribe(res => {
+    //   console.log('notifications', res.Data);
+    //   this.notificationList = res.Data;
+    // })
+    this.shrService.getNotifications(sessionStorage.getItem('groupId')).then(res => {
+      console.log('notigications response', res);
+      res.forEach(x => {
+        this.notificationList.push(x.fields);
+      });
     })
   }
   typeList: any = [{ Id: '2edcd9d6-eddf-4e5b-90ed-bc4508f474bb', Text: 'Meeting' }, { Id: 'e5479599-a75d-4df8-8b06-7dd1ed82e563', Text: 'Agenda Item' }];

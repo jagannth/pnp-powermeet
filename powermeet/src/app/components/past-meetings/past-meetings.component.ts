@@ -7,6 +7,7 @@ import { formatDate } from '@angular/common';
 import { Meeting } from 'src/app/models/Meeting';
 import { User } from 'src/app/models/User';
 import { DataService } from 'src/app/services/data.service';
+import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
 @Component({
   selector: 'app-past-meetings',
   templateUrl: './past-meetings.component.html',
@@ -18,32 +19,53 @@ export class PastMeetingsComponent implements OnInit {
   meetingsListcompleted: any = {};
   attendslist: any = [];
   colorsArray: any = ['lightgray', 'darkcyan', 'crimson', 'chocolate', 'darkgoldenrod', 'blue', 'purple', 'brown', 'chartreuse']
-  constructor(private dataService: DataService, private proxy: ProxyService, private router: Router, private authService: AuthService, private graphService: GraphService) { }
+  constructor(private dataService: DataService, private proxy: ProxyService, private router: Router, private shrService: SharePointDataServicesService, private graphService: GraphService) { }
 
   ngOnInit(): void {
-    this.meetingsList = new Array<Meeting>();
+    // this.meetingsList = new Array<Meeting>();
     this.getMeetings();
     this.getUsersList();
-
   }
   getmeeting(meeting) {
     sessionStorage.setItem("meetingobj", JSON.stringify(meeting));
     this.router.navigate(['/MeetingDetails']);
   }
   getMeetings() {
-    this.proxy.Get('meetings/organizer?email='+sessionStorage.getItem('user')+ '&groupId='+sessionStorage.getItem('groupId')).subscribe(res => {
-      const resObj = res.Data.Meetings.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') < formatDate(new Date(), 'yyyy/MM/dd', 'en'));
-      this.meetingsList = resObj;
-      // this.meetingsList1 = this.meetingsList.filter(x => this.ConvertMeeting(x.StartDate) < new Date());
-      this.meetingsListcompleted = this.meetingsList.filter(x => x.Status === "Completed");
-      console.log("Meetingslist", this.meetingsList);
+    // this.proxy.Get('meetings/organizer?email='+sessionStorage.getItem('user')+ '&groupId='+sessionStorage.getItem('groupId')).subscribe(res => {
+    //   const resObj = res.Data.Meetings.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') < formatDate(new Date(), 'yyyy/MM/dd', 'en'));
+    //   this.meetingsList = resObj;
+    //   // this.meetingsList1 = this.meetingsList.filter(x => this.ConvertMeeting(x.StartDate) < new Date());
+    //   this.meetingsListcompleted = this.meetingsList.filter(x => x.Status === "Completed");
+    //   console.log("Meetingslist", this.meetingsList);
+    //   this.getGraphEvents();
+    //   // if (this.meetingsList)
+    //   // this.getTodayMeetings();
+    // })
+    this.shrService.getMeetings(sessionStorage.getItem('groupId')).then((res) => {
+      const responseArray = [];
+      res.forEach(x => {
+        const meeting = new Meeting();
+        meeting.MeetingID = x.fields.id;
+        meeting.MeetingName = x.fields.Title;
+        meeting.MeetingDescription = x.fields.MeetingDescription;
+        meeting.StartDate = x.fields.StartDateTime;
+        // if (x.fields.MeetingAttendees.length > 0) {
+        //   x.fields.MeetingAttendees.forEach(element => {
+        //     const attendee = new MeetingAttendees();
+        //     attendee.Email = element.Email;
+        //     meeting.MeetingAttendees.push(attendee);
+        //   });
+        // }
+        responseArray.push(meeting);
+      });
+      this.meetingsList = responseArray;
+      // this.meetingsList = this.meetingsList.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') === formatDate(new Date(), 'yyyy/MM/dd', 'en') || x.IsRecurring == true));
       this.getGraphEvents();
-      // if (this.meetingsList)
-      // this.getTodayMeetings();
+      console.log('past meeting list', this.meetingsList);
     })
   }
   getGraphEvents() {
-    this.graphService.getEvents().then((res) => {
+    this.graphService.getGroupEvents(sessionStorage.getItem('groupId')).then((res) => {
       console.log('graph events', res);
       const resObj = res.filter(x => formatDate(x.start.dateTime, 'yyyy/MM/dd', 'en') < formatDate(new Date(), 'yyyy/MM/dd', 'en'));
       resObj.forEach(x => {

@@ -4,6 +4,7 @@
 <div class="">
     <div class="card card-body notification-card p-4">
         <div class="m-4">
+            <!-- <input type="file" id="input-fil" (change)="changeFileInput($event)"> -->
             <div style="margin-left: -11px; margin-bottom: 10px;">
                 <h3 class="text-primary">Meeting Minutes</h3>
                 <button class="btn btn-{{tgAdmin?'outline-primary':'primary'}}" (click)="toggleAdmin(false)">My
@@ -36,9 +37,9 @@
                                 <h6>Action Item</h6>
                             </div>
                         </div>
-                        <div class="col-2 m-1 card bg-info text-light bt" (click)="search = 'Decision'"  (click)="heading = 'My Decision Items'">
+                        <div class="col-2 m-1 card bg-dec text-light bt" (click)="search = 'Decision'"  (click)="heading = 'My Decision Items'">
                             <div class="card-body px-0">
-                                <i class="fas fa-eye icn c-m"></i>
+                                <i class="fas fa-eye icn c-dec"></i>
                                 <h1 id="decision-u" class="pt-4">{{dashBoardCount(0,false,'Decision')}}</h1>
                                 <h6>Decision</h6>
                             </div>

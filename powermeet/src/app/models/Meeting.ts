@@ -17,6 +17,7 @@ export class Meeting {
     public UserName: string;
     public IsGroup: boolean = false;
     public GroupID: string;
+    public id: string;
     constructor() {
         this.MeetingID = "00000000-0000-0000-0000-000000000000"; // this value is nothing but the empty guid..
         this.IsActive = true;

@@ -5,7 +5,10 @@
   text-decoration: none;
   font-weight: 600;
 }
-
+.tempp{
+  font-size: 2rem;
+  padding: 3.4rem;
+}
 .btn-toggle:hover {
   color: #54558B;
 }
