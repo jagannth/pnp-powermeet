@@ -427,7 +427,7 @@ export class AgendaNotesComponent implements OnInit {
       })
     }else{
       const agenda = new AgendaItems();
-      agenda.AgendaName = "External Notes";
+      agenda.AgendaName = "Meeting Summery";
       agenda.Notes = this.notesArray;
       this.meetingObject.AgendaItems.push(agenda);
     }

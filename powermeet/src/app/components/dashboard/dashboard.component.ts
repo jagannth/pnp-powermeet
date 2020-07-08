@@ -68,21 +68,41 @@ export class DashboardComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    // this.getGraphUsers();
-    // this.note = new Note();
-    // this.username = sessionStorage.getItem('user');
-    // this.isGroup = sessionStorage.getItem('groupId');
-    // console.log('group id', this.isGroup);
-    // setTimeout(() => {
-    //   if (this.isGroup) this.getMeetingsDashboard('group', this.isGroup);
-    //   else this.getMeetingsDashboard(this.username, 0);
-    // }, 100);
+    this.getGraphUsers();
+    this.note = new Note();
+    this.username = sessionStorage.getItem('user');
+    this.isGroup = sessionStorage.getItem('groupId');
+    console.log('group id', this.isGroup);
+    setTimeout(() => {
+      if (this.isGroup == undefined || this.isGroup == 'undefined') {
+        this.getMeetingsDashboard(this.username, '0');
+      }
+      else{
+        this.getMeetingsDashboard('group', this.isGroup);
+      }
+    }, 100);
+   
+    // this.getAttachments();
+  }
+  getAttachments(){
+    console.log('tessssss');
+    this.shrService.getAttachmentId('changes_noted_in_jagan_call.txt').then(res=>{
+      console.log('id res', res);
+    });
   }
   changeFileInput(response) {
     const file = response.target.files[0];
-    this.shrService.UploadAttachments(sessionStorage.getItem('groupId'), file, file.name, 1, 1).then(res => {
+    console.log('fileee', file);
+    const driveItem = {
+      MeetingLookupId : 25,
+      AgendaLookupId : 16,
+      NoteLookupId:30
+    };
+   setTimeout(() => {
+    this.shrService.UploadAttachments(sessionStorage.getItem('groupId'), file, file.name,driveItem).then(res => {
       console.log('file upload response', res);
-    })
+    });
+   }, 1000);
   }
   clear() {
     this.dashBoard = new Array<Dashboard>();
@@ -108,7 +128,13 @@ export class DashboardComponent implements OnInit {
     this.spinner.show();
     this.shrService.getMeetings(sessionStorage.getItem('groupId')).then((res) => {
       console.log('meetings response', res);
-      res.forEach(x => {
+      var resObj = [];
+      if(groupId == '0'){
+        resObj = res.filter(x=> x.fields.IsGroup == false && x.fields.Organizer == sessionStorage.getItem('user'));
+      }else{
+        resObj = res;
+      }
+      resObj.forEach(x => {
         const meeting = new Meeting();
         meeting.MeetingID = x.fields.id;
         meeting.MeetingName = x.fields.Title;
@@ -149,6 +175,7 @@ export class DashboardComponent implements OnInit {
       });
       const met = new Meeting();
       met.MeetingName = "External";
+      met.StartDate = new Date().toString();
       met.AgendaItems.push(new AgendaItems());
       this.shrService.getExternalNotes(sessionStorage.getItem('groupId')).then(res => {
         console.log('external notes', res);
@@ -180,20 +207,7 @@ export class DashboardComponent implements OnInit {
     this.spinner.hide();
 
   }
-  usermeet() {
-    this.Meeting.forEach(x => {
-      x.AgendaItems.forEach(y => {
-        let len = 0;
-        if (status) {
-          y.Notes = y.Notes.filter(z => z.AssignedTo == this.username);
-        }
-        else {
-          y.Notes = y.Notes.filter(z => z.AssignedTo == this.username);
-        }
-      });
-    });
-    return this.Meeting;
-  }
+
   dashBoardCount(admin, status, value) {
     var count = 0;
     if (admin == 0) {
@@ -493,6 +507,48 @@ export class DashboardComponent implements OnInit {
         this.donaughtChart('u');
       }, 1000);
     }
+  }
+  filters(val: string) {
+    const meeting = JSON.parse(sessionStorage.getItem('orgMeeting'));
+    if (val == 'Day') {
+      this.heading = 'Today Meeting Items';
+      this.Meeting = meeting.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(new Date(), 'yyyy/MM/dd', 'en'));
+    }
+     else if (val == 'Week') {
+      const date = new Date();
+      date.setDate(date.getDate() - 7);
+      this.heading = 'This Week Meeting Items';
+      this.Meeting = meeting.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en'));
+    } else {
+      const date = new Date();
+      date.setDate(date.getDate() - 30);
+      this.heading = 'This Month Meeting Items';
+      this.Meeting = meeting.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en'));
+    }
+    if( this.tgAdmin == true){
+      setTimeout(() => {
+        this.donaughtChart('a');
+      }, 1000);
+    }else{
+      setTimeout(() => {
+        this.donaughtChart('u');
+      }, 1000);
+    }
+    
+  }
+  usermeet() {
+    this.Meeting.forEach(x => {
+      x.AgendaItems.forEach(y => {
+        let len = 0;
+        if (status) {
+          y.Notes = y.Notes.filter(z => z.AssignedTo == this.username);
+        }
+        else {
+          y.Notes = y.Notes.filter(z => z.AssignedTo == this.username);
+        }
+      });
+    });
+    return this.Meeting;
   }
   donaughtChart(id) {
     const risk = parseInt(document.getElementById('risk-' + id).innerText);

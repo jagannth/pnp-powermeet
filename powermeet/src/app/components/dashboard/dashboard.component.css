@@ -44,16 +44,20 @@
   background-color: #a13323;
 }
 .bg-p{
-  background-color: #6dade3;
+  background-color: #7d7d7d;
+  /* background-color: #6dade3; */
 }
 .bg-i{
-  background-color: #a7d7c5;
+  background-color: #c5c5c5;
+  /* background-color: #a7d7c5; */
 }
 .bg-d{
-  background-color: darkturquoise;
+  background-color: #dfdfdf;
+  /* background-color: darkturquoise; */
 }
 .bg-c{
-  background-color: #5c8d89;
+  background-color: #f4f3f3;
+  /* background-color: #5c8d89; */
 }
 .c-red{
   color: #e65124;

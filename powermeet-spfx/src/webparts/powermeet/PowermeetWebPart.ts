@@ -35,7 +35,13 @@ export default class PowermeetWebPart extends BaseClientSideWebPart<IPowermeetWe
     const val = tokenProvider.getToken("https://graph.microsoft.com");
     val.then(res => {
       sessionStorage.setItem('siteUrl',this.context.pageContext.site.absoluteUrl);
-      this.domElement.innerHTML = `<app-powermeet-web-part description="${res}" user="${this.context.pageContext.user.email}" group="${this.context.pageContext.site.group.id._guid}"> </app-powermeet-web-part>`;
+      var group: string;
+      if(this.context.pageContext.site.group == undefined){
+        group = undefined;
+      }else{
+        group = this.context.pageContext.site.group.id._guid;
+      }
+      this.domElement.innerHTML = `<app-powermeet-web-part description="${res}" user="${this.context.pageContext.user.email}" group="${group}"> </app-powermeet-web-part>`;
       //site url siteUrl="${this.context.pageContext.site.absoluteUrl}"
       // let ngElement = this.domElement.getElementsByTagName('app-powermeet-web-part')[0];
       // if(ngElement) {

@@ -23,14 +23,21 @@ export class PastMeetingsComponent implements OnInit {
 
   ngOnInit(): void {
     // this.meetingsList = new Array<Meeting>();
-    this.getMeetings();
+    const group = sessionStorage.getItem('groupId');
+    if (group == undefined || group == 'undefined') {
+      console.log('console if');
+      this.getMeetings(sessionStorage.getItem('user'), '0');
+    } else {
+      console.log('console else');
+      this.getMeetings('group', group);
+    }
     this.getUsersList();
   }
   getmeeting(meeting) {
     sessionStorage.setItem("meetingobj", JSON.stringify(meeting));
     this.router.navigate(['/MeetingDetails']);
   }
-  getMeetings() {
+  getMeetings(value, Id) {
     // this.proxy.Get('meetings/organizer?email='+sessionStorage.getItem('user')+ '&groupId='+sessionStorage.getItem('groupId')).subscribe(res => {
     //   const resObj = res.Data.Meetings.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') < formatDate(new Date(), 'yyyy/MM/dd', 'en'));
     //   this.meetingsList = resObj;
@@ -43,22 +50,24 @@ export class PastMeetingsComponent implements OnInit {
     // })
     this.shrService.getMeetings(sessionStorage.getItem('groupId')).then((res) => {
       const responseArray = [];
+      const responseArray1 = [];
       res.forEach(x => {
         const meeting = new Meeting();
         meeting.MeetingID = x.fields.id;
         meeting.MeetingName = x.fields.Title;
         meeting.MeetingDescription = x.fields.MeetingDescription;
         meeting.StartDate = x.fields.StartDateTime;
-        // if (x.fields.MeetingAttendees.length > 0) {
-        //   x.fields.MeetingAttendees.forEach(element => {
-        //     const attendee = new MeetingAttendees();
-        //     attendee.Email = element.Email;
-        //     meeting.MeetingAttendees.push(attendee);
-        //   });
-        // }
-        responseArray.push(meeting);
+        if ((Id == '0' && x.fields.IsGroup == false) && x.fields.Organizer == sessionStorage.getItem('user')) {
+          responseArray.push(meeting);
+        }else if(Id != '0' && x.fields.IsGroup == true){
+          responseArray1.push(meeting);
+        }
       });
-      this.meetingsList = responseArray;
+      if(Id == '0'){
+        this.meetingsList = responseArray;
+      }else{
+        this.meetingsList = responseArray1;
+      }
       // this.meetingsList = this.meetingsList.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') === formatDate(new Date(), 'yyyy/MM/dd', 'en') || x.IsRecurring == true));
       this.getGraphEvents();
       console.log('past meeting list', this.meetingsList);

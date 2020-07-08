@@ -363,6 +363,7 @@
                 <div *ngIf="agenda.Notes.length > 0">
                     <h6 class="text-primary">Agenda Name : <span>{{agenda?.AgendaName}}</span></h6>
                     <p class="text-primary mb-0">Description :<span>{{agenda?.AgendaDescription}}</span></p>
+                    <h6 class="text-primary float-right">Duration: {{diffTimes(agenda?.StartTime,agenda?.EndTime)}}</h6>
                 </div>
                 <div class="row bg-light pt-2" *ngIf="agenda.Notes.length > 0">
                     <div class="col-8">

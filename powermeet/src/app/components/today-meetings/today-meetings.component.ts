@@ -34,14 +34,14 @@ export class TodayMeetingsComponent implements OnInit {
   async ngOnInit() {
     this.spinner.show();
     this.meetingsList = new Array<Meeting>();
-    // const group =sessionStorage.getItem('groupId');
-    this.getMeetings('group', sessionStorage.getItem('groupId'));
-    // if (group) {
-    //   console.log('console if');
-    // } else {
-    //   console.log('console else');
-    //   // this.getMeetings(sessionStorage.getItem('user'), '0');
-    // }
+    const group = sessionStorage.getItem('groupId');
+    if (group == undefined || group == 'undefined') {
+      console.log('console if');
+      this.getMeetings(sessionStorage.getItem('user'), '0');
+    } else {
+      console.log('console else');
+      this.getMeetings('group', group); 
+    }
     this.getGraphUsers();
     setTimeout(() => {
       this.spinner.hide();
@@ -53,38 +53,52 @@ export class TodayMeetingsComponent implements OnInit {
     });
   }
   getMeetings(Value, Id) {
-    // this.proxy.Get('meetings/organizer?email=' + Value + '&groupId='+Id).subscribe(async res => {
-    //   this.meetingsList = res.Data.Meetings.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') === formatDate(new Date(), 'yyyy/MM/dd', 'en') || x.IsRecurring == true));
-    //   console.log('meetings list(ngoninit)', this.meetingsList);
-    //   this.getGraphEvents(Id);
-    // });
     this.shrService.getMeetings(sessionStorage.getItem('groupId')).then((res) => {
-      console.log('meetings response', res);
       const responseArray = [];
+      const responseArray1 = [];
       res.forEach(x => {
-        const meeting = new Meeting();
-        meeting.MeetingID = x.fields.id;
-        meeting.MeetingName = x.fields.Title;
-        meeting.MeetingDescription = x.fields.MeetingDescription;
-        meeting.StartDate = x.fields.StartDateTime;
-        var nameArr = x.fields.MeetingAttendees.split('|');
-        nameArr.forEach(element => {
-          const attendee = new MeetingAttendees();
-          attendee.Email = element;
-          console.log('attendees',element);
-          if(element != '' && element != 'TestSite99@sticsoft.io'){meeting.MeetingAttendees.push(attendee);}
-        });
-        console.log(nameArr);
-        // if (x.fields.MeetingAttendees.length > 0) {
-        //   x.fields.MeetingAttendees.forEach(element => {
-        //     const attendee = new MeetingAttendees();
-        //     attendee.Email = element.Email;
-        //     meeting.MeetingAttendees.push(attendee);
-        //   });
-        // }
-        responseArray.push(meeting);
+        console.log('meetings Id', Id,x.fields);
+        if ((Id == '0' && x.fields.IsGroup == false) && x.fields.Organizer == sessionStorage.getItem('user')) {
+          const meeting = new Meeting();
+          console.log('meetings If', x.fields.IsGroup);
+          meeting.MeetingID = x.fields.id;
+          meeting.MeetingName = x.fields.Title;
+          meeting.IsGroup = x.fields.IsGroup;
+          meeting.Organizer = x.fields.Organizer
+          meeting.MeetingDescription = x.fields.MeetingDescription;
+          meeting.StartDate = x.fields.StartDateTime;
+          var nameArr = x.fields.MeetingAttendees.split('|');
+          nameArr.forEach(element => {
+            const attendee = new MeetingAttendees();
+            attendee.Email = element;
+            if (element != '' && element != 'TestSite99@sticsoft.io') { meeting.MeetingAttendees.push(attendee); }
+          });
+          responseArray.push(meeting);
+        }
+        else if(Id != '0' && x.fields.IsGroup == true){
+          console.log('meetings else', x.fields.IsGroup);
+          const meeting = new Meeting();
+          meeting.MeetingID = x.fields.id;
+          meeting.MeetingName = x.fields.Title;
+          meeting.IsGroup = x.fields.IsGroup;
+          meeting.MeetingDescription = x.fields.MeetingDescription;
+          meeting.StartDate = x.fields.StartDateTime;
+          var nameArr = x.fields.MeetingAttendees.split('|');
+          nameArr.forEach(element => {
+            const attendee = new MeetingAttendees();
+            attendee.Email = element;
+            if (element != '' && element != 'TestSite99@sticsoft.io') { meeting.MeetingAttendees.push(attendee); }
+          });
+          responseArray1.push(meeting);
+        }
       });
-      this.meetingsList = responseArray;
+      if(Id == '0'){
+        console.log('responseArray', responseArray);
+        this.meetingsList = responseArray;
+      }else{
+        console.log('responseArray1', responseArray);
+        this.meetingsList = responseArray1;
+      }
       this.meetingsList = this.meetingsList.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') === formatDate(new Date(), 'yyyy/MM/dd', 'en') || x.IsRecurring == true));
       this.getGraphEvents(Id);
       console.log('todays meeting list', this.meetingsList);
@@ -97,7 +111,7 @@ export class TodayMeetingsComponent implements OnInit {
         this.structEvent(res, Id);
       });
     } else {
-      this.graphService.getGroupEvents(Id).then((res) => {
+      this.graphService.getGroupEvents("54b63089-c127-4cd9-9dd5-72013c0c3eaa").then((res) => {
         console.log('group events', res);
         this.structEvent(res, Id);
       });
@@ -129,7 +143,7 @@ export class TodayMeetingsComponent implements OnInit {
       });
       meeting.AgendaItems = [];
       if (x.isOrganizer == true) {
-        this.addMeeting(meeting);
+        this.addMeeting(meeting, Id);
       }
     });
     this.meetingsList.sort(this.GFG_sortFunction);
@@ -139,7 +153,7 @@ export class TodayMeetingsComponent implements OnInit {
     this.meetingsListcompleted1 = this.meetingsListcompleted;
     sessionStorage.setItem('Mcount', this.meetingsList.length);
   }
-  addMeeting(Data: Meeting) {
+  addMeeting(Data: Meeting, Id) {
     // const val = sessionStorage.getItem('user');
     // var frmData = new FormData();
     // const ResponseObject: string = JSON.stringify(Data);
@@ -158,6 +172,12 @@ export class TodayMeetingsComponent implements OnInit {
     //     sessionStorage.setItem('Mcount', this.meetingsList.length);
     //   }
     // });
+    var isgroup: boolean;
+    if (Id == '0') {
+      isgroup = false;
+    } else {
+      isgroup = true;
+    }
     let attendee: string = '';
     Data.MeetingAttendees.forEach(y => {
       attendee += y.Email + '|';
@@ -173,7 +193,7 @@ export class TodayMeetingsComponent implements OnInit {
         Time: "30",
         IsMeetingActive: true,
         IsRecurring: false,
-        IsGroup: true,
+        IsGroup: isgroup,
         GroupID: Data.GroupID,
         MeetingAttendees: attendee
       }
@@ -189,10 +209,9 @@ export class TodayMeetingsComponent implements OnInit {
       nameArr.forEach(element => {
         const attendee = new MeetingAttendees();
         attendee.Email = element;
-        console.log('attendees',element);
-        if(element != '' && element != 'TestSite99@sticsoft.io'){meeting.MeetingAttendees.push(attendee);}
+        if (element != '' && element != 'TestSite99@sticsoft.io') { meeting.MeetingAttendees.push(attendee); }
       });
-      
+
       this.meetingsList.push(meeting);
       this.meetingsList.sort(this.GFG_sortFunction);
       this.meetingsList1 = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() > new Date().getHours());
@@ -270,7 +289,7 @@ export class TodayMeetingsComponent implements OnInit {
       console.log("TodaysMeetingslistupdated", this.meetingsList1);
       this.meetingsList1.forEach((x, index) => {
         if (x.MeetingID == '00000000-0000-0000-0000-000000000000') {
-          this.addMeeting(x);
+          this.addMeeting(x, '0');
         }
       });
 

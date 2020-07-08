@@ -2,42 +2,62 @@
     <p style="color: white"> Loading... </p>
 </ngx-spinner>
 <div class="">
-    <div class="card card-body notification-card p-4">
-        <div class="m-4">
-            <!-- <input type="file" id="input-fil" (change)="changeFileInput($event)"> -->
+    <div class="card card-body notification-card px-4 pt-1" style="border: none;">
+        <div class="">
+            <input type="file" id="input-fil" (change)="changeFileInput($event)">
+            <img src="https://sticsoftio.sharepoint.com/sites/TestSite99/Lists/Attachments/covid.jpg"/>
             <div style="margin-left: -11px; margin-bottom: 10px;">
-                <h3 class="text-primary">Meeting Minutes</h3>
-                <button class="btn btn-{{tgAdmin?'outline-primary':'primary'}}" (click)="toggleAdmin(false)">My
-                    Statistics</button>
-                <button class="btn btn-{{tgAdmin?'primary':'outline-primary'}} ml-2" (click)="toggleAdmin(true)">All
-                    Shared Meeting Statistics</button>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <button class="btn btn-{{tgAdmin?'outline-primary':'primary'}}"
+                                    (click)="toggleAdmin(false)">My Statistics</button>
+                                <button class="btn btn-{{tgAdmin?'primary':'outline-primary'}} ml-2"
+                                    (click)="toggleAdmin(true)" *ngIf="this.isGroup != undefined || this.isGroup == 'undefined'">Team Statistics</button>
+                            </div>
+                            <div class="col-6 text-right pr-5">
+                                <div class="pr-1">
+                                    Filters:
+                                    <a href="javascript:void(0);" (click)="filters('Day')">Day</a>&nbsp;&nbsp;
+                                    <a href="javascript:void(0);" (click)="filters('Week')">Week</a>&nbsp;&nbsp;
+                                    <a href="javascript:void(0);" (click)="filters('Month')">Month</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- my statistics start -->
             <div class="row" *ngIf="!tgAdmin">
                 <div class="col-8">
                     <div class="row text-left">
-                        <div class="col-2 m-1 card text-light bg-m bt" (click)="search = username" (click)="heading = 'My Items'">
+                        <div class="col-2 m-1 card text-light bg-m bt" (click)="search = username"
+                            (click)="heading = 'My Items'">
                             <div class="card-body px-0 pb-0">
                                 <i class="fas fa-user icn c-m"></i>
                                 <h1 class="pt-4">{{Meeting?.length-1}}</h1>
                                 <h6>Total Meetings</h6>
                             </div>
                         </div>
-                        <div class="col-2 m-1 card bg-red text-light bt" (click)="search = 'Risk'" (click)="heading = 'My Risk Items'">
+                        <div class="col-2 m-1 card bg-red text-light bt" (click)="search = 'Risk'"
+                            (click)="heading = 'My Risk Items'">
                             <div class="card-body px-0">
                                 <i class="fas fa-exclamation-triangle icn c-red"></i>
                                 <h1 id="risk-u" class="pt-4">{{dashBoardCount(0,false,'Risk')}}</h1>
                                 <h6>Risk</h6>
                             </div>
                         </div>
-                        <div class="col-2 m-1 card bg-orange text-light bt" (click)="search = 'Action'" (click)="heading = 'My Action Items'">
+                        <div class="col-2 m-1 card bg-orange text-light bt" (click)="search = 'Action'"
+                            (click)="heading = 'My Action Items'">
                             <div class="card-body px-0">
                                 <i class="fas fa-bullseye icn c-orange"></i>
                                 <h1 id="action-u" class="pt-4">{{dashBoardCount(0,false,'Action')}}</h1>
                                 <h6>Action Item</h6>
                             </div>
                         </div>
-                        <div class="col-2 m-1 card bg-dec text-light bt" (click)="search = 'Decision'"  (click)="heading = 'My Decision Items'">
+                        <div class="col-2 m-1 card bg-dec text-light bt" (click)="search = 'Decision'"
+                            (click)="heading = 'My Decision Items'">
                             <div class="card-body px-0">
                                 <i class="fas fa-eye icn c-dec"></i>
                                 <h1 id="decision-u" class="pt-4">{{dashBoardCount(0,false,'Decision')}}</h1>
@@ -46,22 +66,25 @@
                         </div>
                     </div>
                     <div class="row text-left">
-                        <div class="col-2 m-1 card-body text-light bg-p bt" (click)="search = 'Planned'"  (click)="heading = 'My Planned Items'">
+                        <div class="col-2 m-1 card-body text-dark bg-p bt" (click)="search = 'Planned'"
+                            (click)="heading = 'My Planned Items'">
                             <i class="fas fa-tasks icn c-p"></i>
                             <h1 id="planned-u" class="pt-4">{{dashBoardCount(0,true,'Planned')}}</h1>
                             <h6>Planned</h6>
                         </div>
-                        <div class="col-2 m-1 card-body bg-i text-light bt" (click)="search = 'In Progress'"  (click)="heading = 'My In-Progress Items'">
+                        <div class="col-2 m-1 card-body bg-i text-dark bt" (click)="search = 'In Progress'"
+                            (click)="heading = 'My In-Progress Items'">
                             <i class="fas fa-spinner icn c-i"></i>
                             <h1 id="in-u" class="pt-4">{{dashBoardCount(0,true,'In Progress')}}</h1>
                             <h6>In Progress</h6>
                         </div>
-                        <div class="col-2 m-1 card-body bg-d text-light bt"  (click)="heading = 'My Delivery Items'">
+                        <div class="col-2 m-1 card-body bg-d text-dark bt" (click)="heading = 'My Delivery Items'">
                             <i class="fas fa-drafting-compass icn c-d"></i>
                             <h1 id="close-u" class="pt-4">0</h1>
                             <h6>Close to Delivery</h6>
                         </div>
-                        <div class="col-2 m-1 card-body bg-c text-light bt" (click)="search = 'Completed'"  (click)="heading = 'My Completed Items'">
+                        <div class="col-2 m-1 card-body bg-c text-dark bt" (click)="search = 'Completed'"
+                            (click)="heading = 'My Completed Items'">
                             <i class="far fa-check-circle icn c-c"></i>
                             <h1 id="completed-u" class="pt-4">{{dashBoardCount(0,true,'Completed')}}</h1>
                             <h6>Completed</h6>
@@ -81,28 +104,32 @@
             <div class="row" *ngIf="tgAdmin">
                 <div class="col-8">
                     <div class="row text-left">
-                        <div class="col-2 m-1 card text-light bg-m bt" (click)="search = ''"  (click)="heading = 'All Items'">
+                        <div class="col-2 m-1 card text-light bg-m bt" (click)="search = ''"
+                            (click)="heading = 'All Items'">
                             <div class="card-body px-0 pb-0">
                                 <i class="fas fa-users icn c-m"></i>
                                 <h1 class="pt-4">{{Meeting?.length-1}}</h1>
                                 <h6>Total Meetings</h6>
                             </div>
                         </div>
-                        <div class="col-2 m-1 card bg-red text-light bt" (click)="search = 'Risk'" (click)="heading = 'All Risk Items'">
+                        <div class="col-2 m-1 card bg-red text-light bt" (click)="search = 'Risk'"
+                            (click)="heading = 'All Risk Items'">
                             <div class="card-body px-0">
                                 <i class="fas fa-exclamation-triangle icn c-red"></i>
                                 <h1 id="risk-a" class="pt-4">{{dashBoardCount(1,false,'Risk')}}</h1>
                                 <h6>Risk</h6>
                             </div>
                         </div>
-                        <div class="col-2 m-1 card bg-orange text-light bt" (click)="search = 'Action'" (click)="heading = 'All Action Items'">
+                        <div class="col-2 m-1 card bg-orange text-light bt" (click)="search = 'Action'"
+                            (click)="heading = 'All Action Items'">
                             <div class="card-body px-0">
                                 <i class="fas fa-bullseye icn c-orange"></i>
                                 <h1 id="action-a" class="pt-4">{{dashBoardCount(1,false,'Action')}}</h1>
                                 <h6>Action Item</h6>
                             </div>
                         </div>
-                        <div class="col-2 m-1 card bg-info text-light bt" (click)="search = 'Decision'" (click)="heading = 'All Decision Items'">
+                        <div class="col-2 m-1 card bg-info text-light bt" (click)="search = 'Decision'"
+                            (click)="heading = 'All Decision Items'">
                             <div class="card-body px-0">
                                 <i class="fas fa-eye icn c-m"></i>
                                 <h1 id="decision-a" class="pt-4">{{dashBoardCount(1,false,'Decision')}}</h1>
@@ -111,12 +138,14 @@
                         </div>
                     </div>
                     <div class="row text-left">
-                        <div class="col-2 m-1 card-body text-light bg-p bt" (click)="search = 'Planned'" (click)="heading = 'All Planned Items'">
+                        <div class="col-2 m-1 card-body text-light bg-p bt" (click)="search = 'Planned'"
+                            (click)="heading = 'All Planned Items'">
                             <i class="fas fa-tasks icn c-p"></i>
                             <h1 id="planned-a" class="pt-4">{{dashBoardCount(1,true,'Planned')}}</h1>
                             <h6>Planned</h6>
                         </div>
-                        <div class="col-2 m-1 card-body bg-i text-light bt" (click)="search = 'In Progress'" (click)="heading = 'All In-Progress Items'">
+                        <div class="col-2 m-1 card-body bg-i text-light bt" (click)="search = 'In Progress'"
+                            (click)="heading = 'All In-Progress Items'">
                             <i class="fas fa-spinner icn c-i"></i>
                             <h1 id="in-a" class="pt-4">{{dashBoardCount(1,true,'In Progress')}}</h1>
                             <h6>In Progress</h6>
@@ -126,7 +155,8 @@
                             <h1 id="close-a" class="pt-4">0</h1>
                             <h6>Close to Delivery</h6>
                         </div>
-                        <div class="col-2 m-1 card-body bg-c text-light bt" (click)="search = 'Completed'" (click)="heading = 'All Completed Items'">
+                        <div class="col-2 m-1 card-body bg-c text-light bt" (click)="search = 'Completed'"
+                            (click)="heading = 'All Completed Items'">
                             <i class="far fa-check-circle icn c-c"></i>
                             <h1 id="completed-a" class="pt-4">{{dashBoardCount(1,true,'Completed')}}</h1>
                             <h6>Completed</h6>
@@ -151,7 +181,7 @@
                                    Show By Meetings
                                 </button>
                             </div> -->
-                            <div class="col-9 ml-0">
+                            <div class="col-4 ml-0">
                                 <!-- <button class="btn btn-{{btnToggle}} mb-3 ml-1" (click)="showAll()"
                                     *ngIf="IsOwner && Toggle == 'Hide'">
                                     <i class="fa fa-filter" aria-hidden="true"></i>
@@ -164,10 +194,10 @@
                                 <input class="form-control" (keyup)="searchData($event)" placeholder="Search Notes.."
                                     [(ngModel)]="search" />
                             </div>
-                            <div class="col-3">
-                                <button class="btn btn-primary btn-block float-right" data-toggle="modal"
+                            <div class="col-8">
+                                <button class="btn btn-primary float-right" data-toggle="modal"
                                     (click)="editNote(note,0)" data-target="#noteEdit">
-                                    Add New Action Item
+                                    Add Note
                                 </button>
                             </div>
 
@@ -271,7 +301,7 @@
                                                         <p *ngSwitchDefault>None</p>
                                                     </div>
                                                 </div>
-                                               
+
                                                 <div class="col-1 text-center">
                                                     <button class="btn btn-sm btn-outline-success" data-toggle="modal"
                                                         (click)="editNote(note,1)" data-target="#noteEdit">

@@ -6,12 +6,12 @@
   "version": "*",
   "manifestVersion": 2,  
   "requiresCustomScript": false,
-  "supportedHosts": ["SharePointWebPart","SharePointFullPage","TeamsTab"],
+  "supportedHosts": ["SharePointWebPart","SharePointFullPage","TeamsTab", "TeamsPersonalApp"],
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
     "group": { "default": "Other" },
-    "title": { "default": "powermeet006" },
-    "description": { "default": "powermeet description" },
+    "title": { "default": "Meeting Data Management Tool" },
+    "description": { "default": "Meeting Data Management Tool description" },
     "officeFabricIconFontName": "Page",
     "properties": {
       "description": "powermeet"

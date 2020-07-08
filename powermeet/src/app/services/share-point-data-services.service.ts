@@ -34,7 +34,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Meetings/items?expand=fields')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Meetings/items?expand=fields')
         .get();
       return result.value;
     } catch (error) {
@@ -53,7 +53,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Meetings/items/' + meetingId + '?expand=fields')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Meetings/items/' + meetingId + '?expand=fields')
         .get();
       return result;
     } catch (error) {
@@ -73,9 +73,9 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Meetings/items')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Meetings/items')
         .post(listItem);
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('post notif response', res);
         });
       return result;
@@ -95,7 +95,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Agenda Items/items?expand=fields&$filter=fields/MeetingLookupId eq ' + meetingId)
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Agenda Items/items?expand=fields&$filter=fields/MeetingLookupId eq ' + meetingId)
         .get();
       return result.value;
     } catch (error) {
@@ -114,7 +114,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Agenda Items/items/'+agendaId+'?expand=fields')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Agenda Items/items/'+agendaId+'?expand=fields')
         .get();
       return result;
     } catch (error) {
@@ -133,7 +133,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Agenda Items/items?expand=fields&$top=10')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Agenda Items/items?expand=fields&$top=10')
         .get();
       return result.value;
     } catch (error) {
@@ -152,7 +152,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Template Agenda/items?expand=fields&$filter=fields/TemplateLookupId eq ' + templateId)
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Template Agenda/items?expand=fields&$filter=fields/TemplateLookupId eq ' + templateId)
         .get();
       return result.value;
     } catch (error) {
@@ -172,9 +172,9 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Template Agenda/items')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Template Agenda/items')
         .post(listItem);
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('post notif response', res);
         });
       return result;
@@ -194,7 +194,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Template/items?expand=fields')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Template/items?expand=fields')
         .get();
       return result.value;
     } catch (error) {
@@ -214,9 +214,9 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Template/items')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Template/items')
         .post(listItem);
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('post notif response', res);
         });
       return result;
@@ -237,9 +237,9 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Agenda Items/items')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Agenda Items/items')
         .post(listItem);
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('post notif response', res);
         });
       return result;
@@ -260,9 +260,9 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Agenda Items/items/'+AgendaId)
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Agenda Items/items/'+AgendaId)
         .update(listItem);
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('update notif response', res);
         });
       return result;
@@ -299,7 +299,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Notes/items?expand=fields&$filter=fields/AgendaLookupId eq ' + agendaId)
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notes/items?expand=fields&$filter=fields/AgendaLookupId eq ' + agendaId)
         .get();
       return result.value;
     } catch (error) {
@@ -318,7 +318,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Notes/items?expand=fields')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notes/items?expand=fields')
         .get();
       return result.value;
     } catch (error) {
@@ -338,9 +338,9 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Notes/items')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notes/items')
         .post(listItem);
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('post notif response', res);
         });
       return result;
@@ -361,9 +361,9 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Notes/items/'+NoteID)
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notes/items/'+NoteID)
         .update(listItem);
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('post notif response', res);
         });
       return result;
@@ -383,7 +383,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Notifications/items?expand=fields')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notifications/items?expand=fields')
         .get();
       return result.value;
     } catch (error) {
@@ -402,14 +402,14 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + groupId + '/sites/root/lists/Notifications/items')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notifications/items')
         .post(listItem);
       return result;
     } catch (error) {
       console.log('Could not add notification items', JSON.stringify(error, null, 2));
     }
   }
-  async UploadAttachments(groupId,stream:any,filename:string,meetingId:number,agendaId:number): Promise<any> {
+  async UploadAttachments(groupId,stream:any,filename:string,driveItem:any): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {  
         let token = JSON.parse(sessionStorage.getItem('token'));        
@@ -422,17 +422,57 @@ export class SharePointDataServicesService {
           });
         }
           let result = await this.graphClient
-            .api("/groups/"+groupId+"/sites/root/drive/Attachments/items/root:/"+filename+":/content")
+            .api("/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/drives/b!iWEUljAoAEi_ZCTertMZeN98T_PX2tFLikQM9E-tGxgeVN0HdXUGTZOPcwp9rH4t/items/root:/"+filename+":/content")
             .put(stream)
-          let fresult = await this.updateAttachmentMetadata(groupId,meetingId,agendaId,result.id);
-          resolve(fresult);           
+            console.log('attachments response', result);
+          // let attchId = await this.getAttachmentId(filename);
+          let fresult = await this.updateAttachmentMetadata(driveItem,result.id);
+          resolve(result);           
       } catch (error) {          
           console.error(error);
       }  
     });
   }
-
-  async updateAttachmentMetadata(groupId,meetingId:number,agendaId:number,itemId:number): Promise<any>{
+  async getAttachmentId(filename:string){
+    let token = sessionStorage.getItem('authconfig');
+    if (token) {
+      this.graphClient = Client.init({
+        authProvider: async (done) => {
+          if (token) { done(null, token); }
+          else { done("Could not get an access token", null) }
+        }
+      });
+    }
+    try {
+      let result = await this.graphClient
+        .api(`/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/Lists/Attachments/items?expand=fields&$filter=fields/Modified gt '2018-01-01'`)
+        .get();
+        console.log('resisdflsdlmf', result);
+      return result.value;
+    } catch (error) {
+      console.log('Could not get attachemtns', JSON.stringify(error, null, 2));
+    }
+  }
+async getAttachments(){
+  let token = sessionStorage.getItem('authconfig');
+  if (token) {
+    this.graphClient = Client.init({
+      authProvider: async (done) => {
+        if (token) { done(null, token); }
+        else { done("Could not get an access token", null) }
+      }
+    });
+  }
+  try {
+    let result = await this.graphClient
+      .api('/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/Lists/Attachments/items?expand=fields')
+      .get();
+    return result.value;
+  } catch (error) {
+    console.log('Could not get attachemtns', JSON.stringify(error, null, 2));
+  }
+}
+  async updateAttachmentMetadata(driveItem: any,itemId:number): Promise<any>{
     return new Promise<any>(async (resolve, reject) => {
       try {  
         let token = JSON.parse(sessionStorage.getItem('token'));       
@@ -444,12 +484,9 @@ export class SharePointDataServicesService {
             }
           });
         }
-        const driveItem = {
-          MeetingLookupId : meetingId,
-          AgendaLookupId : agendaId
-        };
+        
           let result = await this.graphClient
-            .api("/groups/"+groupId+"/sites/root/drive/Attachments/items/"+itemId)
+            .api("/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/lists/Attachments/items/"+itemId)
             .update(driveItem)
           resolve(result);           
       } catch (error) {          
@@ -469,9 +506,9 @@ export class SharePointDataServicesService {
         });
       }
       try{
-        let result = await this.graphClient.api('/groups/'+groupId+'/sites/root/lists/'+listName+'/items/'+itemId)
+        let result = await this.graphClient.api('/groups/'+"54b63089-c127-4cd9-9dd5-72013c0c3eaa"+'/sites/root/lists/'+listName+'/items/'+itemId)
         .delete();
-        this.postNotification(sessionStorage.getItem('groupId'),this.notifObj).then(res =>{
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
           console.log('delete notif response', res);
         });
         return result;
