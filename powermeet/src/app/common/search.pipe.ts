@@ -16,9 +16,11 @@ export class SearchPipe implements PipeTransform {
     if(!value)return null;
     if(!args)return value;
     args = args.toLowerCase();
+    //if(value.length > 0){
     return value.filter(function(item){
         return JSON.stringify(item).toLowerCase().includes(args);
     });
+  //}
 }
 
 }

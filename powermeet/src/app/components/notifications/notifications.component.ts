@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { DataService } from 'src/app/services/data.service';
 import { User } from 'src/app/models/User';
 import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notifications',
@@ -17,6 +18,7 @@ export class NotificationsComponent implements OnInit {
   constructor(private proxy: ProxyService, private dataService: DataService, private shrService: SharePointDataServicesService) { }
 
   ngOnInit(): void {
+    document.getElementById('todayactive').classList.remove('active');
     this.getNotifcations();
     this.getUsersList();
   }
@@ -28,7 +30,6 @@ export class NotificationsComponent implements OnInit {
     });
   }
   getUserStatus(email): User {
-    console.log('usersss', email);
     const data = this.usersList.find(x => x.email === email);
     return data;
   }
@@ -43,6 +44,11 @@ export class NotificationsComponent implements OnInit {
         this.notificationList.push(x.fields);
       });
     })
+  }
+  get sortData() {
+    return this.notificationList.sort((a, b) => {
+      return <any>new Date(b.NotificationDateTime) - <any>new Date(a.NotificationDateTime);
+    });
   }
   typeList: any = [{ Id: '2edcd9d6-eddf-4e5b-90ed-bc4508f474bb', Text: 'Meeting' }, { Id: 'e5479599-a75d-4df8-8b06-7dd1ed82e563', Text: 'Agenda Item' }];
   getStatus(Id) {

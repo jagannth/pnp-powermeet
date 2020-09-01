@@ -1,430 +1,648 @@
 <ngx-spinner bdColor="rgba(0,0,0,0.4)" size="medium" color="#fff" type="ball-spin-fade" [fullScreen]="true">
-    <p style="color: white"> Loading... </p>
+  <p style="color: white"> Loading... </p>
 </ngx-spinner>
-<div class="">
-    <div class="card card-body notification-card px-4 pt-1" style="border: none;">
-        <div class="">
-            <input type="file" id="input-fil" (change)="changeFileInput($event)">
-            <img src="https://sticsoftio.sharepoint.com/sites/TestSite99/Lists/Attachments/covid.jpg"/>
-            <div style="margin-left: -11px; margin-bottom: 10px;">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="row">
-                            <div class="col-6">
-                                <button class="btn btn-{{tgAdmin?'outline-primary':'primary'}}"
-                                    (click)="toggleAdmin(false)">My Statistics</button>
-                                <button class="btn btn-{{tgAdmin?'primary':'outline-primary'}} ml-2"
-                                    (click)="toggleAdmin(true)" *ngIf="this.isGroup != undefined || this.isGroup == 'undefined'">Team Statistics</button>
-                            </div>
-                            <div class="col-6 text-right pr-5">
-                                <div class="pr-1">
-                                    Filters:
-                                    <a href="javascript:void(0);" (click)="filters('Day')">Day</a>&nbsp;&nbsp;
-                                    <a href="javascript:void(0);" (click)="filters('Week')">Week</a>&nbsp;&nbsp;
-                                    <a href="javascript:void(0);" (click)="filters('Month')">Month</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- my statistics start -->
-            <div class="row" *ngIf="!tgAdmin">
-                <div class="col-8">
-                    <div class="row text-left">
-                        <div class="col-2 m-1 card text-light bg-m bt" (click)="search = username"
-                            (click)="heading = 'My Items'">
-                            <div class="card-body px-0 pb-0">
-                                <i class="fas fa-user icn c-m"></i>
-                                <h1 class="pt-4">{{Meeting?.length-1}}</h1>
-                                <h6>Total Meetings</h6>
-                            </div>
-                        </div>
-                        <div class="col-2 m-1 card bg-red text-light bt" (click)="search = 'Risk'"
-                            (click)="heading = 'My Risk Items'">
-                            <div class="card-body px-0">
-                                <i class="fas fa-exclamation-triangle icn c-red"></i>
-                                <h1 id="risk-u" class="pt-4">{{dashBoardCount(0,false,'Risk')}}</h1>
-                                <h6>Risk</h6>
-                            </div>
-                        </div>
-                        <div class="col-2 m-1 card bg-orange text-light bt" (click)="search = 'Action'"
-                            (click)="heading = 'My Action Items'">
-                            <div class="card-body px-0">
-                                <i class="fas fa-bullseye icn c-orange"></i>
-                                <h1 id="action-u" class="pt-4">{{dashBoardCount(0,false,'Action')}}</h1>
-                                <h6>Action Item</h6>
-                            </div>
-                        </div>
-                        <div class="col-2 m-1 card bg-dec text-light bt" (click)="search = 'Decision'"
-                            (click)="heading = 'My Decision Items'">
-                            <div class="card-body px-0">
-                                <i class="fas fa-eye icn c-dec"></i>
-                                <h1 id="decision-u" class="pt-4">{{dashBoardCount(0,false,'Decision')}}</h1>
-                                <h6>Decision</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row text-left">
-                        <div class="col-2 m-1 card-body text-dark bg-p bt" (click)="search = 'Planned'"
-                            (click)="heading = 'My Planned Items'">
-                            <i class="fas fa-tasks icn c-p"></i>
-                            <h1 id="planned-u" class="pt-4">{{dashBoardCount(0,true,'Planned')}}</h1>
-                            <h6>Planned</h6>
-                        </div>
-                        <div class="col-2 m-1 card-body bg-i text-dark bt" (click)="search = 'In Progress'"
-                            (click)="heading = 'My In-Progress Items'">
-                            <i class="fas fa-spinner icn c-i"></i>
-                            <h1 id="in-u" class="pt-4">{{dashBoardCount(0,true,'In Progress')}}</h1>
-                            <h6>In Progress</h6>
-                        </div>
-                        <div class="col-2 m-1 card-body bg-d text-dark bt" (click)="heading = 'My Delivery Items'">
-                            <i class="fas fa-drafting-compass icn c-d"></i>
-                            <h1 id="close-u" class="pt-4">0</h1>
-                            <h6>Close to Delivery</h6>
-                        </div>
-                        <div class="col-2 m-1 card-body bg-c text-dark bt" (click)="search = 'Completed'"
-                            (click)="heading = 'My Completed Items'">
-                            <i class="far fa-check-circle icn c-c"></i>
-                            <h1 id="completed-u" class="pt-4">{{dashBoardCount(0,true,'Completed')}}</h1>
-                            <h6>Completed</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div style="display: block;margin-left: -130px">
-                        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels"
-                            [chartType]="doughnutChartType" height="70" width="100">
-                        </canvas>
-                    </div>
-                </div>
-            </div>
-            <!-- my statistics end -->
-            <!-- All Statistics start -->
-            <div class="row" *ngIf="tgAdmin">
-                <div class="col-8">
-                    <div class="row text-left">
-                        <div class="col-2 m-1 card text-light bg-m bt" (click)="search = ''"
-                            (click)="heading = 'All Items'">
-                            <div class="card-body px-0 pb-0">
-                                <i class="fas fa-users icn c-m"></i>
-                                <h1 class="pt-4">{{Meeting?.length-1}}</h1>
-                                <h6>Total Meetings</h6>
-                            </div>
-                        </div>
-                        <div class="col-2 m-1 card bg-red text-light bt" (click)="search = 'Risk'"
-                            (click)="heading = 'All Risk Items'">
-                            <div class="card-body px-0">
-                                <i class="fas fa-exclamation-triangle icn c-red"></i>
-                                <h1 id="risk-a" class="pt-4">{{dashBoardCount(1,false,'Risk')}}</h1>
-                                <h6>Risk</h6>
-                            </div>
-                        </div>
-                        <div class="col-2 m-1 card bg-orange text-light bt" (click)="search = 'Action'"
-                            (click)="heading = 'All Action Items'">
-                            <div class="card-body px-0">
-                                <i class="fas fa-bullseye icn c-orange"></i>
-                                <h1 id="action-a" class="pt-4">{{dashBoardCount(1,false,'Action')}}</h1>
-                                <h6>Action Item</h6>
-                            </div>
-                        </div>
-                        <div class="col-2 m-1 card bg-info text-light bt" (click)="search = 'Decision'"
-                            (click)="heading = 'All Decision Items'">
-                            <div class="card-body px-0">
-                                <i class="fas fa-eye icn c-m"></i>
-                                <h1 id="decision-a" class="pt-4">{{dashBoardCount(1,false,'Decision')}}</h1>
-                                <h6>Decision</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row text-left">
-                        <div class="col-2 m-1 card-body text-light bg-p bt" (click)="search = 'Planned'"
-                            (click)="heading = 'All Planned Items'">
-                            <i class="fas fa-tasks icn c-p"></i>
-                            <h1 id="planned-a" class="pt-4">{{dashBoardCount(1,true,'Planned')}}</h1>
-                            <h6>Planned</h6>
-                        </div>
-                        <div class="col-2 m-1 card-body bg-i text-light bt" (click)="search = 'In Progress'"
-                            (click)="heading = 'All In-Progress Items'">
-                            <i class="fas fa-spinner icn c-i"></i>
-                            <h1 id="in-a" class="pt-4">{{dashBoardCount(1,true,'In Progress')}}</h1>
-                            <h6>In Progress</h6>
-                        </div>
-                        <div class="col-2 m-1 card-body bg-d text-light bt" (click)="heading = 'All Deliverable Items'">
-                            <i class="fas fa-drafting-compass icn c-d"></i>
-                            <h1 id="close-a" class="pt-4">0</h1>
-                            <h6>Close to Delivery</h6>
-                        </div>
-                        <div class="col-2 m-1 card-body bg-c text-light bt" (click)="search = 'Completed'"
-                            (click)="heading = 'All Completed Items'">
-                            <i class="far fa-check-circle icn c-c"></i>
-                            <h1 id="completed-a" class="pt-4">{{dashBoardCount(1,true,'Completed')}}</h1>
-                            <h6>Completed</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div style="display: block;margin-left: -130px">
-                        <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels"
-                            [chartType]="doughnutChartType" height="70" width="100">
-                        </canvas>
-                    </div>
-                </div>
-            </div>
-            <!-- All Statistics end -->
-            <div class="row">
-                <div class="col-md-12 pl-0 mt-4">
-                    <div>
-                        <div class="row">
-                            <!-- <div class="col-2 m-1">
-                                <button class="btn btn-primary mb-3 ml-2" (click)="toggleAc()">
-                                   Show By Meetings
-                                </button>
-                            </div> -->
-                            <div class="col-4 ml-0">
-                                <!-- <button class="btn btn-{{btnToggle}} mb-3 ml-1" (click)="showAll()"
-                                    *ngIf="IsOwner && Toggle == 'Hide'">
-                                    <i class="fa fa-filter" aria-hidden="true"></i>
-                                </button> -->
-                                <!-- <select class="form-control" (change)="getTaskByMeeting($event.target.value)">
-                                    <option value="">Select</option>
-                                    <option value="All">All</option>
-                                    <option *ngFor="let met of Meeting" value="{{met?.MeetingID}}">{{met?.MeetingName}}</option>
-                                </select> -->
-                                <input class="form-control" (keyup)="searchData($event)" placeholder="Search Notes.."
-                                    [(ngModel)]="search" />
-                            </div>
-                            <div class="col-8">
-                                <button class="btn btn-primary float-right" data-toggle="modal"
-                                    (click)="editNote(note,0)" data-target="#noteEdit">
-                                    Add Note
-                                </button>
-                            </div>
-
-                        </div>
-                        <h6 class="text-primary mt-2">{{heading}}</h6>
-                        <!-- meeting toggle start -->
-                        <div class="accordion" id="accordionExample">
-                            <!-- <option *ngFor="let met of Meeting" value="{{met?.MeetingID}}">{{met?.MeetingName}}</option> -->
-                            <div class="card" *ngFor="let met of Meeting;let i = index">
-                                <div class="card-header" [attr.id]="'accordion_' + i">
-                                    <h2 class="mb-0">
-                                        <!-- aria-expanded="false" class="btn btn-link collapsed" data-toggle="collapse"-->
-                                        <button class="btn btn-link" type="button" [attr.href]="'#collapseOne_' + i"
-                                            data-toggle="collapse" aria-expanded="true"
-                                            [attr.aria-controls]="'collapseOne_' + i" [attr.id]="'my_' + i">
-                                            {{met?.MeetingName}}
-                                        </button>
-                                    </h2>
-                                </div>
-
-                                <div [attr.id]="'collapseOne_' + i" class="collapse show"
-                                    [attr.aria-labelledby]="'accordion_' + i" data-parent="#accordionExample">
-                                    <div class="card-body pb-0" *ngFor="let agenda of met?.AgendaItems">
-                                        <!-- <div>
-                                        <h6 class="ml-2">{{agenda?.AgendaName}}</h6>
-                                        <div class="row bg-light py-2 mx-2">
-                                            <div class="col-5"><b>Notes</b></div>
-                                            <div class="col-1 text-center"><b>Next Steps</b> </div>
-                                            <div class="col-2 m-1 text-center"><b>Assigned To </b> </div>
-                                            <div class="col-1 text-center"><b>Assigned Date </b> </div>
-                                            <div class="col-1 text-center"><b>Due Date </b> </div>
-                                            <div class="col-1 text-center"> <b>Status</b></div>
-                                            <div class="col-1 text-center"><b>Action</b> </div>
-                                        </div>
-                                       </div> -->
-                                        <!-- <div class="alert alert-danger text-center m-2" role="alert"
-                                            *ngIf="agenda.Notes.length == 0">
-                                            No Data
-                                        </div> -->
-                                        <div class="m-2" *ngFor="let note of agenda.Notes | LockFilter: search">
-                                            <div class="row border-bottom pb-2 mx-2">
-                                                <div class="col-5">
-                                                    <div class="row">
-                                                        <div class="col-2 px-1">
-                                                            <span class="td-attendee-more1"
-                                                                *ngIf="!getStatus(note.CreatedBy)?.status"
-                                                                [style.background-color]="colorsArray[0]">
-                                                                {{getStatus(note.CreatedBy)?.displayName | uppercase}}
-                                                            </span>
-                                                            <span class="td-attendee1"
-                                                                *ngIf="getStatus(note.CreatedBy)">
-                                                                <img [src]="getStatus(note.CreatedBy)?.file" alt=""
-                                                                    class="img-fluid">
-                                                            </span>
-                                                        </div>
-                                                        <div class="col-10">
-                                                            <span>
-                                                                {{note.Description}}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-1 text-center">
-                                                    <div [ngSwitch]="note.Type">
-                                                        <button *ngSwitchCase="'Action'"
-                                                            class="btn bg-orange text-light btn-sm w-6r">{{note.Type}}</button>
-                                                        <button *ngSwitchCase="'Decision'"
-                                                            class="btn btn-primary btn-sm w-6r">{{note.Type}}</button>
-                                                        <button *ngSwitchCase="'Risk'"
-                                                            class="btn btn-danger btn-sm w-6r">{{note.Type}}</button>
-                                                        <p *ngSwitchDefault>None</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2 text-center" *ngIf="note.Type != ''">
-                                                    <span class="td-attendee-more1 ml-1"
-                                                        *ngIf="!getStatus(note.AssignedTo)?.status"
-                                                        [style.background-color]="colorsArray[0]">
-                                                        {{getStatus(note.AssignedTo)?.displayName | uppercase}}
-                                                    </span>
-                                                    <span class="td-attendee1" *ngIf="getStatus(note.AssignedTo)">
-                                                        <img [src]="getStatus(note.AssignedTo)?.file" alt=""
-                                                            class="img-fluid">
-                                                    </span>
-                                                </div>
-                                                <div class="col-2 text-center" *ngIf="note.Type == ''">
-                                                    <p>None</p>
-                                                </div>
-                                                <div class="col-1 text-center">
-                                                    {{note?.AssignedDate | date }}
-                                                </div>
-                                                <div class="col-1 text-center">{{note?.DueDate | date}}
-                                                </div>
-                                                <div class="col-1 text-center">
-                                                    <div [ngSwitch]="note.Status">
-                                                        <button *ngSwitchCase="'Planned'"
-                                                            class="btn btn-outline-info btn-sm w-6r">{{note?.Status}}</button>
-                                                        <button *ngSwitchCase="'In Progress'"
-                                                            class="btn btn-outline-success btn-sm w-6r">{{note?.Status}}</button>
-                                                        <button *ngSwitchCase="'Completed'"
-                                                            class="btn btn-outline-danger btn-sm w-6r">{{note?.Status}}</button>
-                                                        <p *ngSwitchDefault>None</p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-1 text-center">
-                                                    <button class="btn btn-sm btn-outline-success" data-toggle="modal"
-                                                        (click)="editNote(note,1)" data-target="#noteEdit">
-                                                        <i class="fas fa-edit"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- meeting toggle end -->
-                    </div>
-                </div>
-            </div>
-        </div>
+<a id="notesscreen" [routerLink]="['/Notes']" [queryParams]="{ Id: meetingId,'start': 'false'}" hidden>Notes Screen</a>
+<div class="dashboard-body mt3">
+  <!-- <input type="file" id="input-fil" (change)="changeFileInput($event)"> -->
+  <!-- anlytics overiew section : start  -->
+  <div class="d-flex justify-content-between mb-3 ">
+    <div>
+      <h5 class="mb-1">Meetings Overview</h5>
+      <p class="mb-0">Viewing data for : <b class="text-secondary">{{overviewDate}}</b></p>
     </div>
+    <div class="d-flex mt-2">
+      <div class="mr-2 ">
+        <ul class="list-group list-group-horizontal date-filter shadow-sm">
+          <li id="toid" class="list-group-item active" (click)="filters('Day','toid')">Today</li>
+          <li id="woid" class="list-group-item" (click)="filters('Week','woid')">This Week</li>
+          <li id="moid" class="list-group-item" (click)="filters('Month','moid')">This Month</li>
+        </ul>
+      </div>
+
+      <div>
+
+        <input type="date" id="customDate" [value]="fillDate" name="" class="form-control shadow-sm" id="daid"
+          (change)="filters($event.target.value,'daid')">
+
+      </div>
+
+    </div>
+  </div>
+  <!-- anlytics overiew section : end  -->
+
+  <div class="card card-body border-0 p-0 mb-3 shadow-sm">
+
+    <!-- anlytics overiew section : start  -->
+    <!-- <div class="d-flex justify-content-between mb-2 bg-light p-2 rounded-top">
+      <div>
+        <h5 class="mb-0 pt-1 pl-2">Meetings Overview</h5>
+      </div>
+
+      <div>
+        <input type="date" name="" class="form-control mr-2" id="">
+      </div>
+
+    </div> -->
+    <!-- anlytics overiew section : end  -->
+
+    <div class="px-3">
+      <ul class="nav nav-pills  border-bottom">
+        <li class="nav-item active">
+          <a id="my" class="nav-link admin-nav-link active" (click)="toggleAdmin('my',false)">My Meeting Stats</a>
+        </li>
+        <li class="nav-item" *ngIf="isGroup != 'undefined'">
+          <a id="All" class="nav-link admin-nav-link" (click)="toggleAdmin('All',true)">All Meeting Stats</a>
+        </li>
+
+      </ul>
+    </div>
+
+
+    <div class="p-4">
+      <!-- <input type="file" id="input-fil" (change)="changeFileInput($event)"> -->
+      <!-- my statistics start -->
+      <div class="row" *ngIf="!tgAdmin">
+        <div class="col-md-6">
+          <div class="row ">
+            <!-- <div class="col-md-4 p-1 stats-card  tiles" id="tid" (click)="tabFilter('','')"
+              (click)="heading = 'My Items'" (click)="Changecolor('tid')">
+              <div class="card card-body border-0 p-2 text-light bg-m bt">
+                <h6>Total Meetings</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span>{{MeetingCount}}</span>
+                  <span>
+                    <i class="fas fa-user icn c-m"></i>
+                  </span>
+                </h1>
+              </div>
+            </div> -->
+            <div class="col-md-4 p-1 stats-card tiles" id="Rid" (click)="tabFilter('Risk','')"
+              (click)="heading = 'My Risk Items'" (click)="Changecolor('Rid')">
+              <div class="card card-body border-0 p-2 bg-red text-light bt">
+                <h6>Risk</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="risk-u">{{dashboardCounts?.Risk}}</span>
+                  <span>
+                    <i class="fas fa-exclamation-triangle icn c-red"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+            <div class="col-md-4 p-1 stats-card tiles" id="aid" (click)="tabFilter('Action','')"
+              (click)="heading = 'My Action Items'" (click)="Changecolor('aid')">
+              <div class="card card-body border-0 p-2 bg-orange text-light bt">
+                <h6>Action Item</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="action-u">{{dashboardCounts?.Action}}</span>
+                  <span>
+                    <i class="fas fa-bullseye icn c-orange"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+            <div class="col-md-4 p-1 stats-card tiles" id="did" (click)="tabFilter('Decision','')"
+              (click)="heading = 'My Decision Items'" (click)="Changecolor('did')">
+              <div class="card card-body border-0 p-2 bg-dec text-light bt">
+                <h6>Decision</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="decision-u">{{dashboardCounts?.Decision}}</span>
+                  <span>
+                    <i class="fas fa-eye icn c-dec"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+
+            <div class="col-md-4 p-1 stats-card tiles" id="pid" (click)="tabFilter('','Planned')"
+              (click)="heading = 'My Planned Items'" (click)="Changecolor('pid')">
+              <div class="card card-body border-0 p-2 text-dark bg-p bt">
+                <h6>Planned</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="planned-u">{{dashboardCounts?.Planned}}</span>
+                  <span>
+                    <i class="fas fa-tasks icn c-p"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+            <div class="col-md-4 p-1 stats-card tiles" id="iid" (click)="tabFilter('','In Progress')"
+              (click)="heading = 'My In-Progress Items'" (click)="Changecolor('iid')">
+              <div class="card card-body border-0 p-2 bg-i text-dark bt">
+                <h6>In Progress</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="in-u">{{dashboardCounts?.InProgress}}</span>
+                  <span>
+                    <i class="fas fa-spinner icn c-i"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+            <!-- <div class="col-md-4 p-1 stats-card tiles" id="cid" (click)="tabFilter('','Close')"
+              (click)="heading = 'My Delivery Items'" (click)="Changecolor('cid')">
+              <div class="card card-body border-0 p-2 bg-d text-dark bt">
+                <h6>Close to Delivery</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="close-u">0</span>
+                  <span>
+                    <i class="fas fa-drafting-compass icn c-d"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div> -->
+            <div class="col-md-4 p-1 stats-card tiles" id="coid" (click)="tabFilter('','Completed')"
+              (click)="heading = 'My Completed Items'" (click)="Changecolor('coid')">
+              <div class="card card-body border-0 p-2 bg-c text-dark bt">
+                <h6>Completed</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="completed-u">{{dashboardCounts?.Completed}}</span>
+                  <span>
+                    <i class="far fa-check-circle icn c-c"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+          <div style="display: block; margin-top: -1.2rem;">
+            <!-- <img [src]="logo"/> -->
+            <canvas baseChart [data]="doughnutChartData" [legend]="lineChartLegend" [colors]="chartColors1"
+              [labels]="doughnutChartLabels" [chartType]="doughnutChartType" height="70" width="100"
+              [options]="options">
+            </canvas>
+          </div>
+        </div>
+
+      </div>
+      <!-- my statistics end -->
+
+      <!-- All Statistics start -->
+      <div class="row" *ngIf="tgAdmin">
+        <div class="col-md-6">
+          <div class="row text-left">
+            <!-- <div class="col-md-4 p-1 stats-card  tiles1" id="tid1" (click)="tabFilter('','')"
+              (click)="heading = 'All Items'" (click)="Changecolor('tid1')">
+              <div class="card card-body border-0 p-2  px-0 text-light bg-m bt">
+                <h6>Total Meetings</h6>
+                <h1 class="d-flex justify-content-between">
+
+                  <span>{{MeetingCount}}</span>
+                  <span>
+                    <i class="fas fa-users icn c-m"></i>
+                  </span>
+                </h1>
+              </div>
+            </div> -->
+            <div class="col-md-4 p-1 stats-card tiles1" id="Rid1" (click)="tabFilter('Risk','')"
+              (click)="heading = 'All Risk Items'" (click)="Changecolor('Rid1')">
+              <div class="card card-body border-0 p-2  px-0 bg-red text-light bt">
+                <h6>Risk</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="risk-a">{{dashboardCounts?.Risk}} </span>
+                  <span>
+                    <i class="fas fa-exclamation-triangle icn c-red"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+            <div class="col-md-4 p-1 stats-card tiles1" id="aid1" (click)="tabFilter('Action','')"
+              (click)="heading = 'All Action Items'" (click)="Changecolor('aid1')">
+              <div class="card card-body border-0 p-2  px-0 bg-orange text-light bt">
+                <h6>Action Item</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="action-a">{{dashboardCounts?.Action}}</span>
+                  <span>
+                    <i class="fas fa-bullseye icn c-orange"></i>
+                  </span>
+                </h1>
+
+              </div>
+            </div>
+
+            <div class="col-md-4 p-1 stats-card tiles1" id="did1" (click)="tabFilter('Decision','')"
+              (click)="heading = 'All Decision Items'" (click)="Changecolor('did1')">
+              <div class="card card-body border-0 p-2  px-0 bg-dec text-light bt">
+                <h6>Decision</h6>
+                <h1 class="d-flex justify-content-between">
+
+                  <span id="decision-a">{{dashboardCounts?.Decision}}</span>
+                  <span>
+                    <i class="fas fa-eye icn c-m"></i>
+                  </span>
+                </h1>
+              </div>
+            </div>
+
+
+            <div class="col-md-4 p-1 stats-card tiles1" id="pid1" (click)="tabFilter('','Planned')"
+              (click)="heading = 'All Planned Items'" (click)="Changecolor('pid1')">
+              <div class="card card-body border-0 p-2 text-dark bg-p bt">
+                <h6>Planned</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="planned-a">{{dashboardCounts?.Planned}}</span>
+
+                  <span>
+                    <i class="fas fa-tasks icn c-p"></i>
+                  </span>
+                </h1>
+              </div>
+            </div>
+
+            <div class="col-md-4 p-1 stats-card tiles1" id="iid1" (click)="tabFilter('','In Progress')"
+              (click)="heading = 'All In-Progress Items'" (click)="Changecolor('iid1')">
+              <div class="card card-body border-0 p-2 bg-i text-dark bt">
+                <h6>In Progress</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="in-a">{{dashboardCounts?.InProgress}}</span>
+
+                  <span>
+                    <i class="fas fa-spinner icn c-i"></i>
+                  </span>
+                </h1>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-4 p-1 stats-card tiles1" id="cid1" (click)="tabFilter('','Close')"
+              (click)="heading = 'All Deliverable Items'" (click)="Changecolor('cid1')">
+              <div class="card card-body border-0 p-2 bg-d text-dark bt">
+                <h6>Close to Delivery</h6>
+                <h1 class="d-flex justify-content-between">
+                  <span id="close-a">0</span>
+
+                  <span>
+                    <i class="fas fa-drafting-compass icn c-d"></i>
+                  </span>
+                </h1>
+              </div>
+            </div> -->
+
+
+
+
+            <div class="col-md-4 p-1 stats-card tiles1" id="coid1" (click)="tabFilter('','Completed')"
+              (click)="heading = 'All Completed Items'" (click)="Changecolor('coid1')">
+              <div class="card card-body border-0 p-2 bg-c text-dark bt">
+
+                <h6>Completed</h6>
+
+                <h1 class="d-flex justify-content-between">
+                  <span id="completed-a">{{dashboardCounts?.Completed}}</span>
+                  <span>
+                    <i class="far fa-check-circle icn c-c"></i>
+                  </span>
+                </h1>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+          <div style="display: block;margin-top: -1.2rem;">
+            <!-- <img [src]="logo"/> -->
+            <canvas baseChart [data]="doughnutChartData" [legend]="lineChartLegend" [colors]="chartColors"
+              [labels]="doughnutChartLabels" [chartType]="doughnutChartType" height="70" width="100">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <!-- All Statistics end -->
+
+    </div>
+  </div>
+
+  <div class="card card-body border-0 p-0 shadow-sm">
+
+    <div class="d-flex justify-content-between mb-2 bg-light p-2 rounded-top">
+      <div>
+        <h5 class="mb-0 pt-1 pl-2">{{heading}}</h5>
+      </div>
+
+      <div class="mr-2">
+        <!-- <button class="btn btn-primary btn-block float-right" data-toggle="modal" (click)="editNote(note,0)"
+          data-target="#noteEdit">
+          Add New Note
+        </button> -->
+        <button class="btn btn-outline-success"  data-toggle="modal" data-target="#plannerModal">
+          <img src="https://restfuncapp2020080721521.blob.core.windows.net/blob/Planner.png" width="30" />
+          Planner</button>
+      </div>
+
+    </div>
+
+    <div class="row m-2">
+      <div class="col-md-12 ">
+        <div>
+          <div class="row mb-3">
+            <!-- <div class="col-2 m-1">
+                                    <button class="btn btn-primary mb-3 ml-2" (click)="toggleAc()">
+                                       Show By Meetings
+                                    </button>
+                                </div> -->
+            <div class="col-12 pb-3 border-bottom">
+              <!-- <button class="btn btn-{{btnToggle}} mb-3 ml-1" (click)="showAll()"
+                                        *ngIf="IsOwner && Toggle == 'Hide'">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </button> -->
+              <!-- <select class="form-control" (change)="getTaskByMeeting($event.target.value)">
+                                        <option value="">Select</option>
+                                        <option value="All">All</option>
+                                        <option *ngFor="let met of Meeting" value="{{met?.MeetingID}}">{{met?.MeetingName}}</option>
+                                    </select> -->
+              <input class="form-control py-3" (keyup)="searchData($event)" placeholder="Search Notes.."
+                [(ngModel)]="search" />
+            </div>
+            <!-- <div class="col-3">
+              <button class="btn btn-primary btn-block float-right" data-toggle="modal" (click)="editNote(note,0)"
+                data-target="#noteEdit">
+                Add New Action Item
+              </button>
+            </div> -->
+
+          </div>
+          <!-- <h6 class="text-primary mt-2">{{heading}}</h6> -->
+          <!-- meeting toggle start -->
+          <div class="accordion" id="meetingNotes">
+            <!-- <option *ngFor="let met of Meeting" value="{{met?.MeetingID}}">{{met?.MeetingName}}</option> -->
+            <div class="card" *ngFor="let met of Meeting;let i = index">
+              <div class="card-header" [attr.id]="'accordion_' + i" *ngIf="met?.Notes.length > 0">
+                <h2 class="mb-0">
+                  <!-- aria-expanded="false" class="btn btn-link collapsed" data-toggle="collapse"-->
+                  <button class="btn btn-link" type="button" [attr.href]="'#collapseOne_' + i" data-toggle="collapse"
+                    aria-expanded="true" [attr.aria-controls]="'collapseOne_' + i" [attr.id]="'my_' + i">
+                    <i class="fas fa-chevron-right mr-2"></i> {{met?.MeetingName}} {{met?.Notes.length}}
+                  </button>
+                </h2>
+              </div>
+              <div [attr.id]="'collapseOne_' + i" class="collapse show" [attr.aria-labelledby]="'accordion_' + i"
+                data-parent="#meetingNotes">
+                <div class="row bg-light p-2 py-3" *ngIf="met?.Notes.length > 0">
+
+                  <div class="col-5">
+                    <div class="row ">
+                      <div class="col-2 pr-0">
+                        <h6 class="mb-0">Assignee</h6>
+                      </div>
+                      <div class="col-10">
+                        <h6 class="mb-0">Notes</h6>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-1 text-center px-0">
+                    <h6 class="mb-0">Notes Type</h6>
+                  </div>
+
+                  <div class="col-2 text-center">
+                    <h6 class="mb-0">Assigned To</h6>
+                  </div>
+
+                  <div class="col-1 text-center px-0">
+                    <h6 class="mb-0">Created Date</h6>
+                  </div>
+                  <div class="col-1 text-center px-0">
+                    <h6 class="mb-0">Due Date</h6>
+                  </div>
+                  <div class="col-1 text-center px-0">
+                    <h6 class="mb-0">Task Status</h6>
+                  </div>
+                  <div class="col-1 text-center px-0">
+                    <h6 class="mb-0">Actions</h6>
+                  </div>
+                </div>
+                <div class="card-body p-0" *ngFor="let note of met.Notes | LockFilter: search">
+                  <div class="row border-bottom p-2 ">
+                    <div class="col-5">
+                      <div class="row">
+                        <!-- <button type="button" id="testex" class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
+                          Tooltip on right
+                        </button> -->
+                        <div class="col-2 " (mouseover)="userProfile('assin')">
+                          <a id="assin" data-toggle="tooltip" data-placement="right" [title]="getStatus(note.CreatedBy)?.card">
+                            <span class="td-attendee-more1" *ngIf="!getStatus(note.CreatedBy)?.status">
+                              {{getStatus(note.CreatedBy)?.displayName | uppercase}}
+                            </span>
+                            <span class="td-attendee1" *ngIf="getStatus(note.CreatedBy)">
+                              <img [src]="getStatus(note.CreatedBy)?.file" alt="" class="img-fluid">
+                            </span>
+                          </a>
+                        </div>
+                        <div class="col-10">
+                          <span>
+                            {{note.Description}}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-1 text-center ">
+                      <div [ngSwitch]="note.Type">
+                        <p *ngSwitchCase="'Action'">{{note.Type}}</p>
+                        <p *ngSwitchCase="'Decision'">{{note.Type}}</p>
+                        <p *ngSwitchCase="'Risk'">{{note.Type}}</p>
+                        <p *ngSwitchDefault>None</p>
+                      </div>
+                    </div>
+                    <div class="col-2 text-center " *ngIf="note.Type != ''" (mouseover)="userProfile('assin2')">
+                      <a id="assin2" data-toggle="tooltip" data-placement="right"  [title]="getStatus(note.AssignedTo)?.card">
+                      <span class="td-attendee-more1 ml-1" *ngIf="!getStatus(note.AssignedTo)?.status">
+                        {{getStatus(note.AssignedTo)?.displayName | uppercase}}
+                      </span>
+                      <span class="td-attendee1" *ngIf="getStatus(note.AssignedTo)">
+                        <img [src]="getStatus(note.AssignedTo)?.file" alt="" class="img-fluid">
+                      </span>
+                    </a>
+                    </div>
+                    <div class="col-2 text-center " *ngIf="note.Type == ''">
+                      <p>None</p>
+                    </div>
+                    <div class="col-1 text-center px-0">
+                      {{note?.AssignedDate | date }}
+                    </div>
+                    <div class="col-1 text-center px-0">{{note?.DueDate | date}}
+                    </div>
+                    <div class="col-1 text-center">
+                      <div [ngSwitch]="note.Status">
+                        <p *ngSwitchCase="'Planned'" >{{note?.Status}}</p>
+                        <p *ngSwitchCase="'In Progress'" >{{note?.Status}}</p>
+                        <p *ngSwitchCase="'Completed'" >{{note?.Status}}</p>
+                        <p *ngSwitchDefault>None</p>
+                      </div>
+                    </div>
+
+                    <div class="col-1 text-center">
+                      <!-- <button class="btn btn-sm btn-outline-success" > -->
+                        <i class="fas fa-edit" data-toggle="modal" (click)="editNote(note,1)"
+                        data-target="#noteEdit"></i>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <!-- meeting toggle end -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 </div>
 <!-- Modal -->
 <div class="modal fade" id="noteEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="exampleModalLabel">Action Item</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel">Action Item</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="noteForm" class="modal-body">
+        <div>
+          <label for="">Note</label>
+          <textarea class="form-control" rows="10" placeholder="Enter your note.."
+            formControlName="Description">{{noteForm.value.Description}}</textarea>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <label for="type">Type</label>
+            <select id="type" class="form-control mt-1" formControlName="Type">
+              <option value="">Select</option>
+              <option value="Risk">Risk</option>
+              <option value="Action">Action</option>
+              <option value="Decision">Decision</option>
+            </select>
+          </div>
+          <div class="col-4">
+            <label for="status">Status</label>
+            <select id="status" class="form-control mt-1" formControlName="Status">
+              <option value="">Select</option>
+              <option value="Planned">Planned</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+          <div class="form-group col-4 dropdown dropright attendee-parent mt-2">
+            <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <label for="">
+                <span class="td-attendee-add" style="padding: 0.5rem 0.725rem!important;"><i class="fas fa-user"></i>
+                </span>
+                &nbsp;&nbsp;Assigned To</label>
             </div>
-            <form [formGroup]="noteForm" class="modal-body">
-                <div>
-                    <label for="">Note</label>
-                    <textarea class="form-control" rows="10" placeholder="Enter your note.."
-                        formControlName="Description">{{note.Description}}</textarea>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <label for="type">Type</label>
-                        <select id="type" class="form-control mt-1" formControlName="Type">
-                            <option value="">Select</option>
-                            <option value="Risk">Risk</option>
-                            <option value="Action">Action</option>
-                            <option value="Decision">Decision</option>
-                        </select>
-                    </div>
-                    <div class="col-4">
-                        <label for="status">Status</label>
-                        <select id="status" class="form-control mt-1" formControlName="Status">
-                            <option value="">Select</option>
-                            <option value="Planned">Planned</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-4 dropdown dropright attendee-parent mt-2">
-                        <div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <label for="">
-                                <span class="td-attendee-add" style="padding: 0.5rem 0.725rem!important;"><i
-                                        class="fas fa-user"></i> </span>
-                                &nbsp;&nbsp;Assigned To</label>
-                        </div>
-                        <div class="dropdown-menu dd mt-1">
-                            <ul *ngFor="let attendies of usersList;let j=index" class="members-list mb-0">
-                                <li class="mb-1" (click)="changeAssignedTo(attendies.email)">
-                                    <span class="user-img">
-                                        <span class="td-attendee-more" *ngIf="!getStatus(attendies.email)?.status"
-                                            style="padding: 0.5rem!important;
+            <div class="dropdown-menu dd mt-1">
+              <ul *ngFor="let attendies of usersList;let j=index" class="members-list mb-0">
+                <li class="mb-1" (click)="changeAssignedTo(attendies.email)">
+                  <span class="user-img">
+                    <span class="td-attendee-more" *ngIf="!getStatus(attendies.email)?.status" style="padding: 0.5rem!important;
                             margin-left: 0rem!important;" [style.background-color]="colorsArray[0]">
-                                            {{getStatus(attendies.email)?.displayName | uppercase}}
-                                        </span>
-                                        <span class="td-attendee" *ngIf="getStatus(attendies.email)" style="padding: 0.5rem!important;
+                      {{getStatus(attendies.email)?.displayName | uppercase}}
+                    </span>
+                    <span class="td-attendee" *ngIf="getStatus(attendies.email)" style="padding: 0.5rem!important;
                             margin-left: 0rem!important;">
-                                            <img [src]="getStatus(attendies.email)?.file" alt="" class="img-fluid">
-                                        </span>
-                                    </span>
-                                    <span class="mbmr-name">
-                                        {{attendies.email}}
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div *ngIf="noteForm?.value.AssignedTo != '' && noteForm?.value.AssignedTo != null"
-                                class="mt-1">
-                                <span class="td-attendee-more1 mr-3"
-                                    *ngIf="!getStatus(noteForm?.value.AssignedTo)?.status"
-                                    [style.background-color]="colorsArray[0]">
-                                    {{getStatus(noteForm?.value.AssignedTo)?.displayName | uppercase}}
-                                </span>
-                                <span class="td-attendee1" *ngIf="getStatus(noteForm?.value.AssignedTo)">
-                                    <img [src]="getStatus(noteForm?.value.AssignedTo)?.file" alt="" class="img-fluid">
-                                </span>
-                                {{noteForm?.value.AssignedTo | slice:0:25}}..
-                            </div>
-                            <!-- <div class="mt-2" >
+                      <img [src]="getStatus(attendies.email)?.file" alt="" class="img-fluid">
+                    </span>
+                  </span>
+                  <span class="mbmr-name">
+                    {{getStatus(attendies.email)?.fullname}}
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div *ngIf="noteForm?.value.AssignedTo != '' && noteForm?.value.AssignedTo != null" class="mt-1">
+                <span class="td-attendee-more1 mr-3" *ngIf="!getStatus(noteForm?.value.AssignedTo)?.status">
+                  {{getStatus(noteForm?.value.AssignedTo)?.displayName | uppercase}}
+                </span>
+                <span class="td-attendee1" *ngIf="getStatus(noteForm?.value.AssignedTo)">
+                  <img [src]="getStatus(noteForm?.value.AssignedTo)?.file" alt="" class="img-fluid">
+                </span>
+                {{getStatus(noteForm?.value.AssignedTo)?.fullname}}
+              </div>
+              <!-- <div class="mt-2" >
                             <span>{{noteForm?.value.AssignedTo}}</span>
                         </div> -->
-                        </div>
-                    </div>
-                    <!-- <div class="col-4">
+            </div>
+          </div>
+          <!-- <div class="col-4">
                         <label for="status">Assigned To</label>
                         <select id="status" class="form-control mt-1" formControlName="AssignedTo">
                             <option value="">Select</option>
                             <option *ngFor="let user of usersList" value="{{user.email}}">{{user.email}}</option>
                         </select>
                     </div> -->
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <label for="assigneddate">Assigned Date</label>
-                        <input type="date" class="form-control" formControlName="AssignedDate" />
-                    </div>
-                    <div class="col-4">
-                        <label for="duedate">Due Date</label>
-                        <input type="date" class="form-control" formControlName="DueDate" />
-                    </div>
-                </div>
-            </form>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" (click)="saveChanges()" data-dismiss="modal">Save
-                    changes</button>
-            </div>
         </div>
+        <div class="row">
+          <div class="col-4">
+            <label for="assigneddate">Assigned Date</label>
+            <input type="date" class="form-control" formControlName="AssignedDate" />
+          </div>
+          <div class="col-4">
+            <label for="duedate">Due Date</label>
+            <input type="date" class="form-control" formControlName="DueDate" />
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="saveChanges()" data-dismiss="modal">Save
+          changes</button>
+      </div>
     </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="plannerModal" tabindex="-1" role="dialog" aria-labelledby="plannerModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="plannerModalLabel">Planner</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+         <!-- <div class="col-6">
+
+         </div> -->
+         <div class="col-12">
+          <div class="input-group mb-2">
+            <input class="form-control" [(ngModel)]="plannerTitle" placeholder="Enter Planner Title" />
+            <div class="input-group-append">
+              <span class="btn btn-outline-success" (click)="postGroupTask()">Add To Planner</span>
+            </div>
+          </div>
+          <div class="list-group">
+            <a class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let task of plannerTasks">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">{{task?.title}}</h6>
+                <small>{{task?.createdDateTime | date:'medium'}}</small>
+              </div>
+              <!-- <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small>Donec id elit non mi porta.</small> -->
+            </a>
+          </div>
+         </div>
+       </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
 </div>

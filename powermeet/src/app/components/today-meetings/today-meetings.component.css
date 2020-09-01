@@ -1,25 +1,30 @@
+th:nth-child(1) {
+  width: 30%;
+}
 
-th:nth-child(1){
-    width: 30%;
+th:nth-child(2) {
+  width: 25%;
 }
-th:nth-child(2){
-    width: 25%;
+
+th:nth-child(3) {
+  width: 25%;
 }
-th:nth-child(3){
-    width: 25%;
+
+th:nth-child(4) {
+  width: 10%;
 }
-th:nth-child(4){
-    width: 10%;
+
+th:nth-child(5) {
+  width: 10%;
 }
-th:nth-child(5){
-    width: 10%;
-}
+
 /* You can add global styles to this file, and also import other style files */
-.logo{
-    font-size: 6rem;
-    color: deepskyblue;
-    margin-bottom: -2rem!important;
+.logo {
+  font-size: 6rem;
+  color: deepskyblue;
+  margin-bottom: -2rem !important;
 }
+
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
@@ -141,16 +146,16 @@ body {
 }
 
 .td-attendee>img {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
   border-radius: 3rem;
   margin-left: -0.8rem;
 }
 
 .meeting-attendee>img {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
   border-radius: 3rem;
   margin-right: 0.2rem;
@@ -172,7 +177,7 @@ body {
   padding: 1rem 0.725rem;
   border-radius: 5rem;
   background: #c4c4c4;
-   /* margin-top: 1rem;  */
+  /* margin-top: 1rem;  */
   width: 3.35rem;
   height: 3.35rem;
 }
@@ -235,5 +240,45 @@ body {
   padding: 1.5rem;
   border: 2px dotted #ddd;
   border-radius: 0.25rem;
+  cursor: pointer;
+}
+.mt3{
+  margin-top: 2rem;
+}
+
+.bdr {
+  border: none;
+}
+
+.dashboard-body {
+  height: calc(100vh - 62px) !important;
+  overflow-y: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.date-filter>li {
+  padding: 0.3rem 1rem;
   cursor: pointer;
 }

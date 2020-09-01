@@ -221,3 +221,29 @@ body {
   border-radius: 0.25rem;
   cursor: pointer;
 }
+.bdr{
+  border: none;
+}
+.mt3{
+  margin-top: 2rem;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

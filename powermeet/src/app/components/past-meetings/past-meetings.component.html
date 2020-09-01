@@ -1,17 +1,15 @@
 <!-- upcoming meetings section :start  -->
 <ngx-spinner bdColor = "rgba(0,0,0,0.4)" size = "medium" color = "#fff" type = "ball-spin-fade" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
-<div class="row ">
+<div class="row mt3">
     <div class="col-12">
-        <div class="card card-body shadow-sm p-3">
+        <div class="card card-body shadow-sm p-3 bdr">
 
             <!-- card header section :start  -->
             <div class="row border-bottom no-gutters pb-2 mb-3">
-                <!-- <div class="col-6 ">
-                    <h6 class="f-600 pt-2">Upcoming</h6>
-                </div> -->
-                <!-- <div class="col-6 text-right ">
-                    <button class="btn btn-one shadow-sm-one">Add New</button>
-                </div> -->
+                <div class="col-6 ">
+                    <h6 class="f-600 pt-2">All Meetings</h6>
+                </div>
+
             </div>
             <!-- card header section :end  -->
 
@@ -20,10 +18,17 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Meeting</th>
+                            <!-- <th scope="col">Meeting</th>
                             <th class="text-center" scope="col">Agenda Items</th>
                             <th class="text-center" scope="col">Attendees</th>
+                            <th class="text-center" scope="col">Time</th> -->
+                            <th scope="col">Meeting</th>
+                            <!-- <th class="text-center" scope="col">Meeting Type</th> -->
+                            <th class="text-center" scope="col">Attendees</th>
                             <th class="text-center" scope="col">Time</th>
+                            <th class="text-center" scope="col">Agenda</th>
+                            <th class="text-center" scope="col">Action</th>
+                            <th class="text-center" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,12 +44,7 @@
                                     {{meeting?.MeetingDescription}}
                                 </span>
                             </td>
-                            <td class="text-center">
-                                <span class="td-main-text ">
-                                    {{getapprovedcount(meeting.AgendaItems)}} approved
-                                    of {{meeting?.AgendaItems.length}}
-                                </span>
-                            </td>
+                           
                             <td class="text-center">
                                 <span  *ngFor="let j = index;let attendee of meeting?.MeetingAttendees | slice:0:3">
                                     <span class="td-attendee-more" *ngIf="!getStatus(attendee.Email)" [style.background-color]="colorsArray[0]">
@@ -66,6 +66,19 @@
                                 <span class=" td-main-text">
                                     {{meeting?.StartDate | date:'HH:mm'}}
                                 </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="td-main-text ">
+                                    {{getapprovedcount(meeting.AgendaItems)}} approved
+                                    of {{meeting?.AgendaItems.length}}
+                                </span>
+                            </td>
+                            <td class="text-center"  [routerLink]="['/Notes']" [queryParams]="{ Id: meeting?.MeetingID,'start': 'false'}">
+                                <span class="td-main-text clr-four hover">
+                                    View Notes
+                                </span>
+                                <br>
+                               
                             </td>
                         </tr>
                     </tbody>
@@ -143,6 +156,9 @@
                                     {{meeting1?.MeetingDescription}}
                                 </span>
                             </td>
+                            <td>
+
+                            </td>
                             <td class="text-center">
                                 <span class="td-main-text">
                                     {{getapprovedcount(meeting1.AgendaItems)}}  approved
@@ -171,7 +187,17 @@
                                     {{meeting1?.StartDate | date:'HH:mm'}}
                                 </span>
                             </td>
+                            <td class="text-center"  [routerLink]="['/Notes']" [queryParams]="{ Id: meeting1?.MeetingID,'start': 'false'}">
+                                <span class="td-main-text clr-four hover">
+                                    Notes
+                                </span>
+                                <br>
+                                <span class="td-action-icon mx-1">
+                                    <!-- <img src="../../../assets/images/AddNotes-icon.svg" alt="" class="img-fluid"> -->
+                                    <i class="fa fa-plus-square-o" style="font-size: 20px;"></i>
 
+                                </span>
+                            </td>     
                             <td class="text-center">
                                 <span class="td-main-text clr-four hover">
                                     Meet Now

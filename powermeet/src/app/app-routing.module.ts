@@ -8,7 +8,7 @@ import { PastMeetingsComponent } from './components/past-meetings/past-meetings.
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'Dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'Home', pathMatch: 'full' },
   { path: 'Agendas', component: MeetingDetailsComponent },
   { path: 'Home', component: HomeComponent},
   // { path: 'Notifications', component: NotificationsComponent ,canActivate: [MsalGuard]},

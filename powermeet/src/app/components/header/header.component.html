@@ -30,12 +30,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <ul class="nav nav-pills mb-3 border-bottom">
+            <ul class="nav nav-pills mb-3 fixed-top bg-white px-3 border-bottom">
+                
                 <li class="nav-item active">
-                    <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/Home" routerLinkActive="active">Today Meetings</a>
+                    <a class="nav-link" id="todayactive" routerLink="/Home" routerLinkActive="active">Upcoming Meetings</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/PastMeetings" routerLinkActive="active"> Past Meetings</a>
@@ -45,12 +43,13 @@
                         <span class="badge badge-pill badge-primary">{{notifLnt}}</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Dashboard</a>
+                </li>
                 <!-- <li  class="nav-item">
                     <a class="nav-link" (click)="signOut()">Sign Out</a>
                 </li> -->
             </ul>
-
-
         </div>
     </div>
 </div>

@@ -35,6 +35,14 @@
       {
         "resource": "Microsoft Graph",
         "scope": "Sites.ReadWrite.All"
+      } ,
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Group.ReadWrite.All"
+      } ,
+      {
+        "resource": "Microsoft Graph",
+        "scope": "ChannelMessage.Send"
       }      
     ] 
   },

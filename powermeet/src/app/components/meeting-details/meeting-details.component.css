@@ -5,10 +5,12 @@
   text-decoration: none;
   font-weight: 600;
 }
-.tempp{
+
+.tempp {
   font-size: 2rem;
   padding: 3.4rem;
 }
+
 .btn-toggle:hover {
   color: #54558B;
 }
@@ -48,8 +50,26 @@ a[aria-expanded="true"]>i {
   margin: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 0.25rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   cursor: pointer;
+  background-color: lightgray;
+}
+.temp-card1 {
+  width: 12rem;
+    margin: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    background-color: lightgray;
+    color: darkblue;
+}
+
+.temp-card1>img {
+  width: 100%;
+  height: 8.9rem;
+  object-fit: contain;
+  margin-bottom: 0.15rem;
 }
 
 .temp-card>img {
@@ -66,13 +86,14 @@ a[aria-expanded="true"]>i {
 .blank-temp {
   background: #f1f1f1;
 }
+
 /* input[type=text]:focus {
 
   outline: 0;
   overflow: auto;
-  margin: auto; 
+  margin: auto;
   position: absolute;
-  
+
 } */
 
 
@@ -80,125 +101,135 @@ a[aria-expanded="true"]>i {
   min-width: 300px;
   max-height: 300px;
   overflow: auto;
-  }
-  
-  .attendee-parent {
+}
+
+.attendee-parent {
   width: 3.5rem;
-  
-  }
-  
-  .members-list {
+
+}
+.mt3{
+  margin-top: 3rem;
+}
+.members-list {
   list-style-type: none;
   padding: 0.25rem;
   padding-right: 0.25rem;
-  }
-  
-  .members-list>li {
+}
+
+.members-list>li {
   display: flex;
   height: 3rem;
   line-height: 3rem;
-  }
-  
-  .members-list>li:hover {
+}
+
+.members-list>li:hover {
   background: #e3e8eb;
   cursor: pointer;
-  }
-  
-  
-  .members-list>li>.user-img {
+}
+
+
+.members-list>li>.user-img {
   width: 3rem;
   height: 3rem;
   object-fit: contain;
   margin-right: 1rem;
-  }
-  
-  .members-list>li>.user-img>img {
-  border-radius: 5rem;
-  }
-  .send_button{
-    background: none !important; 
-    border: none !important;
-  }
-  .circle-profile{
-    width: 3rem;
-    height:3rem;
-    border-radius: 5rem;
-    background: #ddd;
-    position: relative;
-  }
-  .circle-top-left>img{
-    position: absolute;
-    width: 1.5rem;
-    height: 1.5rem;
-    top:0;
-    left:0;
-    background: red;
-    border-top-left-radius: 5rem;
-  /*   object-fit:contain; */
-  }
+}
 
-  .Participants-parent1:hover .dropdown-menu {
-    display: block;
-    margin-top: 0; 
-    min-width: 300px;
-    max-height: 300px;
-    overflow: auto;
- }
-  
-  .circle-top-right >img{
-    position: absolute;
-    width: 1.5rem;
-    height: 1.5rem;
-    top:0;
-    right:0;
-    background: green;
-    border-top-right-radius: 5rem;
-  }
-  .circle-bottom-left>img{
-    position: absolute;
-    width: 1.5rem;
-    height: 1.5rem;
-    bottom:0;
-    left:0;
-    background: blue;
-    border-bottom-left-radius: 5rem;
-    border-right: 1px solid #fff !important;
-  }
-  .circle-bottom-right >img{
-    position: absolute;
-    width: 1.5rem;
-    height: 1.5rem;
-    bottom:0;
-    right:0;
-    background: yellow;
-    border-bottom-right-radius: 5rem;
-  }
-  /* width */
+.members-list>li>.user-img>img {
+  border-radius: 5rem;
+}
+
+.send_button {
+  background: none !important;
+  border: none !important;
+}
+
+.circle-profile {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 5rem;
+  background: #ddd;
+  position: relative;
+}
+
+.circle-top-left>img {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: 0;
+  left: 0;
+  background: red;
+  border-top-left-radius: 5rem;
+  /*   object-fit:contain; */
+}
+
+.Participants-parent1:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+  min-width: 300px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.circle-top-right>img {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: 0;
+  right: 0;
+  background: green;
+  border-top-right-radius: 5rem;
+}
+
+.circle-bottom-left>img {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  bottom: 0;
+  left: 0;
+  background: blue;
+  border-bottom-left-radius: 5rem;
+  border-right: 1px solid #fff !important;
+}
+
+.circle-bottom-right>img {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  bottom: 0;
+  right: 0;
+  background: yellow;
+  border-bottom-right-radius: 5rem;
+}
+
+/* width */
 ::-webkit-scrollbar {
   width: 5px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
-.dd{
+
+.dd {
   position: absolute;
-    transform: translate3d(47px, 0px, 0px)!important;
-    top: 0px;
-    left: 0px;
-    will-change: transform;
+  transform: translate3d(47px, 0px, 0px) !important;
+  top: 0px;
+  left: 0px;
+  will-change: transform;
 }
+
 .td-attendee1>img {
   width: 2rem;
   height: 2rem;
@@ -207,9 +238,14 @@ a[aria-expanded="true"]>i {
   margin-left: -0.8rem;
 }
 
+.table td,
+.table th {
+  padding: 0.5rem;
+}
+
 .td-attendee-more1 {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   color: #fff;
   line-height: 3rem;
@@ -218,226 +254,237 @@ a[aria-expanded="true"]>i {
   padding: 0.4rem;
   margin-left: -0.8rem;
 }
+
 /* You can add global styles to this file, and also import other style files */
-.logo{
+.logo {
   font-size: 6rem;
   color: deepskyblue;
-  margin-bottom: -2rem!important;
+  margin-bottom: -2rem !important;
 }
+
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
 body {
-font-family: 'Poppins',
-  sans-serif;
-font-size: 14px;
-color: #454545;
-background: #F3F2F0;
+  font-family: 'Poppins',
+    sans-serif;
+  font-size: 14px;
+  color: #454545;
+  background: #F3F2F0;
 }
 
 [routerLink]:focus {
-outline: none !important;
+  outline: none !important;
 }
 
 .f-600 {
-font-weight: 600;
+  font-weight: 600;
 }
 
 .divider-one {
-height: 2rem;
+  height: 2rem;
 }
 
 .hover:hover {
-cursor: pointer;
+  cursor: pointer;
 }
 
 .no-focus {
-text-decoration: none !important;
+  text-decoration: none !important;
 }
 
 .btn,
 .form-control {
-font-size: 14px !important;
+  font-size: 14px !important;
 }
 
 .primary-link {
-color: #464775;
-text-decoration: none;
+  color: #464775;
+  text-decoration: none;
 }
 
 .clr-one {
-color: #464775;
+  color: #464775;
 }
 
 .clr-two {
-color: #00A3FF;
+  color: #00A3FF;
 }
 
 .clr-three {
-color: #707683;
+  color: #707683;
 }
 
 .clr-four {
-color: #8AC625;
+  color: #8AC625;
 }
 
 .clr-five {
-color: #898989;
+  color: #898989;
 }
 
 .bg-one {
-color: #F3F7F8;
+  color: #F3F7F8;
 }
 
 .btn-one {
-background: #00A3FF;
-color: #fff;
-font-size: 14px;
+  background: #00A3FF;
+  color: #fff;
+  font-size: 14px;
 }
 
 .btn-one:hover {
-background: rgb(8, 146, 226);
-color: #fff;
+  background: rgb(8, 146, 226);
+  color: #fff;
 }
 
 .btn-two {
-background: #c4c4c4;
-color: #fff;
-font-size: 14px;
+  background: #c4c4c4;
+  color: #fff;
+  font-size: 14px;
 }
 
 .btn-two:hover {
-background: #9b9b9b;
-color: #fff;
+  background: #9b9b9b;
+  color: #fff;
 }
 
 /* .shadow-sm-one {
 box-shadow: 0 .125rem .25rem #109CF1 !important;
 } */
 .border-bottom {
-border-color: #EBEFF2 !important;
+  border-color: #EBEFF2 !important;
 }
 
 .table td,
 .table th {
-border-top: none !important;
-color: #323C47 !important;
+  border-top: none !important;
+  color: #323C47 !important;
 }
 
 .table td {
-cursor: pointer;
-vertical-align: middle;
-color: #707683;
+  cursor: pointer;
+  vertical-align: middle;
+  color: #707683;
 }
 
 .table-hover tbody tr:hover {
-color: #323C47;
-background-color: #F3F7F8;
+  color: #323C47;
+  background-color: #F3F7F8;
 }
 
 .td-main-text {
-font-size: 15px;
-font-weight: 600;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .td-secondary-text {
-font-size: 13px;
+  font-size: 13px;
 }
 
 .td-attendee>img {
-width: 3rem;
-height: 3rem;
-object-fit: contain;
-border-radius: 3rem;
-margin-left: -0.8rem;
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 3rem;
+  margin-left: -0.8rem;
 }
 
 .meeting-attendee>img {
-width: 3rem;
-height: 3rem;
-object-fit: contain;
-border-radius: 3rem;
-margin-right: 0.2rem;
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 3rem;
+  margin-right: 0.2rem;
 }
 
 .td-attendee-more {
-width: 3rem;
-height: 3rem;
-border-radius: 50%;
-color: #fff;
-line-height: 3rem;
-text-align: center;
-background: #c4c4c4;
-padding: 0.8rem;
-margin-left: -0.8rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 3rem;
+  text-align: center;
+  background: #c4c4c4;
+  padding: 0.8rem;
+  margin-left: -0.8rem;
 }
 
 .td-attendee-add {
-padding: 1rem 0.725rem;
-border-radius: 5rem;
-background: #c4c4c4;
- /* margin-top: 1rem;  */
-width: 3.35rem;
-height: 3.35rem;
+  padding: 1rem 0.725rem;
+  border-radius: 5rem;
+  background: #c4c4c4;
+  /* margin-top: 1rem;  */
+  width: 3.35rem;
+  height: 3.35rem;
 }
 
 .td-attendee-add>img {
-width: 1.8rem;
+  width: 1.8rem;
 }
 
 .meeting-attendee-more {
-width: 3rem;
-height: 3rem;
-border-radius: 50%;
-color: #fff;
-line-height: 3rem;
-text-align: center;
-background: #c4c4c4;
-padding: 0.8rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 3rem;
+  text-align: center;
+  background: #c4c4c4;
+  padding: 0.8rem;
 }
 
 .agenda-header {
-background: #F8F8F8;
-border-top-right-radius: 0.25rem;
-border-top-left-radius: 0.25rem;
-padding: 0.35rem;
+  background: #F8F8F8;
+  border-top-right-radius: 0.25rem;
+  border-top-left-radius: 0.25rem;
+  padding: 0.35rem;
 }
 
 .agenda-footer {
-display: flex;
-position: relative;
+  display: flex;
+  position: relative;
 }
 
 .input-user {
-margin-right: 1rem;
+  margin-right: 1rem;
 }
 
 #agenda-title {
-font-size: 1.2rem !important;
-font-weight: 600;
+  font-size: 1.2rem !important;
+  font-weight: 600;
 }
 
 .agenda-title-plain-text {
-font-size: 1.2rem;
-font-weight: 600;
-color: #6c757d !important;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #6c757d !important;
 }
 
 .input-content {
-width: 100%;
+  width: 100%;
 }
 
 #input-file {
-display: none
+  display: none
 }
 
 .cust-input-container {
-position: relative;
+  position: relative;
 }
 
 .cust-upload {
-padding: 1.5rem;
-border: 2px dotted #ddd;
-border-radius: 0.25rem;
-cursor: pointer;
+  padding: 1.5rem;
+  border: 2px dotted #ddd;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+.scr600{
+  max-height: 535px;
+  height: 535px;
+    overflow-y: scroll;
+}
+.scr300{
+  max-height: 200px;
+    overflow-y: scroll;
 }

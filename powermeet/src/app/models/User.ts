@@ -5,5 +5,7 @@ export class User {
     userPrincipalName: string;
     file: any;
     status: boolean;
+    fullname: string;
+    card:string;
   }
   

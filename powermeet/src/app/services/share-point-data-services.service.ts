@@ -41,6 +41,29 @@ export class SharePointDataServicesService {
       console.log('Could not get meetings', JSON.stringify(error, null, 2));
     }
   }
+  async putMeeting(meetingId,listItem) {
+    let token = sessionStorage.getItem('authconfig');
+    this.notifObj.fields.NotificationStatus = "Updated Meeting Type for :"+listItem.fields.Title;
+    if (token) {
+      this.graphClient = Client.init({
+        authProvider: async (done) => {
+          if (token) { done(null, token); }
+          else { done("Could not get an access token", null) }
+        }
+      });
+    }
+    try {
+      let result = await this.graphClient
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Meetings/items/'+meetingId)
+        .update(listItem);
+        this.postNotification(sessionStorage.getItem('"54b63089-c127-4cd9-9dd5-72013c0c3eaa"'),this.notifObj).then(res =>{
+          console.log('update notif response', res);
+        });
+      return result;
+    } catch (error) {
+      console.log('Could not update agenda items', JSON.stringify(error, null, 2));
+    }
+  }
   async getMeetingByID(groupId, meetingId: number) {
     let token = sessionStorage.getItem('authconfig');
     if (token) {
@@ -100,6 +123,25 @@ export class SharePointDataServicesService {
       return result.value;
     } catch (error) {
       console.log('Could not get agenda items', JSON.stringify(error, null, 2));
+    }
+  }
+  async getMeetingNotes(meetingId: number) {
+    let token = sessionStorage.getItem('authconfig');
+    if (token) {
+      this.graphClient = Client.init({
+        authProvider: async (done) => {
+          if (token) { done(null, token); }
+          else { done("Could not get an access token", null) }
+        }
+      });
+    }
+    try {
+      let result = await this.graphClient
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notes/items?expand=fields&$filter=fields/MeetingLookupId eq ' + meetingId)
+        .get();
+      return result.value;
+    } catch (error) {
+      console.log('Could not get notes', JSON.stringify(error, null, 2));
     }
   }
   async getAgendaItemsById(groupId, agendaId: number) {
@@ -383,7 +425,7 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notifications/items?expand=fields')
+        .api('/groups/' + "54b63089-c127-4cd9-9dd5-72013c0c3eaa" + '/sites/root/lists/Notifications/items?expand=fields&$select=ID,fields&$orderby=ID desc')
         .get();
       return result.value;
     } catch (error) {
@@ -409,7 +451,7 @@ export class SharePointDataServicesService {
       console.log('Could not add notification items', JSON.stringify(error, null, 2));
     }
   }
-  async UploadAttachments(groupId,stream:any,filename:string,driveItem:any): Promise<any> {
+  async UploadAttachments(groupId,stream:any,filename:string): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {  
         let token = JSON.parse(sessionStorage.getItem('token'));        
@@ -424,16 +466,13 @@ export class SharePointDataServicesService {
           let result = await this.graphClient
             .api("/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/drives/b!iWEUljAoAEi_ZCTertMZeN98T_PX2tFLikQM9E-tGxgeVN0HdXUGTZOPcwp9rH4t/items/root:/"+filename+":/content")
             .put(stream)
-            console.log('attachments response', result);
-          // let attchId = await this.getAttachmentId(filename);
-          let fresult = await this.updateAttachmentMetadata(driveItem,result.id);
           resolve(result);           
       } catch (error) {          
           console.error(error);
       }  
     });
   }
-  async getAttachmentId(filename:string){
+  async getAttachmentId(filename:string,driveItem){
     let token = sessionStorage.getItem('authconfig');
     if (token) {
       this.graphClient = Client.init({
@@ -445,15 +484,15 @@ export class SharePointDataServicesService {
     }
     try {
       let result = await this.graphClient
-        .api(`/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/Lists/Attachments/items?expand=fields&$filter=fields/Modified gt '2018-01-01'`)
+        .api(`/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/drives/b!iWEUljAoAEi_ZCTertMZeN98T_PX2tFLikQM9E-tGxgeVN0HdXUGTZOPcwp9rH4t/root/children?$filter=startswith(name,'${filename}')&$expand=listitem`)
         .get();
-        console.log('resisdflsdlmf', result);
-      return result.value;
+      let fresult = await this.updateAttachmentMetadata(driveItem,result.value[0].listItem.id);
+      return fresult;
     } catch (error) {
       console.log('Could not get attachemtns', JSON.stringify(error, null, 2));
     }
   }
-async getAttachments(){
+async getAgendaAttachments(agendaId){
   let token = sessionStorage.getItem('authconfig');
   if (token) {
     this.graphClient = Client.init({
@@ -465,7 +504,7 @@ async getAttachments(){
   }
   try {
     let result = await this.graphClient
-      .api('/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/Lists/Attachments/items?expand=fields')
+      .api('/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/Lists/Attachments/items?expand=fields&$filter=fields/AgendaLookupId eq ' + agendaId)
       .get();
     return result.value;
   } catch (error) {
@@ -486,7 +525,7 @@ async getAttachments(){
         }
         
           let result = await this.graphClient
-            .api("/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/lists/Attachments/items/"+itemId)
+            .api("/groups/54b63089-c127-4cd9-9dd5-72013c0c3eaa/sites/root/lists/Attachments/items/"+itemId+"/fields")
             .update(driveItem)
           resolve(result);           
       } catch (error) {          

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GetAttendiesService } from 'src/app/services/get-attendies.service';
 import { AgendaDto } from 'src/app/services/dto';
 import { ProxyService } from 'src/app/services/proxy.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/operator/filter';
 import { AgendaItems } from 'src/app/models/AgendaItem';
 import { Meeting } from 'src/app/models/Meeting';
@@ -18,6 +18,8 @@ import { Note } from 'src/app/models/Note';
 import { timer } from 'rxjs';
 import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
 import { Template } from '@angular/compiler/src/render3/r3_ast';
+import { GraphService } from 'src/app/services/graph.service';
+import { StandardTemplate } from 'src/app/models/StandardTemplate';
 
 @Component({
   selector: 'app-meeting-details',
@@ -25,7 +27,8 @@ import { Template } from '@angular/compiler/src/render3/r3_ast';
   styleUrls: ['./meeting-details.component.css']
 })
 export class MeetingDetailsComponent implements OnInit {
-
+  testtemp = [{ id: 1, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp1.png', name: 'Scrum Meetings' }, { id: 2, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp2.png', name: 'Team Building Meetings' }, { id: 3, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp3.png', name: 'Status Update Meetings' }, { id: 4, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp4.png', name: 'Decision Making Meetings' }];
+  testnote = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   dt: any;
   loggeduser: any;
   displayform: boolean;
@@ -65,21 +68,65 @@ export class MeetingDetailsComponent implements OnInit {
   Meeting: Meeting;
   AgendaItem: AgendaItems;
   displayassigniimages: boolean;
-  membersemails: any = [];
+  membersemails: any;
   notesArray: any = [];
   note: Note;
+  currentUrl: string = window.location.href;
+  standardTemplate = [{
+    id: 1, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp1.png', name: 'Scrum Meetings',
+    agendas: [
+      { AgendaName: 'What did you do yesterday?', AgendaDescription: 'What did you do yesterday? Description', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'What will you do today?', AgendaDescription: 'What will you do today? Description', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Anything blocking your progress?', AgendaDescription: 'Anything blocking your progress? Description', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+    ]
+  },
+  {
+    id: 2, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp2.png', name: 'Team Building Meetings',
+    agendas: [
+      { AgendaName: 'Primary Goals for Team Building Meetings', AgendaDescription: 'The overarching goals for team building meetings is to improve the way the team members work together.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Fostering a collaborative team environment', AgendaDescription: 'Team building meetings should combine work with fun, featuring team building activities that let team members share experiences together, get to know each other in new ways, and build trust and communication channels to tap into when completing their tasks', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Aligning everyone’s efforts', AgendaDescription: 'Team building meetings are great channels for communicating your overall team goals and strategy', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Unifying distributed teams', AgendaDescription: 'More and more teams have team members distributed across the country, or around the world.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Key Roles at Team Building Meetings', AgendaDescription: 'Team building meetings are all about the team. They need to be inclusive, and team authorities should participate alongside the rest of the team members.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Common Challenges in Team Building Meetings', AgendaDescription: 'Team building meetings can have great benefits for your team’s communication, productivity, and work satisfaction.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+    ]
+  },
+  {
+    id: 3, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp3.png', name: 'Status Update Meetings',
+    agendas: [
+      { AgendaName: 'Primary Goals for Status Update Meetings', AgendaDescription: 'The primary purpose of status update meetings is to update and align a team or department on the current state of a project or overall direction of the group', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Key Roles in Status Update Meetings', AgendaDescription: 'Status update meetings have a broad category of potential participants', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'How to Host Successful Status Update Meetings', AgendaDescription: 'Great status update meetings not only keep everyone informed and on task, but they can also save valuable work time, and reduce frustration among team members. Keeping a focus on participant engagement and meeting efficiency is..', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+    ]
+  },
+  {
+    id: 4, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp4.png', name: 'Decision Making Meetings',
+    agendas: [
+      { AgendaName: 'Better Team Building Meetings with Technology', AgendaDescription: 'The ability to connect and engage participants at team building meetings is essential.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Easily include and engage everyone', AgendaDescription: 'With MeetingSift you can easily engage teams of all sizes via the participants’ smartphones, tablets, or laptops. It’s easy to use, no training is ne ..', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Quickly and easily capture ideas from any size group', AgendaDescription: 'Recording and sharing ideas in larger groups can be a difficult task when several dozen people are juggling hundreds of Post-it Notes or shouting suggestions across the room.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+    ]
+  }];
 
 
-  constructor(public spinner: NgxSpinnerService, private shrService: SharePointDataServicesService, public proxy: ProxyService, private route: ActivatedRoute, private dataService: DataService) { }
+  constructor(public spinner: NgxSpinnerService, private shrService: SharePointDataServicesService, public proxy: ProxyService, private router: Router, private dataService: DataService, private graphSrv: GraphService) { }
   MeetingID: string = '00000000-0000-0000-0000-000000000000';
   ngOnInit() {
+    this.agendaList = this.standardTemplate[0].agendas;
+    console.log('agendas', this.standardTemplate);
     this.spinner.show();
+    this.getAllNotes();
+    const rout = this.router.url
+    if (this.router.url == '/MeetingDetails') {
+      document.getElementById('todayactive').classList.add('active');
+    }
     this.dt = sessionStorage.getItem('user');
     this.Meeting = new Meeting();
     this.AgendaItem = new AgendaItems();
     this.divnewtemplate = false;
     this.getUsersList();
     this.MeetingObj = JSON.parse(sessionStorage.getItem("meetingobj"));
+    this.meetingType = this.MeetingObj.MeetingType;
     this.MeetingID = this.MeetingObj.MeetingID;
     console.log('session meeting object', this.MeetingObj);
     if (this.MeetingID != "00000000-0000-0000-0000-000000000000")
@@ -94,31 +141,121 @@ export class MeetingDetailsComponent implements OnInit {
       this.spinner.hide();
     }, 2000);
   }
+  agendaList: any = [];
+  agendaList1: any = [];
+  tempchange(temp) {
+    this.agendaList = temp.agendas;
+  }
+  addtoAgendaList(event, data) {
+    if (event.target.checked) {
+      this.agendaList1.push(data);
+    }else{
+      const inx = this.agendaList1.findIndex(x=> x.AgendaName == data.AgendaName);
+      this.agendaList1.splice(inx,1);
+    }
+    console.log('agendaList1', this.agendaList1);
+  }
+  saveToMeeting(){
+    const user = this.usersList.find(x => x.email == sessionStorage.getItem('user'));
+    this.agendaList1.forEach(x => {
+      const listItem = {
+        "fields": {
+          "Title": x.AgendaName,
+          "AgendaDescription": x.AgendaDescription,
+          "IsApproved": true,
+          "AgendaDuration": x.AgendaDuration,
+          "AgendaItemStatus": x.Status,
+          "StartDateTime": new Date(),
+          "EndDateTime": new Date(),
+          "MeetingLookupId": this.MeetingID,
+          "AgendaAttendees": sessionStorage.getItem('user'),
+          "AgendaAssignees": sessionStorage.getItem('user')
+        }
+      };
+      console.log('agenda item', listItem);
+      this.shrService.postAgendaItem(sessionStorage.getItem('groupId'), listItem).then(res => {
+        const agenda = new AgendaItems();
+        agenda.AgendaName = res.fields.Title;
+        agenda.AgendaDescription = res.fields.AgendaDescription;
+        agenda.Duration = res.fields.AgendaDuration;
+        agenda.StartTime = res.fields.EndDateTime;
+        agenda.EndTime = res.fields.StartDateTime;
+        agenda.AgendaID = res.fields.id;
+        agenda.AgendaAssignees = new AgendaAssignees();
+        agenda.AgendaAssignees.Email = res.fields.AgendaAssignees;
+        agenda.MeetingID = res.fields.MeetingLookupId;
+        agenda.Status = res.fields.AgendaItemStatus;
+        agenda.IsApproved = res.fields.IsApproved;
+        this.Meeting.AgendaItems.push(agenda);
+        let body = {
+          "body": {
+            "content": `<at id=\"0\">${user.fullname}</at> added an Agenda : <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${this.MeetingID}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>${res.fields.Title}</a>`,
+            "contentType": "html"
+          },
+          "mentions": [
+            {
+              "id": 0,
+              "mentionText": user.fullname,
+              "mentioned": {
+                "user": {
+                  "displayName": user.fullname,
+                  "id": user.id,
+                  "userIdentityType": "aadUser"
+                }
+              }
+            }
+          ]
+        }
+        this.graphSrv.postChannelMessage(body).then(res => {
+          console.log('Channel message res', res);
+        });
+      });
+
+    });
+  }
+  getAllNotes() {
+    this.shrService.getExternalNotes('jagan').then(res => {
+      var arr = this.MeetingObj.MeetingName.split(" ");
+      console.log('all notes', res);
+      res.forEach(x => {
+        arr.forEach(y => {
+          if (x.fields.Title.includes(y)) {
+            this.notesArray.push(x);
+          }
+        });
+      });
+      console.log('arr', arr);
+    })
+  }
   getTemplatedetails11() {
+    this.TemplateArray = [];
     this.shrService.getTemplates(sessionStorage.getItem('groupId')).then(res => {
       console.log('templates res', res);
       res.forEach(x => {
-        const temp = { Name: '', AgendaItems: new Array<AgendaItems>() };
+        const temp = { Name: '', Id: '', AgendaItems: new Array<AgendaItems>() };
         temp.Name = x.fields.Title;
-        this.shrService.getTemplateAgendas(sessionStorage.getItem('groupId'), x.fields.id).then(res => {
-          console.log('agenda tempkakte res', res);
-          res.forEach(y => {
-            this.shrService.getAgendaItemsById(sessionStorage.getItem('groupId'), y.fields.AgendaLookupId).then(res => {
-              console.log('agenda details', res);
-              const agenda = new AgendaItems();
-              agenda.AgendaName = res.fields.Title;
-              agenda.AgendaDescription = res.fields.AgendaDescription;
-              agenda.Duration = res.fields.AgendaDuration;
-              agenda.StartTime = res.fields.EndDateTime;
-              agenda.EndTime = res.fields.StartDateTime;
-              agenda.Status = res.fields.AgendaItemStatus;
-              agenda.IsApproved = res.fields.IsApproved;
-              temp.AgendaItems.push(agenda);
-            });
+        temp.Id = x.fields.id;
+        if (x.fields.MeetingType == this.meetingType) {
+          this.shrService.getTemplateAgendas(sessionStorage.getItem('groupId'), x.fields.id).then(res => {
+            console.log('agenda tempkakte res', res);
+            res.forEach(y => {
+              this.shrService.getAgendaItemsById(sessionStorage.getItem('groupId'), y.fields.AgendaLookupId).then(res => {
+                console.log('agenda details', res);
+                const agenda = new AgendaItems();
+                agenda.AgendaName = res.fields.Title;
+                agenda.AgendaDescription = res.fields.AgendaDescription;
+                agenda.Duration = res.fields.AgendaDuration;
+                agenda.StartTime = res.fields.EndDateTime;
+                agenda.EndTime = res.fields.StartDateTime;
+                agenda.Status = res.fields.AgendaItemStatus;
+                agenda.IsApproved = res.fields.IsApproved;
+                temp.AgendaItems.push(agenda);
+              });
 
-          });
-        })
-        this.TemplateArray.push(temp);
+            });
+          })
+          this.TemplateArray.push(temp);
+        }
       });
     })
   }
@@ -137,17 +274,24 @@ export class MeetingDetailsComponent implements OnInit {
         agenda.AgendaID = x.fields.id;
         agenda.AgendaAssignees = new AgendaAssignees();
         agenda.AgendaAssignees.Email = x.fields.AgendaAssignees;
-        if(x.fields.AgendaAttendees){
+        if (x.fields.AgendaAttendees) {
           var nameArr = x.fields.AgendaAttendees.split('|');
           nameArr.forEach(element => {
             const attendee = new AgendaAttendees();
             attendee.Email = element;
             if (element != '') { agenda.AgendaAttendees.push(attendee); }
           });
-         }
+        }
         agenda.MeetingID = x.fields.MeetingLookupId;
         agenda.Status = x.fields.AgendaItemStatus;
         agenda.IsApproved = x.fields.IsApproved;
+        // this.shrService.getAgendaAttachments(agenda.AgendaID).then(res=>{
+        //  res.forEach(element => {
+        //   const attachment = new Attachments();
+        //   attachment.AttachmentName = element.fields.LinkFilename;
+        //   agenda.Attachments.push(attachment);
+        //  });
+        // });
         this.Meeting.AgendaItems.push(agenda);
       });
     });
@@ -199,14 +343,17 @@ export class MeetingDetailsComponent implements OnInit {
   }
 
   getAttendee(e) {
-    const attendee = new AgendaAttendees();
-    attendee.Email = e.userPrincipalName;
-    this.AgendaItem.AgendaAttendees.push(attendee);
+    const user = this.AgendaItem.AgendaAttendees.find(x => x.Email == e.email);
+    if (!user) {
+      const attendee = new AgendaAttendees();
+      attendee.Email = e.email;
+      this.AgendaItem.AgendaAttendees.push(attendee);
+    }
   }
   getAssignee(e) {
     this.displayassigniimages = true;
     const assignee = new AgendaAssignees();
-    assignee.Email = e.userPrincipalName;
+    assignee.Email = e.email;
     this.AgendaItem.AgendaAssignees = assignee;
     console.log(this.AgendaItem);
   }
@@ -219,10 +366,10 @@ export class MeetingDetailsComponent implements OnInit {
         var fileObject = new Attachments();
         var reader = new FileReader();
         reader.readAsDataURL(response.target.files[i]);
-        reader.onload = (event) => { // called once readAsDataURL is completed
+        reader.onload = (event: any) => { // called once readAsDataURL is completed
           const valobj: any = {};
           valobj.name = response.target.files[i].name;
-          // valobj.file = event.target.result;  ---resultttttttttttttt
+          valobj.file = event.target.result;
           valobj.type = response.target.files[i].type.slice(0, 5);
           this.imagesArray.push(valobj);
         }
@@ -234,8 +381,51 @@ export class MeetingDetailsComponent implements OnInit {
     }
     console.log('aaaa', this.imagesArray);
   }
+  meetingType: any;
+  Savetemplate() {
+    this.spinner.show();
+    const listItem = {
+      "fields": {
+        "Title": this.templatenamengmodel,
+        "MeetingType": this.meetingType
+      }
+    };
+    this.shrService.postTemplate(sessionStorage.getItem('groupId'), listItem).then(res => {
+      console.log('post template response', res);
+      this.selectedAgendaItems.forEach(x => {
+        const tempItem = {
+          "fields": {
+            "Title": this.templatenamengmodel,
+            "TemplateLookupId": res.fields.id,
+            "AgendaLookupId": x.AgendaID
+          }
+        };
+        this.shrService.postTemplateAgenda(sessionStorage.getItem('groupId'), tempItem).then(res => {
+          console.log('post template-agenda response', res);
+        });
+      });
+    });
+    setTimeout(() => {
+      this.Shownewtemplate(false);
+      this.TemplateArray = [];
+      this.getTemplatedetails11();
+      this.spinner.hide();
+    }, 2000);
+    // let tempobj: any = {};
+    // tempobj.TemplateID = "";
+    // tempobj.Name = this.templatenamengmodel;
+    // tempobj.CreatedBy = "Azure";
+    // tempobj.CreatedDate = new Date();
+    // tempobj.AgendaItems = this.selectedAgendaItems;
+    // this.proxy.Post('templates', tempobj).subscribe(res => {
+    //   this.getTemplatedetails11();
+    //   this.spinner.hide();
+    // });
+  }
+  templateId: any = '';
   saveAgenda(Id) {
     let attendee: string = '';
+    const user = this.usersList.find(x => x.email == sessionStorage.getItem('user'));
     this.AgendaItem.AgendaAttendees.forEach(y => {
       attendee += y.Email + '|';
     });
@@ -274,13 +464,99 @@ export class MeetingDetailsComponent implements OnInit {
     if (this.isEditable == false) {
       this.shrService.postAgendaItem(sessionStorage.getItem('groupId'), listItem).then(res => {
         console.log('post agenda', res);
+        if (this.templateId != '') {
+          const tempItem = {
+            "fields": {
+              "Title": this.templatenamengmodel,
+              "TemplateLookupId": this.templateId,
+              "AgendaLookupId": res.fields.id
+            }
+          };
+          this.shrService.postTemplateAgenda(sessionStorage.getItem('groupId'), tempItem).then(res => {
+            console.log('post template-agenda response', res);
+          });
+        }
+        if (this.Attachments1 !== null && this.Attachments1.length > 0) {
+          this.Attachments1.forEach(x => {
+            const driveItem = {
+              MeetingLookupId: listItem.fields.MeetingLookupId,
+              AgendaLookupId: res.fields.id,
+              NoteLookupId: '1'
+            };
+            this.shrService.UploadAttachments(sessionStorage.getItem('groupId'), x.file, x.file.name).then(res => {
+              console.log('file upload response', res);
+              this.shrService.getAttachmentId(x.file.name, driveItem).then(res => {
+                console.log('attachment id response', res);
+              });
+            });
+          });
+        }
         this.agendaName = '';
+        let body = {
+          "body": {
+            "content": `<at id=\"0\">${user.fullname}</at> added an Agenda : <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${this.MeetingID}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>${res.fields.Title}</a>`,
+            "contentType": "html"
+          },
+          "mentions": [
+            {
+              "id": 0,
+              "mentionText": user.fullname,
+              "mentioned": {
+                "user": {
+                  "displayName": user.fullname,
+                  "id": user.id,
+                  "userIdentityType": "aadUser"
+                }
+              }
+            }
+          ]
+        }
+        this.graphSrv.postChannelMessage(body).then(res => {
+          console.log('Channel message res', res);
+        });
         this.agendaResponse(res, false, 0);
       });
     } else {
       this.shrService.putAgendaItem(sessionStorage.getItem('groupId'), listItem, this.AgendaItem.AgendaID).then(res => {
         console.log('put agenda', res);
+        if (this.Attachments1 !== null && this.Attachments1.length > 0) {
+          this.Attachments1.forEach(x => {
+            const driveItem = {
+              MeetingLookupId: listItem.fields.MeetingLookupId,
+              AgendaLookupId: res.fields.id,
+              NoteLookupId: '1'
+            };
+            this.shrService.UploadAttachments(sessionStorage.getItem('groupId'), x.file, x.file.name).then(res => {
+              console.log('file upload response', res);
+              this.shrService.getAttachmentId(x.file.name, driveItem).then(res => {
+                console.log('success');
+              });
+            });
+          });
+        }
         const inx = this.Meeting.AgendaItems.findIndex(x => x.AgendaID == this.AgendaItem.AgendaID);
+        let body = {
+          "body": {
+            "content": `<at id=\"0\">${user.fullname}</at> added an Agenda : <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${this.MeetingID}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>${res.fields.Title}</a>`,
+            "contentType": "html"
+          },
+          "mentions": [
+            {
+              "id": 0,
+              "mentionText": user.fullname,
+              "mentioned": {
+                "user": {
+                  "displayName": user.fullname,
+                  "id": user.id,
+                  "userIdentityType": "aadUser"
+                }
+              }
+            }
+          ]
+        }
+        this.graphSrv.postChannelMessage(body).then(res => {
+          console.log('Channel message res', res);
+        });
         this.agendaResponse(res, true, inx);
       });
     }
@@ -299,12 +575,12 @@ export class MeetingDetailsComponent implements OnInit {
     agenda.AgendaID = res.fields.id;
     agenda.AgendaAssignees = new AgendaAssignees();
     agenda.AgendaAssignees.Email = res.fields.AgendaAssignees;
-    if(res.fields.AgendaAttendees){
+    if (res.fields.AgendaAttendees) {
       var nameArr = res.fields.AgendaAttendees.split('|');
       nameArr.forEach(element => {
         const attendee = new AgendaAttendees();
         attendee.Email = element;
-        if(element != '' && element != 'TestSite99@sticsoft.io') { agenda.AgendaAttendees.push(attendee); }
+        if (element != '' && element != 'TestSite99@sticsoft.io') { agenda.AgendaAttendees.push(attendee); }
       });
     }
     agenda.MeetingID = res.fields.MeetingLookupId;
@@ -315,6 +591,7 @@ export class MeetingDetailsComponent implements OnInit {
     } else {
       this.Meeting.AgendaItems[inx] = agenda;
     }
+    this.Attachments1 = [];
   }
   itemsChange(e, item, i) {
     // console.log(item)
@@ -329,6 +606,7 @@ export class MeetingDetailsComponent implements OnInit {
     console.log('selecteditmes', this.selectedAgendaItems);
   }
   addToAgendaArray() {
+    const user = this.usersList.find(x => x.email == sessionStorage.getItem('user'));
     this.selectedAgendaItems.forEach(x => {
       const listItem = {
         "fields": {
@@ -359,6 +637,28 @@ export class MeetingDetailsComponent implements OnInit {
         agenda.Status = res.fields.AgendaItemStatus;
         agenda.IsApproved = res.fields.IsApproved;
         this.Meeting.AgendaItems.push(agenda);
+        let body = {
+          "body": {
+            "content": `<at id=\"0\">${user.fullname}</at> added an Agenda : <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${this.MeetingID}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>${res.fields.Title}</a>`,
+            "contentType": "html"
+          },
+          "mentions": [
+            {
+              "id": 0,
+              "mentionText": user.fullname,
+              "mentioned": {
+                "user": {
+                  "displayName": user.fullname,
+                  "id": user.id,
+                  "userIdentityType": "aadUser"
+                }
+              }
+            }
+          ]
+        }
+        this.graphSrv.postChannelMessage(body).then(res => {
+          console.log('Channel message res', res);
+        });
       });
 
     });
@@ -395,23 +695,29 @@ export class MeetingDetailsComponent implements OnInit {
 
   colorsArray: any = ['lightgray', 'darkcyan', 'crimson', 'chocolate', 'darkgoldenrod', 'blue', 'purple', 'brown', 'chartreuse']
   editagenda(edit) {
+    this.spinner.show();
     this.Attachments1 = [];
     this.isEditable = true;
     // this.displayform = true;
     this.AgendaItem = edit;
+    this.AgendaItem.Attachments = [];
+    this.shrService.getAgendaAttachments(edit.AgendaID).then(res => {
+      res.forEach(element => {
+        const attachment = new Attachments();
+        attachment.AttachmentName = element.fields.LinkFilename;
+        this.AgendaItem.Attachments.push(attachment);
+      });
+    });
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 2000);
     this.title = this.AgendaItem.AgendaName;
     console.log('this.edit', this.AgendaItem);
-    // this.agendatitle = false;
-    // // this.title = edit;
-    // this.agenda.title = edit.AgendaName;
-    // this.agenda.description = edit.AgendaDescription;
-    // this.agenda.duration = edit.Duration;
-    // this.AgendaID = edit.AgendaID;
   }
   getImage(name) {
     const types = ['png', 'jpg', 'jpeg', 'jfif', 'gif'];
     // const image: string = 'https://powermeetblobstorage.blob.core.windows.net/powermeetblobstorage/' + name + '?sv=2019-02-02&ss=bqtf&srt=sco&sp=rwdlacup&se=2020-03-04T19:07:17Z&sig=nV0F%2FXxXX6ugZUDdcoZKrrD0Smpl3UFfD6Zk5bihAnQ%3D&_=1583320073253';
-    const image: string = 'https://powermeetblob.blob.core.windows.net/powermeet-blob/' + name;
+    const image: string = 'https://sticsoftio.sharepoint.com/sites/TestSite99/Lists/Attachments/' + name;
     var res = name.split(".");
     const type = types.find(x => x == (res[res.length - 1]).toLowerCase());
     console.log(type);
@@ -478,6 +784,7 @@ export class MeetingDetailsComponent implements OnInit {
   }
   Shownewtemplate(obj) {
     this.divnewtemplate = obj;
+    this.tempAgenda = [];
     this.selectedAgendaItems = [];
     if (obj) {
       this.shrService.getAllAgendaItems(sessionStorage.getItem('groupId')).then(res => {
@@ -492,14 +799,14 @@ export class MeetingDetailsComponent implements OnInit {
           agenda.AgendaID = x.fields.id;
           agenda.AgendaAssignees = new AgendaAssignees();
           agenda.AgendaAssignees.Email = x.fields.AgendaAssignees;
-         if(x.fields.AgendaAttendees){
-          var nameArr = x.fields.AgendaAttendees.split('|');
-          nameArr.forEach(element => {
-            const attendee = new AgendaAttendees();
-            attendee.Email = element;
-            if (element != '') { agenda.AgendaAttendees.push(attendee); }
-          });
-         }
+          if (x.fields.AgendaAttendees) {
+            var nameArr = x.fields.AgendaAttendees.split('|');
+            nameArr.forEach(element => {
+              const attendee = new AgendaAttendees();
+              attendee.Email = element;
+              if (element != '') { agenda.AgendaAttendees.push(attendee); }
+            });
+          }
           agenda.MeetingID = x.fields.MeetingLookupId;
           agenda.Status = x.fields.AgendaItemStatus;
           agenda.IsApproved = x.fields.IsApproved;
@@ -516,45 +823,7 @@ export class MeetingDetailsComponent implements OnInit {
   postTemplate() {
 
   }
-  Savetemplate() {
-    this.spinner.show();
-    const listItem = {
-      "fields": {
-        "Title": this.templatenamengmodel
-      }
-    };
-    this.shrService.postTemplate(sessionStorage.getItem('groupId'), listItem).then(res => {
-      console.log('post template response', res);
-      this.selectedAgendaItems.forEach(x => {
-        const tempItem = {
-          "fields": {
-            "Title": this.templatenamengmodel,
-            "TemplateLookupId": res.fields.id,
-            "AgendaLookupId": x.AgendaID
-          }
-        };
-        this.shrService.postTemplateAgenda(sessionStorage.getItem('groupId'), tempItem).then(res => {
-          console.log('post template-agenda response', res);
-        });
-      });
-    });
-    setTimeout(() => {
-      this.Shownewtemplate(false);
-      this.TemplateArray = [];
-      this.getTemplatedetails11();
-      this.spinner.hide();
-    }, 2000);
-    // let tempobj: any = {};
-    // tempobj.TemplateID = "";
-    // tempobj.Name = this.templatenamengmodel;
-    // tempobj.CreatedBy = "Azure";
-    // tempobj.CreatedDate = new Date();
-    // tempobj.AgendaItems = this.selectedAgendaItems;
-    // this.proxy.Post('templates', tempobj).subscribe(res => {
-    //   this.getTemplatedetails11();
-    //   this.spinner.hide();
-    // });
-  }
+
   ConvertTolocal(datestr) {
     // let yourDate = new Date(datestr);
     // console.log('MetingDatetiem', yourDate.toDateString());
@@ -623,5 +892,13 @@ export class MeetingDetailsComponent implements OnInit {
   }
   pauseTimer() {
     clearInterval(this.interval);
+  }
+  isNotes: boolean = true;
+  addNewTemp(id) {
+    if (id == 1) {
+      this.isNotes = false;
+    } else {
+      this.isNotes = true;
+    }
   }
 }

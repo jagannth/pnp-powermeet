@@ -11,7 +11,7 @@ export class Dashboard {
   }
 }
 
-export class MeetingDashboard {
+export class DashboardCounts {
   public Meeting: number;
   public Risk: number;
   public Action: number;

@@ -226,4 +226,47 @@ export class GraphService {
       console.log('Could not post group PlannerTask', JSON.stringify(error, null, 2));
     }
   }
+  public async postChannelMessage(body) {
+    console.log('channel body', body);
+    let token = sessionStorage.getItem('authconfig');
+    if (token) {
+      this.graphClient = Client.init({
+        authProvider: async (done) => {
+          if (token) { done(null, token); }
+          else { done("Could not get an access token", null) }
+        }
+      });
+    }
+    try {
+      let result = await this.graphClient
+        .api('/teams/54b63089-c127-4cd9-9dd5-72013c0c3eaa/channels/19:66897d02aa6745428f4c8117cc197f39@thread.tacv2/messages')
+        .post(body);
+      return result;
+    } catch (error) {
+      console.log('Could not add messages to channel', JSON.stringify(error, null, 2));
+    }
+  }
+  public async getTeams() {
+    let token = sessionStorage.getItem('authconfig');
+    if (token) {
+      this.graphClient = Client.init({
+        authProvider: async (done) => {
+          if (token) { done(null, token); }
+          else { done("Could not get an access token", null) }
+        }
+      });
+    }
+    try {
+      let result = await this.graphClient
+        .api('/teams/54b63089-c127-4cd9-9dd5-72013c0c3eaa/channels/19:c096954ec3f14a45a3ac877d7c3a51fc@thread.tacv2/messages')
+      .post({
+          "body": {
+              "content": "Hello world"
+          }
+      });
+      return result;
+    } catch (error) {
+      console.log('Could not get teams', JSON.stringify(error, null, 2));
+    }
+  }
 }

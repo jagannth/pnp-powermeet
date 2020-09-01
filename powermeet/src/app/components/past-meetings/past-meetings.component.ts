@@ -5,9 +5,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import { GraphService } from 'src/app/services/graph.service';
 import { formatDate } from '@angular/common';
 import { Meeting } from 'src/app/models/Meeting';
+import { MeetingAttendees } from 'src/app/models/MeetingAttendees';
 import { User } from 'src/app/models/User';
 import { DataService } from 'src/app/services/data.service';
 import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
+import * as moment from 'moment';
 @Component({
   selector: 'app-past-meetings',
   templateUrl: './past-meetings.component.html',
@@ -24,6 +26,7 @@ export class PastMeetingsComponent implements OnInit {
   ngOnInit(): void {
     // this.meetingsList = new Array<Meeting>();
     const group = sessionStorage.getItem('groupId');
+    document.getElementById('todayactive').classList.remove('active');
     if (group == undefined || group == 'undefined') {
       console.log('console if');
       this.getMeetings(sessionStorage.getItem('user'), '0');
@@ -68,13 +71,17 @@ export class PastMeetingsComponent implements OnInit {
       }else{
         this.meetingsList = responseArray1;
       }
-      // this.meetingsList = this.meetingsList.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') === formatDate(new Date(), 'yyyy/MM/dd', 'en') || x.IsRecurring == true));
+      // this.meetingsList = this.meetingsList.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') < formatDate(new Date(), 'yyyy/MM/dd', 'en') || x.IsRecurring == true));
+      this.meetingsList = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() < new Date().getHours());
       this.getGraphEvents();
       console.log('past meeting list', this.meetingsList);
     })
   }
+  ConvertTolocal(datestr) {
+    return moment.utc(datestr).local();
+  }
   getGraphEvents() {
-    this.graphService.getGroupEvents(sessionStorage.getItem('groupId')).then((res) => {
+    this.graphService.getGroupEvents("54b63089-c127-4cd9-9dd5-72013c0c3eaa").then((res) => {
       console.log('graph events', res);
       const resObj = res.filter(x => formatDate(x.start.dateTime, 'yyyy/MM/dd', 'en') < formatDate(new Date(), 'yyyy/MM/dd', 'en'));
       resObj.forEach(x => {
@@ -94,6 +101,7 @@ export class PastMeetingsComponent implements OnInit {
     });
   }
   getStatus(email): User {
+    
     const data = this.usersList.find(x => x.email === email);
     return data;
   }

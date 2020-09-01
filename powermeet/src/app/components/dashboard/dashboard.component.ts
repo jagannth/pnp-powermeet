@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProxyService } from 'src/app/services/proxy.service';
-import { Dashboard, MeetingDashboard } from 'src/app/models/Dashboard';
+import { Dashboard, DashboardCounts } from 'src/app/models/Dashboard';
 import { User } from 'src/app/models/User';
 import { DataService } from 'src/app/services/data.service';
 import { Note } from 'src/app/models/Note';
@@ -9,15 +9,17 @@ import { GraphService } from 'src/app/services/graph.service';
 import { NoteAudit } from 'src/app/models/NoteAudit';
 import * as moment from 'moment';
 import { formatDate } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-import { Meeting } from 'src/app/models/Meeting';
+import { Meeting, DashboardMeeting } from 'src/app/models/Meeting';
 
-import { ChartType } from 'chart.js';
-import { MultiDataSet, Label } from 'ng2-charts';
+import { ChartType, PointStyle } from 'chart.js';
+import { MultiDataSet, Label, Colors } from 'ng2-charts';
 import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
 import { AgendaItems } from 'src/app/models/AgendaItem';
+import * as Chart from 'chart.js';
 declare var $: any;
+Chart.defaults.global.legend.labels.usePointStyle = true;
 
 @Component({
   selector: 'app-dashboard',
@@ -26,9 +28,9 @@ declare var $: any;
 })
 export class DashboardComponent implements OnInit {
   dashBoard: Array<Dashboard>;
-  Meeting: Array<Meeting> = [];
+  Meeting: Array<DashboardMeeting> = [];
   UserMeeting: Array<Meeting> = [];
-  meetingDashboard: MeetingDashboard;
+  dashboardCounts: DashboardCounts;
   myNotes: any = [];
   note: Note;
   IsOwner: boolean = false;
@@ -38,25 +40,31 @@ export class DashboardComponent implements OnInit {
   heading: string = 'My Items';
   toggleAccordian: boolean = false;
   tgAdmin: boolean = false;
+  oldcolor: string = "toid";
+  logo: string = 'https://powermeetblobs.blob.core.windows.net/powermeet-blob/logo.jpg';
   public search: any = '';
   imgUrl: string = "../../../assets/images/Send-Icon.svg";
   colorsArray: any = ['lightgray', 'darkcyan', 'crimson', 'chocolate', 'darkgoldenrod', 'blue', 'purple', 'brown', 'chartreuse'];
-
+  public chartColors: Array<any> = [
+    { // all colors in order
+      backgroundColor: ['#e65124', '#ec7f22', '#006a9e', '#7d7d7d', '#c5c5c5', '#f4f3f3']
+    }
+  ];
+  public chartColors1: Array<any> = [
+    { // all colors in order
+      backgroundColor: ['#e65124', '#ec7f22', '#006a9e', '#7d7d7d', '#c5c5c5', '#f4f3f3']
+    }
+  ];
 
   // Doughnut
-  public doughnutChartLabels: Label[] = ['Risk', 'Decision', 'Action', 'Planned', 'In Progress', 'Completed', ''];
+  public doughnutChartLabels: Label[] = ['Risk', 'Action', 'Decision', 'Planned', 'In Progress', 'Completed'];
   public doughnutChartData: MultiDataSet = [];
   public doughnutChartType: ChartType = 'doughnut';
 
-  constructor(public spinner: NgxSpinnerService, private shrService: SharePointDataServicesService, private proxy: ProxyService, private dataService: DataService, private graphService: GraphService, private router: Router, private fb: FormBuilder) {
-    this.dashBoard = new Array<Dashboard>();
-    this.Meeting = new Array<Meeting>();
-    this.doughnutChartData = [
-      [1, 1, 2, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0, 2, 0],
-    ];
 
-    this.meetingDashboard = new MeetingDashboard();
+  constructor(public spinner: NgxSpinnerService, private shrService: SharePointDataServicesService, private proxy: ProxyService, private dataService: DataService, private graphService: GraphService, private router: Router, private fb: FormBuilder, public route: ActivatedRoute) {
+    this.dashBoard = new Array<Dashboard>();
+    this.Meeting = new Array<DashboardMeeting>();
     this.noteForm = this.fb.group({
       Description: '',
       Type: '',
@@ -67,52 +75,37 @@ export class DashboardComponent implements OnInit {
       NoteID: ''
     });
   }
+  currentUrl: string = window.location.href;
+  isGroup: string;
+  meetingId: string = '';
+  public lineChartLegend: boolean = false;
   ngOnInit(): void {
-    this.getGraphUsers();
+    this.spinner.show();
+    this.utilities();
+    this.getGroupTasks();
+    this.getUsersList();
+    setTimeout(() => {
+      if (this.meetingId != '' && this.meetingId != null) {
+        (<HTMLAnchorElement>document.getElementById('notesscreen')).click();
+      }
+      this.spinner.hide();
+    }, 5000);
+    setTimeout(() => { this.meetingId = sessionStorage.getItem('subEntityId'); }, 3000);
+  }
+  utilities() {
     this.note = new Note();
     this.username = sessionStorage.getItem('user');
     this.isGroup = sessionStorage.getItem('groupId');
-    console.log('group id', this.isGroup);
-    setTimeout(() => {
-      if (this.isGroup == undefined || this.isGroup == 'undefined') {
-        this.getMeetingsDashboard(this.username, '0');
-      }
-      else{
-        this.getMeetingsDashboard('group', this.isGroup);
-      }
-    }, 100);
-   
-    // this.getAttachments();
-  }
-  getAttachments(){
-    console.log('tessssss');
-    this.shrService.getAttachmentId('changes_noted_in_jagan_call.txt').then(res=>{
-      console.log('id res', res);
-    });
-  }
-  changeFileInput(response) {
-    const file = response.target.files[0];
-    console.log('fileee', file);
-    const driveItem = {
-      MeetingLookupId : 25,
-      AgendaLookupId : 16,
-      NoteLookupId:30
-    };
-   setTimeout(() => {
-    this.shrService.UploadAttachments(sessionStorage.getItem('groupId'), file, file.name,driveItem).then(res => {
-      console.log('file upload response', res);
-    });
-   }, 1000);
+    document.getElementById('todayactive').classList.remove('active');
+    if (sessionStorage.getItem('groupId') == 'undefined')
+      this.getMeetingsDashboard('0');
+    else
+      this.getMeetingsDashboard(this.isGroup);
   }
   clear() {
     this.dashBoard = new Array<Dashboard>();
-    this.Meeting = new Array<Meeting>();
-    this.doughnutChartData = [
-      [1, 1, 2, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0, 2, 0],
-    ];
-
-    this.meetingDashboard = new MeetingDashboard();
+    this.Meeting = new Array<DashboardMeeting>();
+    this.dashboardCounts = new DashboardCounts();
     this.noteForm = this.fb.group({
       Description: '',
       Type: '',
@@ -123,119 +116,108 @@ export class DashboardComponent implements OnInit {
       NoteID: ''
     });
   }
-  isGroup: string;
-  getMeetingsDashboard(Id, groupId) {
-    this.spinner.show();
-    this.shrService.getMeetings(sessionStorage.getItem('groupId')).then((res) => {
-      console.log('meetings response', res);
-      var resObj = [];
-      if(groupId == '0'){
-        resObj = res.filter(x=> x.fields.IsGroup == false && x.fields.Organizer == sessionStorage.getItem('user'));
-      }else{
-        resObj = res;
+  async getMeetingsDashboard(groupId): Promise<any> {
+    await this.shrService.getMeetings(sessionStorage.getItem('groupId')).then(async res => {
+      let resObj: any = [];
+      if (groupId == '0') {
+        resObj = res.filter(x => x.fields.IsGroup == false && x.fields.Organizer == sessionStorage.getItem('user'));
+      } else {
+        resObj = res.filter(x => x.fields.IsGroup == true);
       }
-      resObj.forEach(x => {
-        const meeting = new Meeting();
+      await resObj.map(x => {
+        const meeting = new DashboardMeeting();
         meeting.MeetingID = x.fields.id;
         meeting.MeetingName = x.fields.Title;
         meeting.MeetingDescription = x.fields.MeetingDescription;
         meeting.StartDate = x.fields.StartDateTime;
-        this.shrService.getAgendaItems(sessionStorage.getItem('groupId'), parseInt(meeting.MeetingID)).then(res => {
-          console.log('agenda items res', res);
-          res.forEach(y => {
-            const agenda = new AgendaItems();
-            agenda.AgendaName = y.fields.Title;
-            agenda.AgendaDescription = y.fields.AgendaDescription;
-            agenda.Duration = y.fields.AgendaDuration;
-            agenda.StartTime = y.fields.EndDateTime;
-            agenda.EndTime = y.fields.StartDateTime;
-            agenda.AgendaID = y.fields.id;
-            agenda.MeetingID = y.fields.MeetingLookupId;
-            agenda.Status = y.fields.AgendaItemStatus;
-            agenda.IsApproved = y.fields.IsApproved;
-            this.shrService.getNotes(sessionStorage.getItem('groupId'), parseInt(agenda.AgendaID)).then(res => {
-              console.log('get notes by agenda id', res);
-              res.forEach(z => {
-                const note = new Note();
-                note.AgendaID = agenda.AgendaID;
-                note.NoteID = z.fields.id;
-                note.Description = z.fields.NoteDescription;
-                note.Status = z.fields.NoteStatus;
-                note.Type = z.fields.Type;
-                note.AssignedTo = z.fields.CustomAssignedTo;
-                note.AssignedDate = z.fields.AssignedDate;
-                note.DueDate = z.fields.CustomDueDate;
-                agenda.Notes.push(note);
-              });
-            });
-            meeting.AgendaItems.push(agenda);
+        meeting.IsRecurring = x.fields.IsRecurring;
+        this.shrService.getMeetingNotes(parseInt(meeting.MeetingID)).then(res => {
+          res.map(y => {
+            console.log('get notes by meeting id', res);
+            const note = new Note();
+            note.NoteID = y.fields.id;
+            note.AgendaID = y.fields.AgendaLookupId;
+            note.Description = y.fields.NoteDescription;
+            note.Status = y.fields.NoteStatus;
+            note.Type = y.fields.Type;
+            note.AssignedTo = y.fields.CustomAssignedTo;
+            note.AssignedDate = y.fields.AssignedDate;
+            note.DueDate = y.fields.CustomDueDate;
+            meeting.Notes.push(note);
           });
         });
         this.Meeting.push(meeting);
       });
-      const met = new Meeting();
-      met.MeetingName = "External";
-      met.StartDate = new Date().toString();
-      met.AgendaItems.push(new AgendaItems());
-      this.shrService.getExternalNotes(sessionStorage.getItem('groupId')).then(res => {
-        console.log('external notes', res);
-        res.forEach(z => {
-          if (z.fields.Title == "External") {
-            const note = new Note();
-            note.NoteID = z.fields.id;
-            note.Description = z.fields.NoteDescription;
-            note.Status = z.fields.NoteStatus;
-            note.Type = z.fields.Type;
-            note.AssignedTo = z.fields.CustomAssignedTo;
-            note.AssignedDate = z.fields.AssignedDate;
-            note.DueDate = z.fields.CustomDueDate;
-            met.AgendaItems[0].Notes.push(note);
-          }
+      //   const met = new DashboardMeeting();
+      //   met.MeetingName = "External";
+      //   met.StartDate = new Date().toString();
+      //  await this.shrService.getExternalNotes(sessionStorage.getItem('groupId')).then(res => {
+      //     console.log('external notes', res);
+      //     res.forEach(z => {
+      //       if (z.fields.Title == "External") {
+      //         const note = new Note();
+      //         note.NoteID = z.fields.id;
+      //         note.Description = z.fields.NoteDescription;
+      //         note.Status = z.fields.NoteStatus;
+      //         note.Type = z.fields.Type;
+      //         note.AssignedTo = z.fields.CustomAssignedTo;
+      //         note.AssignedDate = z.fields.AssignedDate;
+      //         note.DueDate = z.fields.CustomDueDate;
+      //         met.Notes.push(note);
+      //       }
 
-        });
-      })
-      this.Meeting.push(met);
+      //     });
+      //   })
+      //   this.Meeting.push(met);
+      // this.Meeting = responseObject;
+
+    }).then(() => {
       setTimeout(() => {
+        console.log('meetings response', this.Meeting);
+        this.MeetingCount = this.Meeting.length;
+        this.Meeting = this.Meeting.filter(x => x.Notes.length > 0);
+        console.log('best value', this.Meeting.filter(x => x.Notes.length > 0));
         sessionStorage.setItem('orgMeeting', JSON.stringify(this.Meeting));
-        this.Meeting = this.usermeet();
-        this.spinner.hide();
-        setTimeout(() => {
-          this.donaughtChart('u');
-        }, 2000);
-      }, 4000);
+        this.filters('Day', 'toid');
+        this.getDashboard();
+      }, 5000);
     });
-    this.spinner.hide();
-
   }
+  MeetingCount: number;
+  overviewDate: string = formatDate(new Date(), 'dd/MM/yyyy', 'en');
+  fillDate: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
+  filteredData: any;
 
-  dashBoardCount(admin, status, value) {
+  usermeet() {
+    this.filteredData.forEach(x => {
+      x.Notes = x.Notes.filter(z => z.AssignedTo == this.username);
+    });
+    return this.filteredData;
+  }
+  dashBoardCount1(admin, status, value) {
     var count = 0;
     if (admin == 0) {
       this.Meeting.forEach(x => {
-        x.AgendaItems.forEach(y => {
-          let len = 0;
-          if (status) {
-            len = y.Notes.filter(z => z.Status == value && z.AssignedTo == this.username).length;
-          }
-          else {
-            len = y.Notes.filter(z => z.Type == value && z.AssignedTo == this.username).length;
-          }
-          count += len;
-        });
+        let len = 0;
+        if (status) {
+          len = x.Notes.filter(z => z.Status == value && z.AssignedTo == this.username).length;
+        }
+        else {
+          len = x.Notes.filter(z => z.Type == value && z.AssignedTo == this.username).length;
+        }
+        count += len;
       });
     }
     else {
       this.Meeting.forEach(x => {
-        x.AgendaItems.forEach(y => {
-          let len = 0;
-          if (status) {
-            len = y.Notes.filter(z => z.Status == value).length;
-          }
-          else {
-            len = y.Notes.filter(z => z.Type == value).length;
-          }
-          count += len;
-        });
+        let len = 0;
+        if (status) {
+          len = x.Notes.filter(z => z.Status == value).length;
+        }
+        else {
+          len = x.Notes.filter(z => z.Type == value).length;
+        }
+        count += len;
       });
     }
     return count;
@@ -269,34 +251,7 @@ export class DashboardComponent implements OnInit {
       }
     }
   }
-  getDashboard() {
-    this.proxy.Get('meetings/dashboard/' + sessionStorage.getItem('groupId') + '/0').subscribe(res => {
-      console.log('dashboard', res.Data);
-      this.dashBoard = res.Data.Dashboard;
-      this.Meeting = res.Data.Meeting;
-      this.meetingDashboard.Meeting = this.Meeting.length;
-      this.meetingDashboard.Action = this.dashBoard.filter(x => x.Note.Type == 'Action').length;
-      this.meetingDashboard.Risk = this.dashBoard.filter(x => x.Note.Type == 'Risk').length;
-      this.meetingDashboard.Decision = this.dashBoard.filter(x => x.Note.Type == 'Decision').length;
-      this.meetingDashboard.Planned = this.dashBoard.filter(x => x.Note.Status == 'Planned').length;
-      this.meetingDashboard.InProgress = this.dashBoard.filter(x => x.Note.Status == 'In Progress').length;
-      this.meetingDashboard.Completed = this.dashBoard.filter(x => x.Note.Status == 'Completed').length;
-      this.meetingDashboard.CloseToDeliver = this.dashBoard.filter(x => x.Note.Status != 'Completed' && formatDate(x.Note.CreatedDate, 'yyyy/MM/dd', 'en') >= formatDate(new Date().setDate(new Date().getDate() - 1), 'yyyy/MM/dd', 'en')).length;
 
-      this.meetingDashboard.MyAction = this.dashBoard.filter(x => x.Note.Type == 'Action' && x.Note.AssignedTo == this.username).length;
-      this.meetingDashboard.MyRisk = this.dashBoard.filter(x => x.Note.Type == 'Risk' && x.Note.AssignedTo == this.username).length;
-      this.meetingDashboard.MyDecision = this.dashBoard.filter(x => x.Note.Type == 'Decision' && x.Note.AssignedTo == this.username).length;
-      this.meetingDashboard.MyPlanned = this.dashBoard.filter(x => x.Note.Status == 'Planned' && x.Note.AssignedTo == this.username).length;
-      this.meetingDashboard.MyInProgress = this.dashBoard.filter(x => x.Note.Status == 'In Progress' && x.Note.AssignedTo == this.username).length;
-      this.meetingDashboard.MyCompleted = this.dashBoard.filter(x => x.Note.Status == 'Completed' && x.Note.AssignedTo == this.username).length;
-      this.meetingDashboard.MyCloseToDeliver = this.dashBoard.filter(x => x.Note.Status != 'Completed' && x.Note.AssignedTo == this.username && formatDate(x.Note.CreatedDate, 'yyyy/MM/dd', 'en') >= formatDate(new Date().setDate(new Date().getDate() - 1), 'yyyy/MM/dd', 'en')).length;
-      this.myNotes = this.dashBoard.filter(x => x.Note.AssignedTo == this.username);
-      console.log('meeting dassdsfdsd', this.meetingDashboard);
-      console.log('date1', this.dashBoard[0].Note.CreatedDate);
-      console.log('date2', formatDate(this.dashBoard[0].Note.CreatedDate, 'yyyy/MM/dd', 'en'));
-      console.log('date1', formatDate(new Date().setDate(new Date().getDate() - 1), 'yyyy/MM/dd', 'en'));
-    });
-  }
   filter(admin, status, value) {
     this.toggleAccordian = false;
     $("#collapseExample").collapse('show');
@@ -317,6 +272,18 @@ export class DashboardComponent implements OnInit {
       }
     }
 
+  }
+  filterdata(val) {
+    this.Meeting = JSON.parse(sessionStorage.getItem('orgMeeting'));
+    console.log('Hey this is filter', val);
+    if (val == "Risk" || val == "Action" || val == "Decision") {
+      this.Meeting = this.Meeting.filter(x => {
+        let d = x.Notes.filter(z => z.Type === val && z.AssignedTo === this.username)
+        if (d.length > 0)
+          return d;
+      })
+    }
+    console.log("Meetings", this.username);
   }
   usersList: Array<User>;
   getUsersList() {
@@ -383,7 +350,7 @@ export class DashboardComponent implements OnInit {
       this.shrService.postNote(sessionStorage.getItem('groupId'), listItem).then(res => {
         console.log('post notes response', res);
         this.clear();
-        this.getMeetingsDashboard('group', this.isGroup);
+        this.getMeetingsDashboard(this.isGroup);
       });
     } else {
       const listItem = {
@@ -399,7 +366,7 @@ export class DashboardComponent implements OnInit {
       this.shrService.putNote(sessionStorage.getItem('groupId'), listItem, this.noteForm.value.NoteID).then(res => {
         console.log('post notes response', res);
         this.clear();
-        this.getMeetingsDashboard('group', this.isGroup);
+        this.getMeetingsDashboard(this.isGroup);
       });
     }
 
@@ -416,36 +383,6 @@ export class DashboardComponent implements OnInit {
       this.myNotes = this.dashBoard.filter(x => x.Note.AssignedTo == this.username);
     }
     this.toggle += 1;
-  }
-  getGraphUsers() {
-    this.graphService.getUsers().then((res) => {
-      console.log('users list response ', res);
-      const users = new Array<User>();
-      res.forEach(x => {
-        const user = new User();
-        user.id = x.id;
-        user.email = x.userPrincipalName;
-        user.displayName = x.givenName.slice(0, 1) + x.surname.slice(0, 1);
-        this.graphService.getUserProfile(x.userPrincipalName).then((res) => {
-          if (res) {
-            let reader = new FileReader();
-            reader.addEventListener("load", () => {
-              user.file = reader.result;
-              user.status = true;
-            }, false);
-            if (res) {
-              reader.readAsDataURL(res);
-            }
-          }
-        }).catch(error => {
-          console.log('error', error);
-          user.status = false;
-        });
-        users.push(user);
-      });
-      this.dataService.updatedDataSelection(users);
-      this.getUsersList();
-    });
   }
   changeAssignedTo(val) {
     this.noteForm.patchValue({
@@ -467,19 +404,28 @@ export class DashboardComponent implements OnInit {
       console.log('group plan get', res);
     })
   }
+  plannerTitle: any = '';
   postGroupTask() {
-    const plannerTask = {
-      planId: "EKWgHXzX-UCJt7iRNg9AJ8kAFk5v",
-      bucketId: "AOvw-qpv4k-AzHf5N9txNMkAFwCR",
-      title: "Update client list",
+    if (this.plannerTitle != '') {
+      const plannerTask = {
+        planId: "f1gIkgHvqEKFasL1-oUnJckACYr7",
+        bucketId: "RQR9TEWI8UexaAykiqG6kMkANO_E",
+        title: this.plannerTitle,
+      }
+      this.graphService.postGroupTask(plannerTask).then(res => {
+        console.log('group plan task post', res);
+      })
     }
-    this.graphService.postGroupTask(plannerTask).then(res => {
-      console.log('group plan task post', res);
-    })
+    setTimeout(() => {
+      this.getGroupTasks();
+      this.plannerTitle = '';
+    }, 1000);
   }
+  plannerTasks: any = [];
   getGroupTasks() {
-    this.graphService.getGroupTasks('EKWgHXzX-UCJt7iRNg9AJ8kAFk5v').then(res => {
+    this.graphService.getGroupTasks('f1gIkgHvqEKFasL1-oUnJckACYr7').then(res => {
       console.log('group plan get tasks', res);
+      this.plannerTasks = res;
     });
   }
   toggleAc() {
@@ -491,85 +437,130 @@ export class DashboardComponent implements OnInit {
       (<HTMLDivElement>document.getElementById('collapseOne_0')).classList.add('show');
     }, 100);
   }
-  toggleAdmin(value) {
-    this.tgAdmin = value;
-    this.search = '';
-    if (value == true) {
-      this.heading = 'All Items';
-      this.Meeting = JSON.parse(sessionStorage.getItem('orgMeeting'));
-      setTimeout(() => {
-        this.donaughtChart('a');
-      }, 1000);
-    } else {
-      this.heading = 'My Items';
-      this.Meeting = this.usermeet();
-      setTimeout(() => {
-        this.donaughtChart('u');
-      }, 1000);
-    }
-  }
-  filters(val: string) {
-    const meeting = JSON.parse(sessionStorage.getItem('orgMeeting'));
-    if (val == 'Day') {
-      this.heading = 'Today Meeting Items';
-      this.Meeting = meeting.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(new Date(), 'yyyy/MM/dd', 'en'));
-    }
-     else if (val == 'Week') {
-      const date = new Date();
-      date.setDate(date.getDate() - 7);
-      this.heading = 'This Week Meeting Items';
-      this.Meeting = meeting.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en'));
-    } else {
-      const date = new Date();
-      date.setDate(date.getDate() - 30);
-      this.heading = 'This Month Meeting Items';
-      this.Meeting = meeting.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en'));
-    }
-    if( this.tgAdmin == true){
-      setTimeout(() => {
-        this.donaughtChart('a');
-      }, 1000);
-    }else{
-      setTimeout(() => {
-        this.donaughtChart('u');
-      }, 1000);
-    }
-    
-  }
-  usermeet() {
-    this.Meeting.forEach(x => {
-      x.AgendaItems.forEach(y => {
-        let len = 0;
-        if (status) {
-          y.Notes = y.Notes.filter(z => z.AssignedTo == this.username);
-        }
-        else {
-          y.Notes = y.Notes.filter(z => z.AssignedTo == this.username);
-        }
-      });
-    });
-    return this.Meeting;
-  }
-  donaughtChart(id) {
-    const risk = parseInt(document.getElementById('risk-' + id).innerText);
-    const action = parseInt(document.getElementById('decision-' + id).innerText);
-    const decision = parseInt(document.getElementById('action-' + id).innerText);
-    const planned = parseInt(document.getElementById('planned-' + id).innerText);
-    const inpro = parseInt(document.getElementById('in-' + id).innerText);
-    const close = parseInt(document.getElementById('close-' + id).innerText);
-    const completed = parseInt(document.getElementById('completed-' + id).innerText);
-    const total1 = risk + action + decision;
-    const total2 = planned + inpro + close + completed;
-    // [risk, action, decision, 0, 0, 0, 0, total1 - risk],
-    this.doughnutChartData = [
-      [risk, action, decision, 0, 0, 0, 0, 0],
-      [0, 0, 0, planned, inpro, completed, 0, 0]
-    ];
+  Changecolor(val) {
+    //console.log('')
+    $('.tiles1').removeClass('active');
+    $('.tiles1').addClass('inactive');
+    $('.tiles').removeClass('active');
+    $('.tiles').addClass('inactive');
+    $('#' + val).removeClass('inactive');
+    $('#' + val).addClass('active');
   }
   test: string = "working fine";
   searchData(event) {
     this.Meeting.forEach((x, index) => {
       (<HTMLDivElement>document.getElementById('collapseOne_' + index)).classList.add('show');
     })
+  }
+  getDashboard() {
+    this.dashboardCounts = new DashboardCounts();
+    this.Meeting.forEach(z => {
+      this.dashboardCounts.Meeting = this.MeetingCount;
+      this.dashboardCounts.Action += z.Notes.filter(x => x.Type == 'Action').length;
+      this.dashboardCounts.Risk += z.Notes.filter(x => x.Type == 'Risk').length;
+      this.dashboardCounts.Decision += z.Notes.filter(x => x.Type == 'Decision').length;
+      this.dashboardCounts.Planned += z.Notes.filter(x => x.Status == 'Planned').length;
+      this.dashboardCounts.InProgress += z.Notes.filter(x => x.Status == 'In Progress').length;
+      this.dashboardCounts.Completed += z.Notes.filter(x => x.Status == 'Completed').length;
+      this.doughnutChartData = [
+        [this.dashboardCounts.Risk, this.dashboardCounts.Action, this.dashboardCounts.Decision, 0, 0, 0],
+        [0, 0, 0, this.dashboardCounts.Planned, this.dashboardCounts.InProgress, this.dashboardCounts.Completed]
+      ];
+    });
+    console.log('dashbaord1', this.dashboardCounts);
+    if (this.dashboardCounts.Risk + this.dashboardCounts.Action + this.dashboardCounts.Decision > 0) {
+      this.lineChartLegend = true;
+    }
+  }
+  userProfile(id) {
+    $('.tooltip-inner').css('background-color', '#fff');
+    $('.tooltip-inner').css('color', 'black');
+    $('#' + id).tooltip({
+      placement: 'right',
+      html: true
+    });
+  }
+  dayValue: string = 'Day';
+  filters(val: string, id) {
+    this.dayValue = val;
+    if (this.oldcolor != "") {
+      $("#" + this.oldcolor).removeClass('active');
+      $("#toid").removeClass('active');
+    }
+    $("#" + id).addClass('active');
+    this.oldcolor = id;
+    this.filteredData = JSON.parse(sessionStorage.getItem('orgMeeting'));
+    if (!this.tgAdmin) {
+      this.filteredData = this.usermeet();
+    }
+    if (val == 'Day') {
+      this.heading = 'Today Meeting Items';
+      this.overviewDate = formatDate(new Date(), 'dd/MM/yyyy', 'en');
+      this.Meeting = this.filteredData.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(new Date(), 'yyyy/MM/dd', 'en')) || x.IsRecurring == true);
+    }
+    else if (val == 'Week') {
+      const date = new Date();
+      date.setDate(date.getDate() - 7);
+      this.overviewDate = formatDate(date, 'dd/MM/yyyy', 'en') + ' - ' + formatDate(new Date(), 'dd/MM/yyyy', 'en');
+      this.heading = 'This Week Meeting Items';
+      this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') || x.IsRecurring == true);
+    } else if (val == 'Month') {
+      const date = new Date();
+      date.setDate(date.getDate() - 30);
+      this.overviewDate = formatDate(date, 'dd/MM/yyyy', 'en') + ' - ' + formatDate(new Date(), 'dd/MM/yyyy', 'en');
+      this.heading = 'This Month Meeting Items';
+      this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') || x.IsRecurring == true);
+    } else {
+      console.log('date', val);
+      this.overviewDate = formatDate(val, 'dd/MM/yyyy', 'en');
+      this.heading = formatDate(val, 'dd/MM/yyyy', 'en') + ' Meeting Items';
+      this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(val, 'yyyy/MM/dd', 'en'));
+    }
+    console.log('filter data', this.filteredData);
+    console.log('meeting data', this.Meeting);
+    this.getDashboard();
+  }
+  toggleAdmin(id, value) {
+    this.tgAdmin = value;
+    if (id === "All") {
+      (<HTMLElement>document.getElementById("All")).classList.add('active');
+      (<HTMLElement>document.getElementById("my")).classList.remove('active');
+    }
+    else if (id === "my") {
+      (<HTMLElement>document.getElementById("my")).classList.add('active');
+      (<HTMLElement>document.getElementById("All")).classList.remove('active');
+    }
+
+    this.search = '';
+    this.filters(this.dayValue, this.oldcolor);
+    this.getDashboard();
+    if (value == true) {
+      this.heading = 'All Items';
+      // this.Meeting = this.filteredData;
+      // this.getDashboard();
+    } else {
+      this.heading = 'My Items';
+      // this.Meeting = this.usermeet();
+      // this.getDashboard();
+    }
+  }
+  tabFilter(type: string, status: string) {
+    console.log('filteedd ', this.filteredData);
+    console.log('meetinggg ', this.Meeting);
+    if (status == 'Close') {
+      this.Meeting = [];
+    } else {
+      this.filters(this.dayValue, this.oldcolor);
+      if (type != '') {
+        this.Meeting.forEach(x => {
+          x.Notes = x.Notes.filter(z => z.Type == type);
+        });
+      } else if (status != '') {
+        this.Meeting.forEach(x => {
+          x.Notes = x.Notes.filter(z => z.Status == status);
+        });
+      }
+    }
+
   }
 }

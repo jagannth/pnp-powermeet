@@ -5,7 +5,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from 'src/app/models/User';
 import { DataService } from 'src/app/services/data.service';
 import { Note } from 'src/app/models/Note';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NoteAudit } from 'src/app/models/NoteAudit';
 import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
 import { AgendaItems } from 'src/app/models/AgendaItem';
@@ -17,6 +17,10 @@ import { formatDate } from '@angular/common';
 import { MeetingAttendees } from 'src/app/models/MeetingAttendees';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Attachments } from 'src/app/models/Attachments';
+import * as Chart from 'chart.js';
+import { MultiDataSet, Label, Colors } from 'ng2-charts';
+import { ChartType, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-agenda-notes',
@@ -24,8 +28,39 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./agenda-notes.component.css']
 })
 export class AgendaNotesComponent implements OnInit {
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+    legend: {
+      position: 'bottom',
+    },
+    plugins: {
+      datalabels: {
+        formatter: (value, ctx) => {
+          const label = ctx.chart.data.labels[ctx.dataIndex];
+          return label;
+        },
+      },
+    }
+  };
+  public pieChartLabels: Label[] = ['Risk', 'Action', 'Decision'];
+  public pieChartData: number[] = [30, 60, 10];
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartColors = [
+    {
+      backgroundColor: ['#e65124', '#ec7f22', '#006a9e'],
+    },
+  ];
 
-  constructor(private proxy: ProxyService,public spinner :NgxSpinnerService, private dataService: DataService, private graphService: GraphService, private route: ActivatedRoute, private shrService: SharePointDataServicesService, private fb: FormBuilder) { 
+  public pieChartLabels2: Label[] = ['Planned', 'In-Progress', 'Completed'];
+  public pieChartData2: number[] = [20, 20, 60];
+  public pieChartColors2 = [
+    {
+      backgroundColor: ['#7d7d7d', '#c5c5c5', '#f4f3f3'],
+    },
+  ];
+
+  constructor(private proxy: ProxyService,public spinner :NgxSpinnerService, private dataService: DataService, private graphService: GraphService, private route: ActivatedRoute, private shrService: SharePointDataServicesService, private fb: FormBuilder, private graphSrv: GraphService, public router: Router) { 
     this.noteForm = this.fb.group({
       Description: '',
       Type: '',
@@ -47,16 +82,22 @@ export class AgendaNotesComponent implements OnInit {
   imgUrl: string = "../../../assets/images/Send-Icon.svg";
   colorsArray: any = ['lightgray', 'darkcyan', 'crimson', 'chocolate', 'darkgoldenrod', 'blue', 'purple', 'brown', 'chartreuse'];
   timer: any = { status: 'Start Meeting', time: '23' };
+  currentUrl : string = window.location.href;
   ngOnInit(): void {
     this.spinner.show();
+    console.log('(this.router.url).slice(0, 6)', this.router.url.slice(0, 6));
+    if((this.router.url).slice(0, 6) == '/Notes'){
+      document.getElementById('todayactive').classList.add('active');
+    }
     this.meetingObject = new Meeting();
     this.username = sessionStorage.getItem('user');
     this.noteDetail = new Note();
-    this.getGraphUsers();
+    this.getUsersList();
     this.route.queryParams.subscribe(params => {
       this.getMeetingByID(params.Id, params.start);
       console.log('params', params);
     });
+    sessionStorage.removeItem('subEntityId');
     setTimeout(() => {
       this.spinner.hide();
     }, 2000);
@@ -153,6 +194,7 @@ export class AgendaNotesComponent implements OnInit {
   }
   addNotes(toggle: number, type: string) {
     console.log('this.note', this.noteDetail);
+    const user = this.usersList.find(x=> x.email == sessionStorage.getItem('user'));
     // this.noteDetail.NoteAudit = new NoteAudit();
     // this.noteDetail.AgendaID = this.meetingObject.AgendaItems[this.agendaInx].AgendaID;
     var id =  '0';
@@ -169,17 +211,62 @@ export class AgendaNotesComponent implements OnInit {
         "NoteStatus": this.noteDetail.Status,
         "AgendaLookupId":id,
         "CustomDueDate": this.noteDetail.DueDate,
-        "CustomAssignedTo": this.noteDetail.AssignedTo
+        "CustomAssignedTo": this.noteDetail.AssignedTo,
+        "MeetingLookupId":this.meetingObject.MeetingID
       }
     };
     if (this.isEdited == false) {
       this.shrService.postNote(sessionStorage.getItem('groupId'), listItem).then(res => {
         console.log('post notes response', res);
+        let body =  {
+          "body": {
+              "content": `<at id=\"0\">${user.fullname}</at> added a Note : <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${this.meetingObject.MeetingID}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>${this.noteDetail.Description}</a>`,
+              "contentType": "html"
+          },
+          "mentions": [
+              {
+                  "id": 0,
+                  "mentionText": user.fullname,
+                  "mentioned": {
+                      "user": {
+                          "displayName": user.fullname,
+                          "id": user.id,
+                          "userIdentityType": "aadUser"
+                      }
+                  }
+              }
+          ]
+      }
+        this.graphSrv.postChannelMessage(body).then(res=>{
+          console.log('Channel message res', res);
+        });
         this.noteResponse(res, toggle, false,id);
       });
     } else {
       this.shrService.putNote(sessionStorage.getItem('groupId'), listItem, this.noteDetail.NoteID).then(res => {
         console.log('put notes response', res);
+        let body =  {
+          "body": {
+              "content": `<at id=\"0\">${user.fullname}</at> added a Note : <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${this.meetingObject.MeetingID}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>${this.noteDetail.Description}</a>`,
+              "contentType": "html"
+          },
+          "mentions": [
+              {
+                  "id": 0,
+                  "mentionText": user.fullname,
+                  "mentioned": {
+                      "user": {
+                          "displayName": user.fullname,
+                          "id": user.id,
+                          "userIdentityType": "aadUser"
+                      }
+                  }
+              }
+          ]
+      }
+        this.graphSrv.postChannelMessage(body).then(res=>{
+          console.log('Channel message res', res);
+        });
         this.noteResponse(res, toggle, true,id);
       });
     }
@@ -253,36 +340,6 @@ export class AgendaNotesComponent implements OnInit {
     this.proxy.Get('meetings/notes/' + Id).subscribe(res => {
       if (res) return res.Data;
       return [];
-    });
-  }
-  getGraphUsers() {
-    this.graphService.getUsers().then((res) => {
-      console.log('users list response ', res);
-      const users = new Array<User>();
-      res.forEach(x => {
-        const user = new User();
-        user.id = x.id;
-        user.email = x.userPrincipalName;
-        user.displayName = x.givenName.slice(0, 1) + x.surname.slice(0, 1);
-        this.graphService.getUserProfile(x.userPrincipalName).then((res) => {
-          if (res) {
-            let reader = new FileReader();
-            reader.addEventListener("load", () => {
-              user.file = reader.result;
-              user.status = true;
-            }, false);
-            if (res) {
-              reader.readAsDataURL(res);
-            }
-          }
-        }).catch(error => {
-          console.log('error', error);
-          user.status = false;
-        });
-        users.push(user);
-      });
-      this.dataService.updatedDataSelection(users);
-      this.getUsersList();
     });
   }
   colpsBtn: number = 0;
@@ -467,4 +524,30 @@ export class AgendaNotesComponent implements OnInit {
   alertBtn() {
     (<HTMLDivElement>document.getElementById('alert')).style.display = 'none';
   }
+  // attachments 
+  imagesArray: any = [];
+  Attachments1: any = [];
+  isEditable: boolean = false;
+  changeFileInput(response: any) {
+    console.log('File Input response - ', response);
+    if (response.target.files.length > 0) {
+      for (let i = 0; i < response.target.files.length; i++) {
+        var fileObject = new Attachments();
+        var reader = new FileReader();
+        reader.readAsDataURL(response.target.files[i]);
+        reader.onload = (event: any) => { // called once readAsDataURL is completed
+          const valobj: any = {};
+          valobj.name = response.target.files[i].name;
+          valobj.file = event.target.result;
+          valobj.type = response.target.files[i].type.slice(0, 5);
+          this.imagesArray.push(valobj);
+        }
+        fileObject.file = response.target.files[i];
+        fileObject.AttachmentName = response.target.files[i].name;
+        this.Attachments1.push(fileObject);
+      }
+    }
+    console.log('aaaa', this.imagesArray);
+  }
+  // attachments end
 }

@@ -12,6 +12,7 @@ import { DataService } from 'src/app/services/data.service';
 import { User } from 'src/app/models/User';
 import * as moment from 'moment';
 import { async } from '@angular/core/testing';
+declare var $: any;
 
 import * as microsoftTeams from "@microsoft/teams-js";
 import { SharePointDataServicesService } from 'src/app/services/share-point-data-services.service';
@@ -30,43 +31,136 @@ export class TodayMeetingsComponent implements OnInit {
   colorsArray: any = ['lightgray', 'darkcyan', 'crimson', 'chocolate', 'darkgoldenrod', 'blue', 'purple', 'brown', 'chartreuse']
   constructor(private proxy: ProxyService, private router: Router,
     public spinner: NgxSpinnerService, private authService: AuthService,
-    private graphService: GraphService, private sanitizer: DomSanitizer, private dataService: DataService, private shrService: SharePointDataServicesService) { }
+    private graphService: GraphService, private sanitizer: DomSanitizer, private dataService: DataService, private shrService: SharePointDataServicesService, private graphSrv: GraphService) { }
+
   async ngOnInit() {
+    this.getGraphUsers();
+    // this.joinMeetingInterval();
     this.spinner.show();
     this.meetingsList = new Array<Meeting>();
+    this.usersList = new Array<User>();
     const group = sessionStorage.getItem('groupId');
     if (group == undefined || group == 'undefined') {
       console.log('console if');
       this.getMeetings(sessionStorage.getItem('user'), '0');
     } else {
       console.log('console else');
-      this.getMeetings('group', group); 
+      this.getMeetings('group', group);
     }
-    this.getGraphUsers();
     setTimeout(() => {
       this.spinner.hide();
-    }, 2000);
+      this.getUsersList();
+    }, 3000);
   }
-  getGroupMeetings(Id) {
-    this.graphService.getGroupEvents(Id).then((res) => {
-      console.log('group events', res);
+  heading:string;
+  oldcolor:string;
+  isWeek:boolean = false;
+  filters(val: string, id) {
+    if(val == 'Day'){
+      this.isWeek = false;
+      (<HTMLLIElement>document.getElementById(id)).classList.add('active');
+      (<HTMLLIElement>document.getElementById('woid1')).classList.remove('active');
+    }else{
+      this.isWeek = true;
+      (<HTMLLIElement>document.getElementById(id)).classList.add('active');
+      (<HTMLLIElement>document.getElementById('toid1')).classList.remove('active');
+    }
+    // this.dayValue = val;
+    // if (this.oldcolor != "") {
+    //   $("#" + this.oldcolor).removeClass('active');
+    //   $("#toid").removeClass('active');
+    // }
+    // $("#" + id).addClass('active');
+    // this.oldcolor = id;
+    // this.filteredData = JSON.parse(sessionStorage.getItem('orgMeeting'));
+    // if (val == 'Day') {
+    //   this.heading = 'Today Meeting Items';
+    //   this.overviewDate = formatDate(new Date(), 'dd/MM/yyyy', 'en');
+    //   this.Meeting = this.filteredData.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(new Date(), 'yyyy/MM/dd', 'en')) || x.IsRecurring == true);
+    // }
+    // else if (val == 'Week') {
+    //   const date = new Date();
+    //   date.setDate(date.getDate() - 7);
+    //   this.overviewDate = formatDate(date, 'dd/MM/yyyy', 'en') + ' - ' + formatDate(new Date(), 'dd/MM/yyyy', 'en');
+    //   this.heading = 'This Week Meeting Items';
+    //   this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') || x.IsRecurring == true);
+    // } else if (val == 'Month') {
+    //   const date = new Date();
+    //   date.setDate(date.getDate() - 30);
+    //   this.overviewDate = formatDate(date, 'dd/MM/yyyy', 'en') + ' - ' + formatDate(new Date(), 'dd/MM/yyyy', 'en');
+    //   this.heading = 'This Month Meeting Items';
+    //   this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') || x.IsRecurring == true);
+    // } else {
+    //   console.log('date', val);
+    //   this.overviewDate = formatDate(val, 'dd/MM/yyyy', 'en');
+    //   this.heading = formatDate(val, 'dd/MM/yyyy', 'en') + ' Meeting Items';
+    //   this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(val, 'yyyy/MM/dd', 'en'));
+    // }
+    // console.log('filter data', this.filteredData);
+    // console.log('meeting data', this.Meeting);
+  }
+  async getGraphUsers() {
+   await this.graphService.getUsers().then((res) => {
+      console.log('users list response ', res);
+      const users = new Array<User>();
+      res.forEach(x => {
+        console.log('users list response ', x);
+        const user = new User();
+        user.id = x.id;
+        user.fullname = x.displayName;
+        user.email = x.userPrincipalName;
+        if(x.givenName){
+          user.displayName = x.givenName.slice(0, 1) + x.surname.slice(0, 1);
+        }
+        user.card = `<div class="card" style="width: 18rem;border: none;text-align: left;"><h6>${user.fullname}</h6><p>${user.email}</p></div>`;
+        this.graphService.getUserProfile(x.userPrincipalName).then((res) => {
+          if (res) {
+            let reader = new FileReader();
+            reader.addEventListener("load", () => {
+              user.file = reader.result;
+              user.status = true;
+            }, false);
+            if (res) {
+              reader.readAsDataURL(res);
+            }
+          }
+        }).catch(error => {
+          console.log('error', error);
+          user.status = false;
+        });
+        users.push(user);
+      });
+      console.log('usersss', users);
+      this.dataService.updatedDataSelection(users);
+    });
+  }
+  usersList: Array<User>;
+  getUsersList() {
+    this.dataService.data.subscribe(res => {
+      this.usersList = res;
+      console.log('users res ', this.usersList);
     });
   }
   getMeetings(Value, Id) {
     this.shrService.getMeetings(sessionStorage.getItem('groupId')).then((res) => {
       const responseArray = [];
       const responseArray1 = [];
+      console.log('sharepoint response', res);
       res.forEach(x => {
-        console.log('meetings Id', Id,x.fields);
+        console.log('meetings Id', Id, x.fields);
         if ((Id == '0' && x.fields.IsGroup == false) && x.fields.Organizer == sessionStorage.getItem('user')) {
           const meeting = new Meeting();
           console.log('meetings If', x.fields.IsGroup);
           meeting.MeetingID = x.fields.id;
           meeting.MeetingName = x.fields.Title;
           meeting.IsGroup = x.fields.IsGroup;
+          meeting.IsRecurring = x.fields.IsRecurring;
           meeting.Organizer = x.fields.Organizer
           meeting.MeetingDescription = x.fields.MeetingDescription;
           meeting.StartDate = x.fields.StartDateTime;
+          // if (x.fields.MeetingType) {
+          meeting.MeetingType = x.fields.MeetingType;
+          // }
           var nameArr = x.fields.MeetingAttendees.split('|');
           nameArr.forEach(element => {
             const attendee = new MeetingAttendees();
@@ -75,14 +169,16 @@ export class TodayMeetingsComponent implements OnInit {
           });
           responseArray.push(meeting);
         }
-        else if(Id != '0' && x.fields.IsGroup == true){
+        else if (Id != '0' && x.fields.IsGroup == true) {
           console.log('meetings else', x.fields.IsGroup);
           const meeting = new Meeting();
           meeting.MeetingID = x.fields.id;
           meeting.MeetingName = x.fields.Title;
           meeting.IsGroup = x.fields.IsGroup;
+          meeting.IsRecurring = x.fields.IsRecurring;
           meeting.MeetingDescription = x.fields.MeetingDescription;
           meeting.StartDate = x.fields.StartDateTime;
+          meeting.MeetingType = x.fields.MeetingType;
           var nameArr = x.fields.MeetingAttendees.split('|');
           nameArr.forEach(element => {
             const attendee = new MeetingAttendees();
@@ -92,10 +188,10 @@ export class TodayMeetingsComponent implements OnInit {
           responseArray1.push(meeting);
         }
       });
-      if(Id == '0'){
+      if (Id == '0') {
         console.log('responseArray', responseArray);
         this.meetingsList = responseArray;
-      }else{
+      } else {
         console.log('responseArray1', responseArray);
         this.meetingsList = responseArray1;
       }
@@ -119,7 +215,6 @@ export class TodayMeetingsComponent implements OnInit {
   }
   structEvent(res, Id) {
     const resObj = res.filter(x => (formatDate(x.start.dateTime, 'yyyy/MM/dd', 'en') === formatDate(new Date(), 'yyyy/MM/dd', 'en')) && (!this.CheckMeetings(x)));
-    // console.log('graph response today object', resObj);
     resObj.forEach(x => {
       const meeting = new Meeting();
       meeting.MeetingID = "00000000-0000-0000-0000-000000000000";
@@ -131,7 +226,9 @@ export class TodayMeetingsComponent implements OnInit {
         meeting.IsGroup = true;
         meeting.GroupID = Id;
       }
-      meeting.IsRecurring = false;
+      if (x.recurrence) {
+        meeting.IsRecurring = true;
+      }
 
       meeting.Organizer = x.organizer.emailAddress.address;
       meeting.UserName = x.organizer.emailAddress.address;
@@ -146,12 +243,12 @@ export class TodayMeetingsComponent implements OnInit {
         this.addMeeting(meeting, Id);
       }
     });
-    this.meetingsList.sort(this.GFG_sortFunction);
-    this.meetingsList1 = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() > new Date().getHours());
-    this.meetingsListcompleted = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() < new Date().getHours());
-    this.meetingsListcompleted.sort(this.GFG_sortFunction);
-    this.meetingsListcompleted1 = this.meetingsListcompleted;
-    sessionStorage.setItem('Mcount', this.meetingsList.length);
+    // this.meetingsList.sort(this.GFG_sortFunction);
+    // this.meetingsList1 = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() > new Date().getHours());
+    // this.meetingsListcompleted1 = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() >= new Date().getHours());
+    // this.meetingsListcompleted.sort(this.GFG_sortFunction);
+    this.meetingsListcompleted1 = this.meetingsList;
+    sessionStorage.setItem('Mcount', this.meetingsList);
   }
   addMeeting(Data: Meeting, Id) {
     // const val = sessionStorage.getItem('user');
@@ -192,7 +289,7 @@ export class TodayMeetingsComponent implements OnInit {
         Organizer: Data.Organizer,
         Time: "30",
         IsMeetingActive: true,
-        IsRecurring: false,
+        IsRecurring: Data.IsRecurring,
         IsGroup: isgroup,
         GroupID: Data.GroupID,
         MeetingAttendees: attendee
@@ -211,18 +308,18 @@ export class TodayMeetingsComponent implements OnInit {
         attendee.Email = element;
         if (element != '' && element != 'TestSite99@sticsoft.io') { meeting.MeetingAttendees.push(attendee); }
       });
-
       this.meetingsList.push(meeting);
-      this.meetingsList.sort(this.GFG_sortFunction);
-      this.meetingsList1 = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() > new Date().getHours());
-      this.meetingsListcompleted = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() < new Date().getHours());
-      this.meetingsListcompleted.sort(this.GFG_sortFunction);
-      this.meetingsListcompleted1 = this.meetingsListcompleted;
+      // this.meetingsList.sort(this.GFG_sortFunction);
+      // this.meetingsList1 = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() > new Date().getHours());
+      // this.meetingsListcompleted = this.meetingsList.filter(x => new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() < new Date().getHours());
+      // this.meetingsListcompleted.sort(this.GFG_sortFunction);
+      this.meetingsListcompleted1 = this.meetingsList;
     })
   }
 
   CheckMeetings(obj) {
     const val = this.meetingsList.filter(x => x.MeetingName === obj.subject);
+    console.log('return val', val)
     if (val.length > 0)
       return true;
     else
@@ -320,45 +417,66 @@ export class TodayMeetingsComponent implements OnInit {
     // return yourDate.toDateString();
     return moment.utc(datestr).local();
   }
-  getGraphUsers() {
-    this.graphService.getUsers().then((res) => {
-      console.log('users list response ', res);
-      const users = new Array<User>();
-      res.forEach(x => {
-        const user = new User();
-        user.id = x.id;
-        user.email = x.userPrincipalName;
-        user.displayName = x.givenName.slice(0, 1) + x.surname.slice(0, 1);
-        this.graphService.getUserProfile(x.userPrincipalName).then((res) => {
-          if (res) {
-            let reader = new FileReader();
-            reader.addEventListener("load", () => {
-              user.file = reader.result;
-              user.status = true;
-            }, false);
-            if (res) {
-              reader.readAsDataURL(res);
-            }
-          }
-        }).catch(error => {
-          console.log('error', error);
-          user.status = false;
-        });
-        users.push(user);
-      });
-      this.dataService.updatedDataSelection(users);
-      this.getUsersList();
-    });
-  }
-  usersList: Array<User>;
-  getUsersList() {
-    this.dataService.data.subscribe(res => {
-      this.usersList = res;
-      console.log('users res ', this.usersList);
-    });
-  }
+
   getStatus(email): User {
     const data = this.usersList.find(x => x.email === email);
     return data;
+  }
+  meetingTypeUpdate(value: any, meeting: Meeting) {
+    console.log('value', value);
+    const listItem = {
+      fields: {
+        Title: meeting.MeetingName,
+        MeetingType: value
+      }
+    }
+    // this.meetingsListcompleted1[index].MeetingType = value;
+    this.shrService.putMeeting(meeting.MeetingID, listItem).then(res => {
+      console.log('meeting type update response', res);
+    });
+  }
+  interval;
+  channelMeetingArr: any = [];
+  joinMeetingInterval() {
+    this.pauseTimer();
+    this.interval = setInterval(() => {
+      this.meetingsListcompleted1.forEach(x => {
+        console.log('startdate', new Date(this.ConvertTolocal(x.StartDate).toString()).getHours());
+        console.log('localdate', new Date().getHours());
+        if (new Date(this.ConvertTolocal(x.StartDate).toString()).getHours() == new Date().getHours()) {
+          console.log('success');
+          const join = this.channelMeetingArr.find(z => z == x.MeetingID);
+          if (!join) {
+            this.joinMeeting(x.MeetingName, x.MeetingID);
+            this.channelMeetingArr.push(x.MeetingID);
+          }
+        }
+      });
+    }, 100000)
+  }
+  pauseTimer() {
+    clearInterval(this.interval);
+  }
+  joinMeeting(name, Id) {
+    let body = {
+      "subject": null,
+      "body": {
+        "contentType": "html",
+        "content": "<attachment id=\"74d20c7f34aa4a7fb74e2b30004247c5\"></attachment>"
+      },
+      "attachments": [
+        {
+          "id": "74d20c7f34aa4a7fb74e2b30004247c5",
+          "contentType": "application/vnd.microsoft.card.thumbnail",
+          "contentUrl": null,
+          "content": `{\r\n  \"title\": \"${name} is started. \",\r\n  \"text\": \"Click here to.\\r\\n <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${Id}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>Join</a>. <br>\\r\\n \"}`,
+          "name": null,
+          "thumbnailUrl": null
+        }
+      ]
+    }
+    this.graphSrv.postChannelMessage(body).then(res => {
+      console.log('Channel message res', res);
+    });
   }
 }
