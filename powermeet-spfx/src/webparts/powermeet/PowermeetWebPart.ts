@@ -22,6 +22,7 @@ export default class PowermeetWebPart extends BaseClientSideWebPart<IPowermeetWe
   public constructor() {
     super();
     SPComponentLoader.loadCss("https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css");
+    SPComponentLoader.loadCss("https://unpkg.com/angular-calendar@0.28.20/css/angular-calendar.css");
     SPComponentLoader.loadScript("https://kit.fontawesome.com/74a9a9044f.js");
 
     SPComponentLoader.loadScript("https://code.jquery.com/jquery-3.4.1.slim.min.js");

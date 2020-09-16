@@ -1,4 +1,27 @@
-.nav-pills .nav-link.active,
+.meeting-details-accordain {
+    margin: 0px;
+  }
+  .card-header {
+    margin: 0px;
+    padding: 0px;
+    background-color: #f8f8f8;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    border-bottom-color: transparent;
+  }
+  .meeting-details-accordain > .card-header > h2 > button {
+    color: #3e3e3e !important;
+  }
+  .collapse > .card-body {
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+
+
+
+
+
+  .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
   color: #6164a9;
   background-color: transparent;
@@ -21,27 +44,9 @@
 }
 .nav {
   border-bottom: none;
+  /* display: block */
 }
 
-/* You can add global styles to this file, and also import other style files */
-.logo {
-  font-size: 6rem;
-  color: deepskyblue;
-  margin-bottom: -2rem !important;
-}
-
-/* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-body {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  color: #454545;
-  background: #f3f2f1 !important;
-}
-
-[routerLink]:focus {
-  outline: none !important;
-}
 
 .f-600 {
   font-weight: 600;
@@ -244,4 +249,11 @@ box-shadow: 0 .125rem .25rem #109CF1 !important;
   border: 2px dotted #ddd;
   border-radius: 0.25rem;
   cursor: pointer;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #454545;
+  background: #f3f2f1 !important;
 }

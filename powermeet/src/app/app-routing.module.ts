@@ -6,11 +6,15 @@ import { NotificationsComponent } from './components/notifications/notifications
 import { AgendaNotesComponent } from './components/agenda-notes/agenda-notes.component';
 import { PastMeetingsComponent } from './components/past-meetings/past-meetings.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MymeetingComponent } from './components/mymeeting/mymeeting/mymeeting.component';
+import { AddmeetingComponent } from './components/addmeeting/addmeeting.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
   { path: 'Agendas', component: MeetingDetailsComponent },
-  { path: 'Home', component: HomeComponent},
+  { path: 'Home', component: MymeetingComponent},
+  { path: 'AddMeeting', component: AddmeetingComponent},
+  { path: 'Upcoming', component: HomeComponent},
   // { path: 'Notifications', component: NotificationsComponent ,canActivate: [MsalGuard]},
   { path: 'Notifications', component: NotificationsComponent },
   { path: 'MeetingDetails', component: MeetingDetailsComponent },

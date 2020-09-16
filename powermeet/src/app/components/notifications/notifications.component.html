@@ -1,29 +1,35 @@
-<div class="container-fluid">
-    <div class="row mt3">
-        <div class="col-12">
-            <div class="card card-body notification-card p-3 mb-2" *ngFor="let notif of sortData">
+<app-header></app-header>
+<div class="powermeet-contianer"  style="background: #f3f2f1 !important;">
+  <div class="row ">
+    <div class="col-12">
+      <div class="notification-card" *ngFor="let notif of sortData">
 
-                <div class="d-flex justify-content-between">
-                    <div class="meeting-headline ml-4">
-                        <span class="td-attendee-more" *ngIf="!getUserStatus(notif?.AssigneeName)"  [style.background-color]="colorsArray[0]">
-                            {{getUserStatus(notif?.AssigneeName)?.displayName | uppercase}}{{notif?.AssigneeName | uppercase | slice:0:2}}
-                        </span>
-                        <span class="td-attendee" *ngIf="getUserStatus(notif?.AssigneeName)">
-                            <img [src]="getUserStatus(notif?.AssigneeName)?.file" alt="" class="img-fluid">
-                        </span>
-                        <span class="text-info">
-                            {{getUserStatus(notif?.AssigneeName)?.fullname}} <a style="color: brown!important;">{{notif?.NotificationStatus}}</a>
-                        </span>
-                            
-                    </div>
+        <div class="d-flex justify-content-between">
+          <div class="meeting-headline ml-4">
+            <span class="td-attendee-more1" *ngIf="!getUserStatus(notif?.AssigneeName)"
+              [style.background-color]="colorsArray[0]">
+              {{getUserStatus(notif?.AssigneeName)?.displayName | uppercase}}{{notif?.AssigneeName | uppercase | slice:0:2}}
+            </span>
+            <span class="td-attendee1" *ngIf="getUserStatus(notif?.AssigneeName)">
+              <img [src]="getUserStatus(notif?.AssigneeName)?.file" alt="" class="img-fluid">
+            </span>
+            <span class="text-info">
+              {{getUserStatus(notif?.AssigneeName)?.fullname}}
+            </span>
 
-                    <div class="notification-time">
-                        <p class="clr-one f-600">{{ConvertTolocal(notif?.NotificationDateTime) | date:'medium'}}</p>
-                    </div>
+          </div>
 
-                </div>
-            </div>
+          <div class="notification-time">
+            <p class="clr-one f-600">{{ConvertTolocal(notif?.NotificationDateTime) | date:'medium'}}</p>
+          </div>
 
         </div>
+        <h6 class="text-info">{{notif?.fullname}}</h6>
+        <p class="notification-content">
+          {{notif?.NotificationStatus}}
+        </p>
+      </div>
+
     </div>
+  </div>
 </div>

@@ -1,7 +1,8 @@
 <ngx-spinner bdColor="rgba(0,0,0,0.4)" size="medium" color="#fff" type="ball-spin-fade" [fullScreen]="true">
   <p style="color: white"> Loading... </p>
 </ngx-spinner>
-<div class="dashboard-body mx-2">
+<app-header></app-header>
+<div class="powermeet-contianer mx-2"  style="background: #f3f2f1 !important;">
   <div class="row mt3">
     <div class="col-12">
       <div class="card card-body shadow-sm p-0 mb-2 bg-light">
@@ -514,8 +515,7 @@
           <h6 class="text-center text-primary">Note Status %</h6>
           <div class="chart">
             <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
-              [options]="pieChartOptions"  [colors]="pieChartColors"
-              [legend]="pieChartLegend">
+              [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
             </canvas>
           </div>
         </div>
@@ -523,8 +523,7 @@
           <h6 class="text-center text-primary">Note Type %</h6>
           <div class="chart">
             <canvas baseChart [data]="pieChartData2" [labels]="pieChartLabels2" [chartType]="pieChartType"
-              [options]="pieChartOptions"  [colors]="pieChartColors2"
-              [legend]="pieChartLegend">
+              [options]="pieChartOptions" [colors]="pieChartColors2" [legend]="pieChartLegend">
             </canvas>
           </div>
         </div>

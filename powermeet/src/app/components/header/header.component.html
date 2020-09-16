@@ -3,7 +3,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-  
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
@@ -19,7 +19,7 @@
             <a class="nav-link" routerLink="/Notifications" routerLinkActive="active">Notifications
                 <span class="badge badge-pill badge-primary">{{notifLnt}}</span>
             </a>
-           
+
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -27,29 +27,41 @@
       </form>
     </div>
   </nav> -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <ul class="nav nav-pills mb-3 fixed-top bg-white px-3 border-bottom">
-                
-                <li class="nav-item active">
-                    <a class="nav-link" id="todayactive" routerLink="/Home" routerLinkActive="active">Upcoming Meetings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/PastMeetings" routerLinkActive="active"> Past Meetings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/Notifications" routerLinkActive="active">Notifications
-                        <span class="badge badge-pill badge-primary">{{notifLnt}}</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Dashboard</a>
-                </li>
-                <!-- <li  class="nav-item">
+<div class="container-fluid" style="background: #f3f2f1 !important;">
+  <div class="row">
+    <div class="col-12">
+      <ul class="nav nav-pills mb-3 fixed-top px-3 ">
+        <a class="navbar-brand text-dark" href="#"><i class="fa fa-calendar text-white lg" aria-hidden="true"></i><strong>Power Meet</strong></a>
+        <li class="nav-item active">
+          <a class="nav-link" id="todayactive" routerLink="/Home" routerLinkActive="active">My Meetings</a>
+        </li>
+        <!-- <li class="nav-item active">
+          <a class="nav-link" id="todayactive" routerLink="/Upcoming" routerLinkActive="active">Upcoming Meetings</a>
+        </li> -->
+        <!-- <li class="nav-item">
+          <a class="nav-link" routerLink="/PastMeetings" routerLinkActive="active"> Past Meetings</a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/Notifications" routerLinkActive="active">Notifications
+            <span class="badge badge-pill badge-primary">{{notifLnt}}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Trends</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Sentiment Analysis</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Risk Analysis</a>
+        </li>
+        <!-- <li  class="nav-item">
                     <a class="nav-link" (click)="signOut()">Sign Out</a>
                 </li> -->
-            </ul>
-        </div>
+      </ul>
+      <form class="float-right">
+        <button class="btn btn-primary mt-3 mr-1" style="background-color:#0460A9 !important" routerLink="/AddMeeting">+ New Meeting</button>
+      </form>
     </div>
+  </div>
 </div>

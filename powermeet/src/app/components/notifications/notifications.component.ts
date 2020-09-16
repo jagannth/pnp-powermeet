@@ -31,6 +31,7 @@ export class NotificationsComponent implements OnInit {
   }
   getUserStatus(email): User {
     const data = this.usersList.find(x => x.email === email);
+    console.log('user ', data);
     return data;
   }
   getNotifcations() {

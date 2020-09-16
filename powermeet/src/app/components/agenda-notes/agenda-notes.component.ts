@@ -94,8 +94,8 @@ export class AgendaNotesComponent implements OnInit {
     this.noteDetail = new Note();
     this.getUsersList();
     this.route.queryParams.subscribe(params => {
-      this.getMeetingByID(params.Id, params.start);
       console.log('params', params);
+      this.getMeetingByID(params.Id, params.start);
     });
     sessionStorage.removeItem('subEntityId');
     setTimeout(() => {

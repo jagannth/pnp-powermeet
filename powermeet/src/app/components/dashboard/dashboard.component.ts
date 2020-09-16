@@ -82,8 +82,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.spinner.show();
     this.utilities();
-    this.getGroupTasks();
     this.getUsersList();
+    this.getGroupTasks();
     setTimeout(() => {
       if (this.meetingId != '' && this.meetingId != null) {
         (<HTMLAnchorElement>document.getElementById('notesscreen')).click();
@@ -187,7 +187,7 @@ export class DashboardComponent implements OnInit {
   overviewDate: string = formatDate(new Date(), 'dd/MM/yyyy', 'en');
   fillDate: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
   filteredData: any;
-
+ 
   usermeet() {
     this.filteredData.forEach(x => {
       x.Notes = x.Notes.filter(z => z.AssignedTo == this.username);
@@ -390,44 +390,6 @@ export class DashboardComponent implements OnInit {
     });
     console.log('testtt', this.noteForm);
   }
-  postGroupPlan() {
-    const plannerPlan = {
-      owner: "3527aff3-62df-4cbb-8830-01784a1f6940",
-      title: "title-value"
-    };
-    this.graphService.postGroupPlan(plannerPlan).then(res => {
-      console.log('group plan post', res);
-    })
-  }
-  getGroupPlans() {
-    this.graphService.getGroupPlans().then(res => {
-      console.log('group plan get', res);
-    })
-  }
-  plannerTitle: any = '';
-  postGroupTask() {
-    if (this.plannerTitle != '') {
-      const plannerTask = {
-        planId: "f1gIkgHvqEKFasL1-oUnJckACYr7",
-        bucketId: "RQR9TEWI8UexaAykiqG6kMkANO_E",
-        title: this.plannerTitle,
-      }
-      this.graphService.postGroupTask(plannerTask).then(res => {
-        console.log('group plan task post', res);
-      })
-    }
-    setTimeout(() => {
-      this.getGroupTasks();
-      this.plannerTitle = '';
-    }, 1000);
-  }
-  plannerTasks: any = [];
-  getGroupTasks() {
-    this.graphService.getGroupTasks('f1gIkgHvqEKFasL1-oUnJckACYr7').then(res => {
-      console.log('group plan get tasks', res);
-      this.plannerTasks = res;
-    });
-  }
   toggleAc() {
     this.toggleAccordian = true;
     this.heading = 'Tasks By Meeting';
@@ -475,7 +437,7 @@ export class DashboardComponent implements OnInit {
   userProfile(id) {
     $('.tooltip-inner').css('background-color', '#fff');
     $('.tooltip-inner').css('color', 'black');
-    $('#' + id).tooltip({
+    $('#'+id).tooltip({
       placement: 'right',
       html: true
     });
@@ -496,25 +458,37 @@ export class DashboardComponent implements OnInit {
     if (val == 'Day') {
       this.heading = 'Today Meeting Items';
       this.overviewDate = formatDate(new Date(), 'dd/MM/yyyy', 'en');
-      this.Meeting = this.filteredData.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(new Date(), 'yyyy/MM/dd', 'en')) || x.IsRecurring == true);
+      this.Meeting = this.filteredData.filter(x => (formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(new Date(), 'yyyy/MM/dd', 'en')) );
+      this.Meeting.forEach(z=>{
+        z.Notes = z.Notes.filter(x => (formatDate(x.CreatedDate, 'yyyy/MM/dd', 'en') == formatDate(new Date(), 'yyyy/MM/dd', 'en')) );
+      });
     }
     else if (val == 'Week') {
       const date = new Date();
       date.setDate(date.getDate() - 7);
       this.overviewDate = formatDate(date, 'dd/MM/yyyy', 'en') + ' - ' + formatDate(new Date(), 'dd/MM/yyyy', 'en');
       this.heading = 'This Week Meeting Items';
-      this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') || x.IsRecurring == true);
+      this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') );
+      this.Meeting.forEach(z=>{
+        z.Notes = z.Notes.filter(x => (formatDate(x.CreatedDate, 'yyyy/MM/dd', 'en')  >= formatDate(date, 'yyyy/MM/dd', 'en')));
+      });
     } else if (val == 'Month') {
       const date = new Date();
       date.setDate(date.getDate() - 30);
       this.overviewDate = formatDate(date, 'dd/MM/yyyy', 'en') + ' - ' + formatDate(new Date(), 'dd/MM/yyyy', 'en');
       this.heading = 'This Month Meeting Items';
-      this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') || x.IsRecurring == true);
+      this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') >= formatDate(date, 'yyyy/MM/dd', 'en') );
+      this.Meeting.forEach(z=>{
+        z.Notes = z.Notes.filter(x => (formatDate(x.CreatedDate, 'yyyy/MM/dd', 'en')  >= formatDate(date, 'yyyy/MM/dd', 'en')));
+      });
     } else {
       console.log('date', val);
       this.overviewDate = formatDate(val, 'dd/MM/yyyy', 'en');
       this.heading = formatDate(val, 'dd/MM/yyyy', 'en') + ' Meeting Items';
       this.Meeting = this.filteredData.filter(x => formatDate(x.StartDate, 'yyyy/MM/dd', 'en') == formatDate(val, 'yyyy/MM/dd', 'en'));
+      this.Meeting.forEach(z=>{
+        z.Notes = z.Notes.filter(x => (formatDate(x.CreatedDate, 'yyyy/MM/dd', 'en')  == formatDate(val, 'yyyy/MM/dd', 'en')));
+      });
     }
     console.log('filter data', this.filteredData);
     console.log('meeting data', this.Meeting);
@@ -562,5 +536,43 @@ export class DashboardComponent implements OnInit {
       }
     }
 
+  }
+  postGroupPlan() {
+    const plannerPlan = {
+      owner: "3527aff3-62df-4cbb-8830-01784a1f6940",
+      title: "title-value"
+    };
+    this.graphService.postGroupPlan(plannerPlan).then(res => {
+      console.log('group plan post', res);
+    })
+  }
+  getGroupPlans() {
+    this.graphService.getGroupPlans().then(res => {
+      console.log('group plan get', res);
+    })
+  }
+  plannerTitle: any = '';
+  postGroupTask() {
+    if (this.plannerTitle != '') {
+      const plannerTask = {
+        planId: "f1gIkgHvqEKFasL1-oUnJckACYr7",
+        bucketId: "RQR9TEWI8UexaAykiqG6kMkANO_E",
+        title: this.plannerTitle,
+      }
+      this.graphService.postGroupTask(plannerTask).then(res => {
+        console.log('group plan task post', res);
+      })
+    }
+    setTimeout(() => {
+      this.getGroupTasks();
+      this.plannerTitle = '';
+    }, 2000);
+  }
+  plannerTasks: any = [];
+  getGroupTasks() {
+    this.graphService.getGroupTasks('f1gIkgHvqEKFasL1-oUnJckACYr7').then(res => {
+      console.log('group plan get tasks', res);
+      this.plannerTasks = res;
+    });
   }
 }

@@ -27,7 +27,7 @@ import { StandardTemplate } from 'src/app/models/StandardTemplate';
   styleUrls: ['./meeting-details.component.css']
 })
 export class MeetingDetailsComponent implements OnInit {
-  testtemp = [{ id: 1, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp1.png', name: 'Scrum Meetings' }, { id: 2, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp2.png', name: 'Team Building Meetings' }, { id: 3, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp3.png', name: 'Status Update Meetings' }, { id: 4, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp4.png', name: 'Decision Making Meetings' }];
+  testtemp = [{ id: 1, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp1.png', name: 'Scrum Meetings' }, { id: 2, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp2.png', name: 'Team Building Meetings' }, { id: 3, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp3.png', name: 'Status Update Meetings' }, { id: 4, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp4.png', name: 'Decision Making Meetings' }];
   testnote = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   dt: any;
   loggeduser: any;
@@ -73,49 +73,52 @@ export class MeetingDetailsComponent implements OnInit {
   note: Note;
   currentUrl: string = window.location.href;
   standardTemplate = [{
-    id: 1, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp1.png', name: 'Scrum Meetings',
+    id: 1, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp1.png', name: 'Scrum Meetings',
     agendas: [
-      { AgendaName: 'What did you do yesterday?', AgendaDescription: 'What did you do yesterday? Description', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'What will you do today?', AgendaDescription: 'What will you do today? Description', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Anything blocking your progress?', AgendaDescription: 'Anything blocking your progress? Description', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'What did you do yesterday?', AgendaDescription: 'What did you do yesterday? Description', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'What will you do today?', AgendaDescription: 'What will you do today? Description', Duration: '5 Mins', Status: 'Completed', Type: 'Action', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Anything blocking your progress?', AgendaDescription: 'Anything blocking your progress? Description', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
     ]
   },
   {
-    id: 2, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp2.png', name: 'Team Building Meetings',
+    id: 2, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp2.png', name: 'Team Building Meetings',
     agendas: [
-      { AgendaName: 'Primary Goals for Team Building Meetings', AgendaDescription: 'The overarching goals for team building meetings is to improve the way the team members work together.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Fostering a collaborative team environment', AgendaDescription: 'Team building meetings should combine work with fun, featuring team building activities that let team members share experiences together, get to know each other in new ways, and build trust and communication channels to tap into when completing their tasks', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Aligning everyone’s efforts', AgendaDescription: 'Team building meetings are great channels for communicating your overall team goals and strategy', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Unifying distributed teams', AgendaDescription: 'More and more teams have team members distributed across the country, or around the world.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Key Roles at Team Building Meetings', AgendaDescription: 'Team building meetings are all about the team. They need to be inclusive, and team authorities should participate alongside the rest of the team members.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Common Challenges in Team Building Meetings', AgendaDescription: 'Team building meetings can have great benefits for your team’s communication, productivity, and work satisfaction.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Primary Goals for Team Building Meetings', AgendaDescription: 'The overarching goals for team building meetings is to improve the way the team members work together.', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Fostering a collaborative team environment', AgendaDescription: 'Team building meetings should combine work with fun, featuring team building activities that let team members share experiences together, get to know each other in new ways, and build trust and communication channels to tap into when completing their tasks', Duration: '5 Mins', Status: 'Completed', Type: 'Action', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Aligning everyone’s efforts', AgendaDescription: 'Team building meetings are great channels for communicating your overall team goals and strategy', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Unifying distributed teams', AgendaDescription: 'More and more teams have team members distributed across the country, or around the world.', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Key Roles at Team Building Meetings', AgendaDescription: 'Team building meetings are all about the team. They need to be inclusive, and team authorities should participate alongside the rest of the team members.', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Common Challenges in Team Building Meetings', AgendaDescription: 'Team building meetings can have great benefits for your team’s communication, productivity, and work satisfaction.', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
     ]
   },
   {
-    id: 3, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp3.png', name: 'Status Update Meetings',
+    id: 3, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp3.png', name: 'Status Update Meetings',
     agendas: [
-      { AgendaName: 'Primary Goals for Status Update Meetings', AgendaDescription: 'The primary purpose of status update meetings is to update and align a team or department on the current state of a project or overall direction of the group', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Key Roles in Status Update Meetings', AgendaDescription: 'Status update meetings have a broad category of potential participants', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'How to Host Successful Status Update Meetings', AgendaDescription: 'Great status update meetings not only keep everyone informed and on task, but they can also save valuable work time, and reduce frustration among team members. Keeping a focus on participant engagement and meeting efficiency is..', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Primary Goals for Status Update Meetings', AgendaDescription: 'The primary purpose of status update meetings is to update and align a team or department on the current state of a project or overall direction of the group', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Key Roles in Status Update Meetings', AgendaDescription: 'Status update meetings have a broad category of potential participants', Duration: '5 Mins', Status: 'Completed', Type: 'Action', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'How to Host Successful Status Update Meetings', AgendaDescription: 'Great status update meetings not only keep everyone informed and on task, but they can also save valuable work time, and reduce frustration among team members. Keeping a focus on participant engagement and meeting efficiency is..', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
     ]
   },
   {
-    id: 4, path: 'https://restfuncapp2020080721521.blob.core.windows.net/blob/temp4.png', name: 'Decision Making Meetings',
+    id: 4, path: 'https://storageaccountfunct8ff3.blob.core.windows.net/blob/temp4.png', name: 'Decision Making Meetings',
     agendas: [
-      { AgendaName: 'Better Team Building Meetings with Technology', AgendaDescription: 'The ability to connect and engage participants at team building meetings is essential.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Easily include and engage everyone', AgendaDescription: 'With MeetingSift you can easily engage teams of all sizes via the participants’ smartphones, tablets, or laptops. It’s easy to use, no training is ne ..', AgendaDuration: '5 Mins', Status: 'Completed', Type: 'Action', StartDateTime: '2020-08-28T19:18:15Z' },
-      { AgendaName: 'Quickly and easily capture ideas from any size group', AgendaDescription: 'Recording and sharing ideas in larger groups can be a difficult task when several dozen people are juggling hundreds of Post-it Notes or shouting suggestions across the room.', AgendaDuration: '5 Mins', Status: 'Planned', Type: 'Risk', StartDateTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Better Team Building Meetings with Technology', AgendaDescription: 'The ability to connect and engage participants at team building meetings is essential.', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Easily include and engage everyone', AgendaDescription: 'With MeetingSift you can easily engage teams of all sizes via the participants’ smartphones, tablets, or laptops. It’s easy to use, no training is ne ..', Duration: '5 Mins', Status: 'Completed', Type: 'Action', StartTime: '2020-08-28T19:18:15Z' },
+      { AgendaName: 'Quickly and easily capture ideas from any size group', AgendaDescription: 'Recording and sharing ideas in larger groups can be a difficult task when several dozen people are juggling hundreds of Post-it Notes or shouting suggestions across the room.', Duration: '5 Mins', Status: 'Planned', Type: 'Risk', StartTime: '2020-08-28T19:18:15Z' },
     ]
   }];
 
 
   constructor(public spinner: NgxSpinnerService, private shrService: SharePointDataServicesService, public proxy: ProxyService, private router: Router, private dataService: DataService, private graphSrv: GraphService) { }
   MeetingID: string = '00000000-0000-0000-0000-000000000000';
+  me: string;
   ngOnInit() {
+    this.me = sessionStorage.getItem('user');
     this.agendaList = this.standardTemplate[0].agendas;
     console.log('agendas', this.standardTemplate);
     this.spinner.show();
     this.getAllNotes();
+    this.getTemplatedetails11();
     const rout = this.router.url
     if (this.router.url == '/MeetingDetails') {
       document.getElementById('todayactive').classList.add('active');
@@ -145,25 +148,55 @@ export class MeetingDetailsComponent implements OnInit {
   agendaList1: any = [];
   tempchange(temp) {
     this.agendaList = temp.agendas;
+    console.log('temppp', this.agendaList);
+  }
+  customTempchange(temp) {
+    this.agendaList = temp;
   }
   addtoAgendaList(event, data) {
     if (event.target.checked) {
       this.agendaList1.push(data);
-    }else{
-      const inx = this.agendaList1.findIndex(x=> x.AgendaName == data.AgendaName);
-      this.agendaList1.splice(inx,1);
+    } else {
+      const inx = this.agendaList1.findIndex(x => x.AgendaName == data.AgendaName);
+      this.agendaList1.splice(inx, 1);
     }
     console.log('agendaList1', this.agendaList1);
   }
-  saveToMeeting(){
+  adminApprove(agenda){
+    const listItem = {
+      "fields": {
+        "IsApproved": true,
+      } 
+    };
+    const inx = this.Meeting.AgendaItems.findIndex(x => x.AgendaID == agenda.AgendaID);
+    this.shrService.putAgendaItem(sessionStorage.getItem('groupId'), listItem, agenda.AgendaID).then(res => {
+      console.log('approve res', res);
+      const agenda = new AgendaItems();
+      agenda.AgendaName = res.fields.Title;
+      agenda.AgendaDescription = res.fields.AgendaDescription;
+      agenda.Duration = res.fields.AgendaDuration;
+      agenda.StartTime = res.fields.EndDateTime;
+      agenda.EndTime = res.fields.StartDateTime;
+      agenda.AgendaID = res.fields.id;
+      agenda.AgendaAssignees = new AgendaAssignees();
+      agenda.AgendaAssignees.Email = res.fields.AgendaAssignees;
+      agenda.MeetingID = res.fields.MeetingLookupId;
+      agenda.Status = res.fields.AgendaItemStatus;
+      agenda.IsApproved = res.fields.IsApproved;
+      if ((this.me == 'vinay.kumar@sticsoft.io' || agenda.IsApproved == true)) {
+        this.Meeting.AgendaItems[inx] = agenda;
+      }
+    });
+  }
+  saveToMeeting() {
     const user = this.usersList.find(x => x.email == sessionStorage.getItem('user'));
     this.agendaList1.forEach(x => {
       const listItem = {
         "fields": {
           "Title": x.AgendaName,
           "AgendaDescription": x.AgendaDescription,
-          "IsApproved": true,
-          "AgendaDuration": x.AgendaDuration,
+          "IsApproved": false,
+          "AgendaDuration": x.Duration,
           "AgendaItemStatus": x.Status,
           "StartDateTime": new Date(),
           "EndDateTime": new Date(),
@@ -186,7 +219,9 @@ export class MeetingDetailsComponent implements OnInit {
         agenda.MeetingID = res.fields.MeetingLookupId;
         agenda.Status = res.fields.AgendaItemStatus;
         agenda.IsApproved = res.fields.IsApproved;
-        this.Meeting.AgendaItems.push(agenda);
+        if ((this.me == 'vinay.kumar@sticsoft.io' || agenda.IsApproved == true)) {
+          this.Meeting.AgendaItems.push(agenda);
+        }
         let body = {
           "body": {
             "content": `<at id=\"0\">${user.fullname}</at> added an Agenda : <a href='https://teams.microsoft.com/l/entity/af49f63f-8dd5-417b-b3f5-96658fa88dbd/_djb2_msteams_prefix_2521105317?context=%7B%22subEntityId%22%3A${this.MeetingID}%2C%22channelId%22%3A%2219%3A66897d02aa6745428f4c8117cc197f39%40thread.tacv2%22%7D&groupId=54b63089-c127-4cd9-9dd5-72013c0c3eaa&tenantId=84a9843b-0b29-4729-ba8a-8155cf55c7ae'>${res.fields.Title}</a>`,
@@ -235,27 +270,24 @@ export class MeetingDetailsComponent implements OnInit {
         const temp = { Name: '', Id: '', AgendaItems: new Array<AgendaItems>() };
         temp.Name = x.fields.Title;
         temp.Id = x.fields.id;
-        if (x.fields.MeetingType == this.meetingType) {
-          this.shrService.getTemplateAgendas(sessionStorage.getItem('groupId'), x.fields.id).then(res => {
-            console.log('agenda tempkakte res', res);
-            res.forEach(y => {
-              this.shrService.getAgendaItemsById(sessionStorage.getItem('groupId'), y.fields.AgendaLookupId).then(res => {
-                console.log('agenda details', res);
-                const agenda = new AgendaItems();
-                agenda.AgendaName = res.fields.Title;
-                agenda.AgendaDescription = res.fields.AgendaDescription;
-                agenda.Duration = res.fields.AgendaDuration;
-                agenda.StartTime = res.fields.EndDateTime;
-                agenda.EndTime = res.fields.StartDateTime;
-                agenda.Status = res.fields.AgendaItemStatus;
-                agenda.IsApproved = res.fields.IsApproved;
-                temp.AgendaItems.push(agenda);
-              });
-
+        this.shrService.getTemplateAgendas(sessionStorage.getItem('groupId'), x.fields.id).then(res => {
+          console.log('agenda tempkakte res', res);
+          res.forEach(y => {
+            this.shrService.getAgendaItemsById(sessionStorage.getItem('groupId'), y.fields.AgendaLookupId).then(res => {
+              const agenda = new AgendaItems();
+              agenda.AgendaName = res.fields.Title;
+              agenda.AgendaDescription = res.fields.AgendaDescription;
+              agenda.Duration = res.fields.AgendaDuration;
+              agenda.EndTime = res.fields.EndDateTime;
+              agenda.StartTime = res.fields.StartDateTime;
+              agenda.Status = res.fields.AgendaItemStatus;
+              agenda.IsApproved = res.fields.IsApproved;
+              temp.AgendaItems.push(agenda);
             });
-          })
-          this.TemplateArray.push(temp);
-        }
+
+          });
+        })
+        this.TemplateArray.push(temp);
       });
     })
   }
@@ -292,7 +324,9 @@ export class MeetingDetailsComponent implements OnInit {
         //   agenda.Attachments.push(attachment);
         //  });
         // });
-        this.Meeting.AgendaItems.push(agenda);
+        if ((this.MeetingObj.Organizer == 'TestSite99@sticsoft.io' && sessionStorage.getItem('user') == 'vinay.kumar@sticsoft.io') || agenda.IsApproved == true) {
+          this.Meeting.AgendaItems.push(agenda);
+        }
       });
     });
     // this.proxy.Get('meetings/' + Id).subscribe(res => {
@@ -434,7 +468,7 @@ export class MeetingDetailsComponent implements OnInit {
       "fields": {
         "Title": this.AgendaItem.AgendaName,
         "AgendaDescription": this.AgendaItem.AgendaDescription,
-        "IsApproved": true,
+        "IsApproved": false,
         "AgendaDuration": this.AgendaItem.Duration,
         "AgendaItemStatus": "Completed",
         "StartDateTime": new Date(),
@@ -449,7 +483,7 @@ export class MeetingDetailsComponent implements OnInit {
         "fields": {
           "Title": this.agendaName,
           "AgendaDescription": this.agendaName,
-          "IsApproved": true,
+          "IsApproved": false,
           "AgendaDuration": "5 Mins",
           "AgendaItemStatus": "Completed",
           "StartDateTime": new Date(),
@@ -566,30 +600,32 @@ export class MeetingDetailsComponent implements OnInit {
     this.spinner.hide();
   }
   agendaResponse(res, status, inx) {
-    const agenda = new AgendaItems();
-    agenda.AgendaName = res.fields.Title;
-    agenda.AgendaDescription = res.fields.AgendaDescription;
-    agenda.Duration = res.fields.AgendaDuration;
-    agenda.StartTime = res.fields.EndDateTime;
-    agenda.EndTime = res.fields.StartDateTime;
-    agenda.AgendaID = res.fields.id;
-    agenda.AgendaAssignees = new AgendaAssignees();
-    agenda.AgendaAssignees.Email = res.fields.AgendaAssignees;
-    if (res.fields.AgendaAttendees) {
-      var nameArr = res.fields.AgendaAttendees.split('|');
-      nameArr.forEach(element => {
-        const attendee = new AgendaAttendees();
-        attendee.Email = element;
-        if (element != '' && element != 'TestSite99@sticsoft.io') { agenda.AgendaAttendees.push(attendee); }
-      });
-    }
-    agenda.MeetingID = res.fields.MeetingLookupId;
-    agenda.Status = res.fields.AgendaItemStatus;
-    agenda.IsApproved = res.fields.IsApproved;
-    if (status == false) {
-      this.Meeting.AgendaItems.push(agenda);
-    } else {
-      this.Meeting.AgendaItems[inx] = agenda;
+    if (res.fields.IsApproved == true || this.me == 'vinay.kumar@sticsoft.io') {
+      const agenda = new AgendaItems();
+      agenda.AgendaName = res.fields.Title;
+      agenda.AgendaDescription = res.fields.AgendaDescription;
+      agenda.Duration = res.fields.AgendaDuration;
+      agenda.StartTime = res.fields.EndDateTime;
+      agenda.EndTime = res.fields.StartDateTime;
+      agenda.AgendaID = res.fields.id;
+      agenda.AgendaAssignees = new AgendaAssignees();
+      agenda.AgendaAssignees.Email = res.fields.AgendaAssignees;
+      if (res.fields.AgendaAttendees) {
+        var nameArr = res.fields.AgendaAttendees.split('|');
+        nameArr.forEach(element => {
+          const attendee = new AgendaAttendees();
+          attendee.Email = element;
+          if (element != '' && element != 'TestSite99@sticsoft.io') { agenda.AgendaAttendees.push(attendee); }
+        });
+      }
+      agenda.MeetingID = res.fields.MeetingLookupId;
+      agenda.Status = res.fields.AgendaItemStatus;
+      agenda.IsApproved = res.fields.IsApproved;
+      if (status == false) {
+        this.Meeting.AgendaItems.push(agenda);
+      } else {
+        this.Meeting.AgendaItems[inx] = agenda;
+      }
     }
     this.Attachments1 = [];
   }
@@ -612,7 +648,7 @@ export class MeetingDetailsComponent implements OnInit {
         "fields": {
           "Title": x.AgendaName,
           "AgendaDescription": x.AgendaDescription,
-          "IsApproved": true,
+          "IsApproved": false,
           "AgendaDuration": x.Duration,
           "AgendaItemStatus": "Completed",
           "StartDateTime": new Date(),
@@ -628,8 +664,8 @@ export class MeetingDetailsComponent implements OnInit {
         agenda.AgendaName = res.fields.Title;
         agenda.AgendaDescription = res.fields.AgendaDescription;
         agenda.Duration = res.fields.AgendaDuration;
-        agenda.StartTime = res.fields.EndDateTime;
-        agenda.EndTime = res.fields.StartDateTime;
+        agenda.EndTime = res.fields.EndDateTime;
+        agenda.StartTime = res.fields.StartDateTime;
         agenda.AgendaID = res.fields.id;
         agenda.AgendaAssignees = new AgendaAssignees();
         agenda.AgendaAssignees.Email = res.fields.AgendaAssignees;
@@ -794,8 +830,8 @@ export class MeetingDetailsComponent implements OnInit {
           agenda.AgendaName = x.fields.Title;
           agenda.AgendaDescription = x.fields.AgendaDescription;
           agenda.Duration = x.fields.AgendaDuration;
-          agenda.StartTime = x.fields.EndDateTime;
-          agenda.EndTime = x.fields.StartDateTime;
+          agenda.EndTime = x.fields.EndDateTime;
+          agenda.StartTime = x.fields.StartDateTime;
           agenda.AgendaID = x.fields.id;
           agenda.AgendaAssignees = new AgendaAssignees();
           agenda.AgendaAssignees.Email = x.fields.AgendaAssignees;

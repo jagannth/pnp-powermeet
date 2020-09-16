@@ -23,6 +23,11 @@ import { ChartsModule } from 'ng2-charts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MsalModule } from '@azure/msal-angular';
 import { DataService } from './services/data.service';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { MymeetingComponent } from './components/mymeeting/mymeeting/mymeeting.component';
+import { AddmeetingComponent } from './components/addmeeting/addmeeting.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +36,7 @@ import { DataService } from './services/data.service';
     HeaderComponent,
     NotificationsComponent,
     TodayMeetingsComponent,
-    MeetingDetailsComponent, PastMeetingsComponent, AgendaNotesComponent, DashboardComponent, SearchPipe
+    MeetingDetailsComponent, PastMeetingsComponent, AgendaNotesComponent, DashboardComponent, SearchPipe, MymeetingComponent, AddmeetingComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +46,11 @@ import { DataService } from './services/data.service';
     HttpClientModule,
     ChartsModule,
     RouterModule,
-    NgxSpinnerModule,
+    NgxSpinnerModule,NgbModalModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
     MsalModule.forRoot({
     clientID: OAuthSettings.appId,    
     validateAuthority : true,

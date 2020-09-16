@@ -1,3 +1,268 @@
+/* styles.css start */
+
+.btn,
+.form-control {
+  font-size: 14px !important;
+}
+
+.primary-text {
+  color: #023761 !important;
+}
+
+.primary-link {
+  color: #464775;
+  text-decoration: none;
+}
+
+.clr-one {
+  color: #464775;
+}
+
+.clr-two {
+  color: #00A3FF;
+}
+
+.clr-three {
+  color: #707683;
+}
+
+.clr-four {
+  color: #8AC625;
+}
+
+.clr-five {
+  color: #898989;
+}
+
+.bg-one {
+  color: #F3F7F8;
+}
+
+.btn-one {
+  background: #00A3FF;
+  color: #fff;
+  font-size: 14px;
+}
+
+.btn-one:hover {
+  background: rgb(8, 146, 226);
+  color: #fff;
+}
+
+.btn-two {
+  background: #c4c4c4;
+  color: #fff;
+  font-size: 14px;
+}
+
+.btn-two:hover {
+  background: #9b9b9b;
+  color: #fff;
+}
+
+/* .shadow-sm-one {
+  box-shadow: 0 .125rem .25rem #109CF1 !important;
+} */
+.border-bottom {
+  border-color: #EBEFF2 !important;
+}
+
+.table {
+  margin-bottom: 0px;
+}
+
+.table td,
+.table th {
+  border-top: 1px solid #f8f8f8 !important;
+  color: #323C47 !important;
+}
+
+.table td {
+  cursor: pointer;
+  vertical-align: middle;
+  color: #707683;
+  font-size: 13.5px;
+  padding: 0.5rem 0.7rem !important;
+}
+
+.table th {
+  border: none !important;
+  padding: 1.2rem 0.75rem;
+  background-color: #f8f9fa !important;
+  font-weight: 600;
+  color: #373737 !important;
+  font-size: 14px;
+}
+
+table td p {
+  margin-bottom: 0px !important;
+}
+
+.table-hover tbody tr:hover {
+  color: #323C47;
+  background-color: #F3F7F8;
+}
+
+.td-main-text {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.td-secondary-text {
+  font-size: 12px;
+  color: #7d7d7d;
+  font-weight: 400;
+}
+
+.td-attendee>img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 3rem;
+  margin-left: -0.8rem;
+}
+
+.meeting-attendee>img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 2rem;
+  margin-right: 0.2rem;
+  -webkit-border-radius: 2rem;
+  -moz-border-radius: 2rem;
+  -ms-border-radius: 2rem;
+  -o-border-radius: 2rem;
+}
+
+.td-attendee-more {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 2rem;
+  text-align: center;
+  background: #c4c4c4;
+  padding: 0.8rem;
+  margin-left: -0.8rem;
+}
+
+.td-attendee-add {
+  padding: 1rem 0.725rem;
+  border-radius: 5rem;
+  background: #c4c4c4;
+  /* margin-top: 1rem;  */
+  width: 3.35rem;
+  height: 3.35rem;
+}
+
+.td-attendee-add>img {
+  width: 1.8rem;
+}
+
+.meeting-attendee-more {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 3rem;
+  text-align: center;
+  background: #c4c4c4;
+  padding: 0.8rem;
+}
+
+.agenda-header {
+  background: #F8F8F8;
+  border-top-right-radius: 0.25rem;
+  border-top-left-radius: 0.25rem;
+  padding: 0.35rem;
+}
+
+.agenda-footer {
+  display: flex;
+  position: relative;
+}
+
+.input-user {
+  margin-right: 1rem;
+}
+
+#agenda-title {
+  font-size: 1.2rem !important;
+  font-weight: 600;
+}
+
+.agenda-title-plain-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #6c757d !important;
+}
+
+.input-content {
+  width: 100%;
+}
+
+#input-file {
+  display: none
+}
+
+.cust-input-container {
+  position: relative;
+}
+
+.cust-upload {
+  padding: 1.5rem;
+  border: 2px dotted #ddd;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.powermeet-contianer {
+  margin-top: 3.5rem;
+}
+
+.powermeet-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  background: #fff;
+  padding: 1rem 1.25rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+}
+
+.list-group-item.active {
+  background-color: #0460A9 !important;
+  border-color: #0460A9 !important;
+}
+
+.powermeet-contianer {
+  height: calc(100vh - 70px) !important;
+  overflow-y: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
+
+.meeting-card {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  -webkit-border-radius: 0.25rem;
+  -moz-border-radius: 0.25rem;
+  -ms-border-radius: 0.25rem;
+  -o-border-radius: 0.25rem;
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+  border-color: transparent;
+}
+
+/* styles.css end */
+.notification-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
 .notification-card:hover {
   cursor: pointer;
   box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
@@ -51,249 +316,35 @@
 .fit-cont {
   width: fit-content !important;
 }
-/* You can add global styles to this file, and also import other style files */
-.logo{
-  font-size: 6rem;
-  color: deepskyblue;
-  margin-bottom: -2rem!important;
-}
-/* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
-body {
-font-family: 'Poppins',
-  sans-serif;
-font-size: 14px;
-color: #454545;
-background: #F3F2F0;
+.notification-content {
+  margin-bottom: 0px;
+  margin-left: 3rem;
+  font-size: 14px;
+  color: #3e3e3e;
 }
-
-[routerLink]:focus {
-outline: none !important;
-}
-
-.f-600 {
-font-weight: 600;
-}
-
-.divider-one {
-height: 2rem;
-}
-
-.hover:hover {
-cursor: pointer;
-}
-
-.no-focus {
-text-decoration: none !important;
-}
-
-.btn,
-.form-control {
-font-size: 14px !important;
-}
-
-.primary-link {
-color: #464775;
-text-decoration: none;
-}
-
-.clr-one {
-color: #464775;
-}
-
-.clr-two {
-color: #00A3FF;
-}
-
-.clr-three {
-color: #707683;
-}
-
-.clr-four {
-color: #8AC625;
-}
-
-.clr-five {
-color: #898989;
-}
-
-.bg-one {
-color: #F3F7F8;
-}
-
-.btn-one {
-background: #00A3FF;
-color: #fff;
-font-size: 14px;
-}
-
-.btn-one:hover {
-background: rgb(8, 146, 226);
-color: #fff;
-}
-
-.btn-two {
-background: #c4c4c4;
-color: #fff;
-font-size: 14px;
-}
-
-.btn-two:hover {
-background: #9b9b9b;
-color: #fff;
-}
-
-/* .shadow-sm-one {
-box-shadow: 0 .125rem .25rem #109CF1 !important;
-} */
-.border-bottom {
-border-color: #EBEFF2 !important;
+.td-attendee1>img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 3rem;
+  margin-left: -0.8rem;
 }
 
 .table td,
 .table th {
-border-top: none !important;
-color: #323C47 !important;
+  padding: 0.5rem;
 }
 
-.table td {
-cursor: pointer;
-vertical-align: middle;
-color: #707683;
+.td-attendee-more1 {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 3rem;
+  text-align: center;
+  background: #c4c4c4;
+  padding: 0.4rem;
+  margin-left: -0.8rem;
 }
 
-.table-hover tbody tr:hover {
-color: #323C47;
-background-color: #F3F7F8;
-}
-
-.td-main-text {
-font-size: 15px;
-font-weight: 600;
-}
-
-.td-secondary-text {
-font-size: 13px;
-}
-
-.td-attendee>img {
-width: 3rem;
-height: 3rem;
-object-fit: contain;
-border-radius: 3rem;
-margin-left: -0.8rem;
-}
-
-.meeting-attendee>img {
-width: 3rem;
-height: 3rem;
-object-fit: contain;
-border-radius: 3rem;
-margin-right: 0.2rem;
-}
-
-.td-attendee-more {
-width: 3rem;
-height: 3rem;
-border-radius: 50%;
-color: #fff;
-line-height: 3rem;
-text-align: center;
-background: #c4c4c4;
-padding: 0.8rem;
-margin-left: -0.8rem;
-}
-
-.td-attendee-add {
-padding: 1rem 0.725rem;
-border-radius: 5rem;
-background: #c4c4c4;
- /* margin-top: 1rem;  */
-width: 3.35rem;
-height: 3.35rem;
-}
-
-.td-attendee-add>img {
-width: 1.8rem;
-}
-
-.meeting-attendee-more {
-width: 3rem;
-height: 3rem;
-border-radius: 50%;
-color: #fff;
-line-height: 3rem;
-text-align: center;
-background: #c4c4c4;
-padding: 0.8rem;
-}
-
-.agenda-header {
-background: #F8F8F8;
-border-top-right-radius: 0.25rem;
-border-top-left-radius: 0.25rem;
-padding: 0.35rem;
-}
-
-.agenda-footer {
-display: flex;
-position: relative;
-}
-
-.input-user {
-margin-right: 1rem;
-}
-
-#agenda-title {
-font-size: 1.2rem !important;
-font-weight: 600;
-}
-
-.agenda-title-plain-text {
-font-size: 1.2rem;
-font-weight: 600;
-color: #6c757d !important;
-}
-
-.input-content {
-width: 100%;
-}
-
-#input-file {
-display: none
-}
-
-.cust-input-container {
-position: relative;
-}
-
-.cust-upload {
-padding: 1.5rem;
-border: 2px dotted #ddd;
-border-radius: 0.25rem;
-cursor: pointer;
-}
-.mt3{
-  margin-top: 3rem;
-}
-
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}

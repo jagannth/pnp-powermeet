@@ -1,0 +1,199 @@
+<div class="container-fluid" style="background: #f3f2f1 !important;">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <ul class="nav nav-pills mb-3 fixed-top px-3 ">
+        <a class="navbar-brand text-dark" href="#"><i class="fa fa-calendar text-white lg" aria-hidden="true"></i><strong>New Meeting</strong></a>
+        <li class="nav-item active">
+          <a class="nav-link active" id="todayactive" routerLink="/Home" routerLinkActive="active">Details</a>
+        </li>
+        <!-- <li class="nav-item active">
+          <a class="nav-link" id="todayactive" routerLink="/Upcoming" routerLinkActive="active">Upcoming Meetings</a>
+        </li> -->
+        <!-- <li class="nav-item">
+          <a class="nav-link" routerLink="/PastMeetings" routerLinkActive="active"> Past Meetings</a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/Home">Scheduling Assistant
+          </a>
+        </li>
+      </ul>
+      <form class="float-right">
+        <button class="btn btn-primary mt-3 mr-1" style="background-color:#0460A9 !important" routerLink="/Home">Save</button>
+        <button class="btn btn-secondary mt-3 mr-1" routerLink="/Home">Discard</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <!--  meeting title strip  -->
+  <div class="row container">
+    <div class="col-md-3 px-1 mb-2">
+      <select class="form-control" id="">
+        <option>Meeting Category</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+
+    <div class="col-md-4 px-1 mb-2">
+      <input type="text" placeholder="meeting title" class="form-control">
+    </div>
+  </div>
+  <!--  meeting title strip  -->
+
+  <!-- meeting details section: start  -->
+  <div class="accordion meeting-details-accordain shadow-sm" id="meetingdetailsaccordain">
+
+    <div class="card-header" id="headingOne">
+      <h2 class="m-0">
+        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#meetingdetaiscollapse" aria-expanded="true" aria-controls="collapseOne">
+          Meeting details
+        </button>
+      </h2>
+    </div>
+
+    <div id="meetingdetaiscollapse" class="collapse show" aria-labelledby="headingOne" data-parent="#meetingdetailsaccordain">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="">Attendees:</label>
+              <input type="text" name="" id="" class="form-control">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="row">
+
+              <div class="form-group col-4 pr-1">
+                <label for="">Date</label>
+                <input type="date" name="" id="" class="form-control bg-light">
+              </div>
+
+              <div class="form-group col-3 px-1">
+                <label for="">Starts</label>
+                <select class="form-control bg-light" id="">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+
+              <div class="form-group col-3 px-1">
+                <label for="">Ends</label>
+                <select class="form-control bg-light" id="">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+
+              <div class="form-group col-2 pl-1">
+                <label for="">Repeats</label>
+                <select class="form-control bg-light" id="">
+                  <option>Yes</option>
+                  <option>No</option>
+
+                </select>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="">Ends</label>
+            <select class="form-control bg-light" id="">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="">Team Meatings</label>
+            <div class="custom-control custom-switch mt-2">
+              <input type="checkbox" class="custom-control-input" id="customSwitch1">
+              <label class="custom-control-label" for="customSwitch1"></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- meeting details section: end  -->
+
+  <!--   agenda section : start  -->
+
+  <div class="row my-2">
+    <div class="col-md-8">
+      <div class="card agenda-card">
+        <div class="card-header p-2 d-flex justify-content-between align-items-center">
+          <h6>Agendas</h6>
+
+          <button class="btn btn-link"><i class="fas fa-plus"></i> Add Agenda</button>
+
+        </div>
+
+        <div class="card-body p-0">
+
+          <!--           filters section  -->
+          <div class="card-filters mb-2 border-bottom p-3">
+            <button class="btn btn-light mx-1"><i class="far fa-list-alt"></i> Default suggestions</button>
+            <button class="btn btn-light mx-1"><i class="fas fa-cogs"></i> Items from past meetings</button>
+          </div>
+          <!--           filters section  -->
+
+          <!--           agenda section  -->
+          <div class="p-4">
+            <h6>Select Agenda Items</h6>
+          </div>
+
+          <!--           agenda section  -->
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card agenda-card">
+        <div class="card-header p-2 d-flex justify-content-between align-items-center">
+          <h6>Agendas</h6>
+
+          <button class="btn btn-link"><i class="fas fa-plus"></i> Add Agenda</button>
+
+        </div>
+
+        <div class="card-body p-0">
+
+          <!--           agenda section  -->
+          <div class="p-4">
+            <h6>Select Agenda Items</h6>
+          </div>
+          <div class="text-center">
+            <img src="https://storageaccountfunct8ff3.blob.core.windows.net/blob/newmeet.png" height="250" />
+            <!-- <button class="btn btn-one">Add action item</button> -->
+          </div>
+
+          <!--           agenda section  -->
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!--   agenda section : end  -->
+
+</div>

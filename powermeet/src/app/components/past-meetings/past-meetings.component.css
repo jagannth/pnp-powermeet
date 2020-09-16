@@ -1,43 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
-.logo{
-    font-size: 6rem;
-    color: deepskyblue;
-    margin-bottom: -2rem!important;
+.table td {
+  padding: 1rem !important;
 }
-/* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-
-body {
-  font-family: 'Poppins',
-    sans-serif;
-  font-size: 14px;
-  color: #454545;
-  background: #F3F2F0;
-}
-
-[routerLink]:focus {
-  outline: none !important;
-}
-
-.f-600 {
-  font-weight: 600;
-}
-
-.divider-one {
-  height: 2rem;
-}
-
-.hover:hover {
-  cursor: pointer;
-}
-
-.no-focus {
-  text-decoration: none !important;
-}
+/* styles.css start */
 
 .btn,
 .form-control {
   font-size: 14px !important;
+}
+
+.primary-text {
+  color: #023761 !important;
 }
 
 .primary-link {
@@ -98,9 +70,13 @@ body {
   border-color: #EBEFF2 !important;
 }
 
+.table {
+  margin-bottom: 0px;
+}
+
 .table td,
 .table th {
-  border-top: none !important;
+  border-top: 1px solid #f8f8f8 !important;
   color: #323C47 !important;
 }
 
@@ -108,6 +84,21 @@ body {
   cursor: pointer;
   vertical-align: middle;
   color: #707683;
+  font-size: 13.5px;
+  padding: 0.5rem 0.7rem !important;
+}
+
+.table th {
+  border: none !important;
+  padding: 1.2rem 0.75rem;
+  background-color: #f8f9fa !important;
+  font-weight: 600;
+  color: #373737 !important;
+  font-size: 14px;
+}
+
+table td p {
+  margin-bottom: 0px !important;
 }
 
 .table-hover tbody tr:hover {
@@ -116,36 +107,42 @@ body {
 }
 
 .td-main-text {
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 600;
 }
 
 .td-secondary-text {
-  font-size: 13px;
+  font-size: 12px;
+  color: #7d7d7d;
+  font-weight: 400;
 }
 
 .td-attendee>img {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
   border-radius: 3rem;
   margin-left: -0.8rem;
 }
 
 .meeting-attendee>img {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   object-fit: contain;
-  border-radius: 3rem;
+  border-radius: 2rem;
   margin-right: 0.2rem;
+  -webkit-border-radius: 2rem;
+  -moz-border-radius: 2rem;
+  -ms-border-radius: 2rem;
+  -o-border-radius: 2rem;
 }
 
 .td-attendee-more {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   color: #fff;
-  line-height: 3rem;
+  line-height: 2rem;
   text-align: center;
   background: #c4c4c4;
   padding: 0.8rem;
@@ -156,7 +153,7 @@ body {
   padding: 1rem 0.725rem;
   border-radius: 5rem;
   background: #c4c4c4;
-   /* margin-top: 1rem;  */
+  /* margin-top: 1rem;  */
   width: 3.35rem;
   height: 3.35rem;
 }
@@ -221,29 +218,44 @@ body {
   border-radius: 0.25rem;
   cursor: pointer;
 }
-.bdr{
-  border: none;
-}
-.mt3{
-  margin-top: 2rem;
+
+.powermeet-contianer {
+  margin-top: 3.5rem;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
+.powermeet-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  background: #fff;
+  padding: 1rem 1.25rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.list-group-item.active {
+  background-color: #0460A9 !important;
+  border-color: #0460A9 !important;
 }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
+.powermeet-contianer {
+  height: calc(100vh - 70px) !important;
+  overflow-y: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.meeting-card {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  -webkit-border-radius: 0.25rem;
+  -moz-border-radius: 0.25rem;
+  -ms-border-radius: 0.25rem;
+  -o-border-radius: 0.25rem;
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+  border-color: transparent;
 }
+
+/* styles.css end */

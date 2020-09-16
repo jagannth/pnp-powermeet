@@ -1,7 +1,8 @@
 <ngx-spinner bdColor="rgba(0,0,0,0.4)" size="medium" color="#fff" type="ball-spin-fade" [fullScreen]="true">
   <p style="color: white"> Loading... </p>
 </ngx-spinner>
-<div class="dashboard-body mx-2 mt3">
+<app-header></app-header>
+<div class="powermeet-contianer mt-2"  style="background: #f3f2f1 !important;">
   <div class="row ">
     <div class="col-12">
       <div class="card card-body shadow-sm p-0">
@@ -44,7 +45,7 @@
               <!-- <button class="btn btn-one shadow-sm-one " data-toggle="modal" data-target="#Agendaimport"
                 (click)="addFromExistingTemplates()">Add Agenda From
                 Templates</button> -->
-              <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#staticBackdrop">
+              <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#staticBackdrop" (click)="agendaList1 = []">
                 Add Agenda From Templates
               </button>
             </div>
@@ -124,6 +125,7 @@
                       <th class="py-3">Targeted Audience</th>
                       <th class="text-center py-3">Duration</th>
                       <th class="text-center py-3">Action</th>
+                      <th class="text-center py-3" *ngIf="me == 'vinay.kumar@sticsoft.io'">Approve</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -132,17 +134,41 @@
                       [style.background-image]="i == colorInx?progressColor: ''">
 
                       <td class="pl-4">
-                        <!-- <td class="pl-4" (click)="getNotes(i)"> -->
-                        <span class="td-attendee-more1" *ngIf="!getStatus(agendaitem.AgendaAssignees?.Email)?.status"
-                          [style.background-color]="colorsArray[0]">
-                          {{getStatus(agendaitem.AgendaAssignees?.Email)?.displayName | uppercase}}
-                        </span>
-                        <span class="td-attendee" *ngIf="getStatus(agendaitem.AgendaAssignees?.Email)">
-                          <img [src]="getStatus(agendaitem.AgendaAssignees?.Email)?.file" alt="" class="img-fluid">
-                        </span>
-                        <!-- <span class="td-attendee pl-3">
-                                            <img src="../../../assets/images/user-1.jpg" alt="" class="img-fluid">
-                                        </span> -->
+                        <div class="dropdown dropright Participants-parent1">
+                          <div class=" " data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <span class="td-attendee-more1"
+                              *ngIf="!getStatus(agendaitem.AgendaAssignees?.Email)?.status"
+                              [style.background-color]="colorsArray[0]">
+                              {{getStatus(agendaitem.AgendaAssignees?.Email)?.displayName | uppercase}}
+                            </span>
+                            <span class="td-attendee" *ngIf="getStatus(agendaitem.AgendaAssignees?.Email)">
+                              <img [src]="getStatus(agendaitem.AgendaAssignees?.Email)?.file" alt="" class="img-fluid">
+                            </span>
+                          </div>
+                          <div class="dropdown-menu dd">
+                            <div class="form-group px-2 mb-0">
+                              <input class="form-control" placeholder="Search for member" type="text" name="">
+                            </div>
+                            <ul class="members-list mb-0">
+                              <li class="mb-1">
+                                <span class="user-img ml-2">
+                                  <span class="td-attendee-more1"
+                                    *ngIf="!getStatus(agendaitem.AgendaAssignees?.Email)?.status"
+                                    [style.background-color]="colorsArray[0]">
+                                    {{getStatus(agendaitem.AgendaAssignees?.Email)?.displayName | uppercase}}
+                                  </span>
+                                  <span class="td-attendee" *ngIf="getStatus(agendaitem.AgendaAssignees?.Email)">
+                                    <img [src]="getStatus(agendaitem.AgendaAssignees?.Email)?.file" alt=""
+                                      class="img-fluid">
+                                  </span>
+                                </span>
+                                <span class="mbmr-name">
+                                  {{getStatus(agendaitem.AgendaAssignees?.Email)?.fullname}}
+                                </span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                       </td>
 
                       <td>
@@ -157,28 +183,18 @@
 
                           <div class="dropdown dropright Participants-parent1">
                             <div class=" " data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-
-
                               <div class="circle-profile">
-                                <div class="circle-top-left">
-                                  <img
-                                    src="https://www.goodmorningimagesdownload.com/wp-content/uploads/2019/10/Best-Whatsapp-DP-Profile-Images-15-226x300.jpg"
-                                    alt="">
+                                <div class="circle-top-left" *ngIf="agendaitem?.AgendaAttendees[0]">
+                                  <img [src]="getStatus(agendaitem?.AgendaAttendees[0]?.Email)?.file" alt="">
                                 </div>
-                                <div class="circle-top-right">
-                                  <img
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS-g2yomrPEmrB7KEpJej9sJeklpoA9SlyWwRu9vFC_z9JEVV24"
-                                    alt="">
+                                <div class="circle-top-right" *ngIf="agendaitem?.AgendaAttendees[1]">
+                                  <img [src]="getStatus(agendaitem?.AgendaAttendees[1]?.Email)?.file" alt="">
                                 </div>
-                                <div class="circle-bottom-left">
-                                  <img
-                                    src="https://i.pinimg.com/originals/8c/26/e7/8c26e7b3d7852bb0038a11d65b41c3cf.jpg"
-                                    alt="">
+                                <div class="circle-bottom-left" *ngIf="agendaitem?.AgendaAttendees[2]">
+                                  <img [src]="getStatus(agendaitem?.AgendaAttendees[2]?.Email)?.file" alt="">
                                 </div>
-                                <div class="circle-bottom-right">
-                                  <img
-                                    src="https://weneedfun.com/wp-content/uploads/2016/06/Cute-Indian-Girls-For-Facebook-Profile-Picture-15.jpg"
-                                    alt="">
+                                <div class="circle-bottom-right" *ngIf="agendaitem?.AgendaAttendees[3]">
+                                  <img [src]="getStatus(agendaitem?.AgendaAttendees[3]?.Email)?.file" alt="">
                                 </div>
                               </div>
 
@@ -258,6 +274,10 @@
                         </div>
 
                         <!-- Delete Agenda Item Modal :end-->
+                      </td>
+                      <td class="text-center" *ngIf="me == 'vinay.kumar@sticsoft.io'">
+                        <span *ngIf="!agendaitem?.IsApproved" (click)="adminApprove(agendaitem)"><i class="fa fa-check aprv-icon text-success" aria-hidden="true"></i></span>
+                        <!-- <i class="fa fa-close aprv-icon text-danger" aria-hidden="true"></i> -->
                       </td>
                     </tr>
 
@@ -702,6 +722,11 @@
                       <img [src]=template?.path (click)="tempchange(template)" />
                       <h6 class="text-center">{{template?.name}}</h6>
                     </div>
+                    <div class="temp-card1 text-center" (click)="customTempchange(template.AgendaItems)"
+                        *ngFor="let template of TemplateArray">
+                        <i class="fa fa-file tempp"></i>
+                        <h6>{{template.Name}}</h6>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -733,8 +758,10 @@
               <div class="list-group">
                 <a *ngFor="let note of agendaList;let i = index" class="list-group-item list-group-item-action">
                   <div class="d-flex w-100 justify-content-between">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1_{{i}}" (click)="addtoAgendaList($event,note)"> <h5 class="mb-1">{{note?.AgendaName}}</h5>
-                    <small>{{note?.StartDateTime}}</small>
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1_{{i}}"
+                      (click)="addtoAgendaList($event,note)">
+                    <h5 class="mb-1">{{note?.AgendaName}}</h5>
+                    <small>{{note?.StartTime}}</small>
                   </div>
                   <p class="mb-1">{{note?.AgendaDescription}}</p>
                   <small>Status: {{note?.Status}}</small>
@@ -762,19 +789,19 @@
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
                   <label class="form-check-label" for="defaultCheck1">
-                    Default checkbox
+                    What did you do yesterday?
                   </label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="" id="defaultCheck2">
                   <label class="form-check-label" for="defaultCheck2">
-                    Sample checkbox
+                    What will you do today?
                   </label>
                 </div>
-               <div class="float-right">
-                <button type="submit" class="btn btn-one btn-sm mr-2">Save</button>
-                <button type="submit" class="btn btn-two btn-sm" (click)="addNewTemp(2)">Cancel</button>
-               </div>
+                <div class="float-right">
+                  <button type="submit" class="btn btn-one btn-sm mr-2">Save</button>
+                  <button type="submit" class="btn btn-two btn-sm" (click)="addNewTemp(2)">Cancel</button>
+                </div>
               </form>
             </div>
           </div>
@@ -782,8 +809,8 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-one btn-sm float-left" (click)="addNewTemp(1)">Create New Template</button>
-        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button> -->
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Understood</button> -->
       </div>
     </div>
   </div>
